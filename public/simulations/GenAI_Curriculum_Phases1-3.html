@@ -1094,6 +1094,14 @@ function runRAG() {
 
 // Run initial states
 setTimeout(() => tokenize(), 100);
+
+// Route vault links through the parent window to avoid sandbox restrictions
+document.querySelectorAll('.vault a').forEach(function(a) {
+  a.addEventListener('click', function(e) {
+    e.preventDefault();
+    window.parent.postMessage({ type: 'open-url', url: this.href }, '*');
+  });
+});
 </script>
 </body>
 </html>

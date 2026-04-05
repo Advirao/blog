@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Maximize2, Minimize2, RefreshCw } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -15,6 +15,18 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
 export function SimulatorFrame({ src, title, className }: SimulatorFrameProps) {
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [key, setKey] = useState(0) // increment to reload iframe
+
+  // Open URLs posted from inside the iframe (vault links) in the parent window
+  // so they bypass iframe sandbox restrictions entirely
+  useEffect(() => {
+    function handleMessage(e: MessageEvent) {
+      if (e.data?.type === 'open-url' && typeof e.data.url === 'string') {
+        window.open(e.data.url, '_blank', 'noopener,noreferrer')
+      }
+    }
+    window.addEventListener('message', handleMessage)
+    return () => window.removeEventListener('message', handleMessage)
+  }, [])
 
   return (
     <div
