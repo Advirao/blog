@@ -4,6 +4,7 @@ node_modules/
 
 # Next.js
 .next/
+.swc/
 out/
 build/
 
@@ -13,10 +14,6 @@ build/
 .env.development.local
 .env.test.local
 .env.production.local
-
-# Vercel
-.vercel
-# .vercel/project.json contains VERCEL_ORG_ID and VERCEL_PROJECT_ID — never commit
 
 # TypeScript
 *.tsbuildinfo
