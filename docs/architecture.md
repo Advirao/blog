@@ -98,10 +98,33 @@ Rather than converting each simulator to React (which would require rewriting th
 flowchart LR
     HTML[HTML simulator\npublic/simulations/] -->|served at /simulations/*| CDN[GitHub Pages CDN]
     CDN -->|iframe src=| SF[SimulatorFrame component]
-    SF -->|sandbox=\nallow-scripts\nallow-same-origin\nallow-forms| IF[Rendered iframe]
+    SF -->|sandbox=\nallow-scripts allow-same-origin\nallow-forms allow-popups\nallow-popups-to-escape-sandbox| IF[Rendered iframe]
 ```
 
-**Security:** The `sandbox` attribute restricts the iframe to only what it needs. `allow-popups` and `allow-top-navigation` are intentionally excluded.
+**Security:** The `sandbox` attribute restricts the iframe to only what it needs. `allow-top-navigation` is intentionally excluded.
+
+### External links inside simulators (Resource Vault)
+
+GitHub Pages sets `Cross-Origin-Opener-Policy` headers. When a sandboxed iframe opens a new tab, that tab inherits the security context and external sites (YouTube, docs, etc.) respond with `ERR_BLOCKED_BY_RESPONSE`.
+
+**Fix — postMessage bridge:**
+
+```
+iframe (vault link clicked)
+  └─ postMessage({ type: 'open-url', url }) → parent window
+       └─ SimulatorFrame listener → window.open(url, '_blank')
+```
+
+The link opens from the **parent page** context, completely outside the sandbox. Any simulator HTML file that has external links in a `.vault` block must include this script at the bottom:
+
+```js
+document.querySelectorAll('.vault a').forEach(function(a) {
+  a.addEventListener('click', function(e) {
+    e.preventDefault();
+    window.parent.postMessage({ type: 'open-url', url: this.href }, '*');
+  });
+});
+```
 
 ---
 

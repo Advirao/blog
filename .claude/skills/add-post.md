@@ -48,7 +48,20 @@ pnpm dev
 # Visit http://localhost:3000/oil-trading/your-slug
 ```
 
-### 5. Commit and push
+### 5. If the HTML file has external links (Resource Vault etc.)
+GitHub Pages blocks direct `target="_blank"` links from sandboxed iframes.
+Add this at the bottom of the `<script>` block in your HTML file:
+
+```js
+document.querySelectorAll('.vault a').forEach(function(a) {
+  a.addEventListener('click', function(e) {
+    e.preventDefault();
+    window.parent.postMessage({ type: 'open-url', url: this.href }, '*');
+  });
+});
+```
+
+### 6. Commit and push
 ```bash
 git add .
 git commit -m "feat: add post — Your Title"

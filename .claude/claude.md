@@ -56,6 +56,23 @@ scripts/
 5. Never use `dangerouslySetInnerHTML` — use iframes for untrusted HTML
 6. All colors via CSS variables or Tailwind custom classes (not arbitrary values)
 7. Run `pnpm ingest` after adding new HTML simulation files
+8. External links inside simulator HTML files must use the postMessage bridge (see below) — direct `target="_blank"` links are blocked by GitHub Pages COOP headers
+
+## External Links in Simulators (postMessage bridge)
+GitHub Pages sets Cross-Origin-Opener-Policy headers that cause `ERR_BLOCKED_BY_RESPONSE` when sandboxed iframes open external URLs directly. The fix: intercept clicks in the HTML file and post to the parent, which opens the URL cleanly outside the sandbox.
+
+Any simulator with a `.vault` section (or any `target="_blank"` links) must include this at the bottom of its `<script>` block:
+
+```js
+document.querySelectorAll('.vault a').forEach(function(a) {
+  a.addEventListener('click', function(e) {
+    e.preventDefault();
+    window.parent.postMessage({ type: 'open-url', url: this.href }, '*');
+  });
+});
+```
+
+`SimulatorFrame.tsx` already listens for this message and calls `window.open()` from the parent context.
 
 ## Adding New Content
 Quickest way: drop the HTML file in `public/simulations/` and run `/publish` — it handles metadata, posts.ts, validation, commit, and push interactively.
