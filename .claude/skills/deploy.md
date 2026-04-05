@@ -1,96 +1,39 @@
-# Skill: Deploy to Production
+# Skill: Deploy to GitHub Pages
 
-## Overview
-The site auto-deploys to Vercel via GitHub Actions on every push to `main`.
-Pull requests get automatic preview URLs.
+## Live URL
+https://advirao.github.io/blog
 
----
+## How it works
+Every push to `main` triggers GitHub Actions which:
+1. Installs dependencies
+2. Validates simulation files (`pnpm ingest`)
+3. Type-checks (`tsc --noEmit`)
+4. Runs tests (`pnpm test`)
+5. Builds static export (`pnpm build` with `NEXT_PUBLIC_BASE_PATH=/blog`)
+6. Deploys the `out/` folder to GitHub Pages
 
-## One-time GitHub + Vercel setup
+## One-time GitHub setup (already done)
+1. GitHub → Advirao/blog → Settings → Pages
+2. Source → **GitHub Actions**
+3. Done — no tokens or secrets needed
 
-### Step 1 — Push repo to GitHub
-```bash
-git remote add origin https://github.com/Advirao/blog.git
-git push -u origin main
-```
-
-### Step 2 — Import project on Vercel
-1. Go to [vercel.com/new](https://vercel.com/new)
-2. Import your GitHub repository
-3. Framework preset: **Next.js** (auto-detected)
-4. Add environment variable: `NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app`
-5. Click Deploy
-
-### Step 3 — Link Vercel project locally
-```bash
-pnpm dlx vercel link
-# This creates .vercel/project.json with orgId and projectId
-```
-
-### Step 4 — Add GitHub Actions secrets
-Go to **GitHub → repo → Settings → Secrets and variables → Actions** and add:
-
-| Secret | Where to find it |
-|---|---|
-| `VERCEL_TOKEN` | [vercel.com/account/tokens](https://vercel.com/account/tokens) |
-| `VERCEL_ORG_ID` | `.vercel/project.json` → `"orgId"` |
-| `VERCEL_PROJECT_ID` | `.vercel/project.json` → `"projectId"` |
-
-> **Note:** Add `.vercel/` to `.gitignore` so these IDs aren't committed.
-
-### Step 5 — Push and verify
+## Day-to-day deployment
 ```bash
 git push origin main
-# Watch the Actions tab on GitHub — should go green in ~2 minutes
+# Actions tab on GitHub shows live progress
+# Site updates at https://advirao.github.io/blog in ~2 minutes
 ```
 
----
-
-## Day-to-day deployments
-
-### Automatic (recommended)
+## Build locally (simulate production)
 ```bash
-git push origin main
-# GitHub Actions: install → ingest → type-check → build → vercel deploy --prod
+NEXT_PUBLIC_BASE_PATH=/blog pnpm build
+# Static files output to ./out/
+# Open out/index.html in a browser to verify
 ```
 
-### Manual Vercel CLI
-```bash
-pnpm dlx vercel --prod
+## Important: basePath
+The repo lives at `/blog` on GitHub Pages, so all builds must set:
 ```
-
-### Preview (any branch or PR)
-Any pull request automatically gets a preview URL from Vercel.
-```bash
-git checkout -b feature/new-post
-git push origin feature/new-post
-# Open a PR → Vercel posts a preview URL as a PR comment
+NEXT_PUBLIC_BASE_PATH=/blog
 ```
-
----
-
-## Environment variables
-
-| Variable | Required | Description |
-|---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | Yes | Full URL of the site (no trailing slash) |
-
-Set in: Vercel dashboard → Project → Settings → Environment Variables.
-For local dev, copy `.env.example` to `.env.local` and fill in.
-
----
-
-## Rollback
-```bash
-# Via Vercel dashboard: Deployments → pick a previous one → Promote to Production
-# Via CLI:
-pnpm dlx vercel rollback
-```
-
----
-
-## Build locally before pushing
-```bash
-pnpm build && pnpm start
-# Visit http://localhost:3000 — must match production behavior
-```
+This is set automatically in the GitHub Actions workflow. Do NOT set it in `.env.local` — it would break local dev at `http://localhost:3000`.

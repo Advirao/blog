@@ -152,25 +152,18 @@ pnpm lint           # ESLint
 
 ## Deployment
 
-The site deploys automatically to Vercel on every push to `main`.
+The site deploys automatically to **GitHub Pages** on every push to `main`.
+
+Live at: **[advirao.github.io/blog](https://advirao.github.io/blog)**
 
 ### One-time setup
 
-1. Push this repo to GitHub
-2. Import the project at [vercel.com/new](https://vercel.com/new)
-3. In Vercel → Settings → Environment Variables, add:
-   ```
-   NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
-   ```
-4. Add these three secrets to **GitHub → Settings → Secrets → Actions**:
-   - `VERCEL_TOKEN` — from [vercel.com/account/tokens](https://vercel.com/account/tokens)
-   - `VERCEL_ORG_ID` — from `.vercel/project.json` after running `vercel link`
-   - `VERCEL_PROJECT_ID` — same file
+1. Go to **GitHub → Advirao/blog → Settings → Pages**
+2. Under **Source**, select **GitHub Actions**
+3. Push to `main` — the workflow runs automatically:
+   `install → ingest → type-check → test → build → deploy`
 
-After that, every `git push main` runs the full pipeline:
-`install → ingest → type-check → build → vercel deploy --prod`
-
-Pull requests get an automatic preview URL.
+No secrets or tokens required. GitHub Actions handles everything.
 
 ---
 

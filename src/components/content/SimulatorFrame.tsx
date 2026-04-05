@@ -10,6 +10,8 @@ interface SimulatorFrameProps {
   className?: string
 }
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
+
 export function SimulatorFrame({ src, title, className }: SimulatorFrameProps) {
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [key, setKey] = useState(0) // increment to reload iframe
@@ -58,7 +60,7 @@ export function SimulatorFrame({ src, title, className }: SimulatorFrameProps) {
       {/* The iframe */}
       <iframe
         key={key}
-        src={src}
+        src={`${basePath}${src}`}
         title={title}
         className="sim-frame flex-1"
         style={{ minHeight: isFullscreen ? '100%' : '85vh' }}

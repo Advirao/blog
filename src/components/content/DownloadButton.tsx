@@ -10,6 +10,8 @@ interface DownloadButtonProps {
   label?: string
 }
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
+
 export function DownloadButton({
   simulationFile,
   filename,
@@ -20,7 +22,7 @@ export function DownloadButton({
   const handleDownload = () => {
     // Create a temporary anchor element to trigger download
     const a = document.createElement('a')
-    a.href = simulationFile
+    a.href = `${basePath}${simulationFile}`
     a.download = filename.endsWith('.html') ? filename : `${filename}.html`
     document.body.appendChild(a)
     a.click()

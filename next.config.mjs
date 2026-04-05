@@ -1,21 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // Allow the simulation HTML files to be served statically
-  // and allow embedding via iframe
-  async headers() {
-    return [
-      {
-        source: '/simulations/:path*',
-        headers: [
-          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
-          { key: 'Content-Security-Policy', value: "frame-ancestors 'self'" },
-        ],
-      },
-    ]
+  output: 'export',
+  // GitHub Pages serves this repo at /blog — set at build time via env
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
+  assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || '',
+  images: {
+    unoptimized: true, // required for static export
   },
-  // Output export for static hosting (optional, comment out for Vercel)
-  // output: 'export',
 }
 
 export default nextConfig
