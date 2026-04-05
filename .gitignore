@@ -16,6 +16,7 @@ build/
 
 # Vercel
 .vercel
+# .vercel/project.json contains VERCEL_ORG_ID and VERCEL_PROJECT_ID — never commit
 
 # TypeScript
 *.tsbuildinfo

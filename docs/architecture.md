@@ -1,58 +1,70 @@
-# Architecture Diagrams
+# Architecture
+
+This document covers the technical architecture of the KB interactive learning platform.
+
+---
 
 ## Request Flow
 
+Every page is statically generated at build time. The browser receives pre-rendered HTML with no server-side runtime.
+
 ```mermaid
 graph TD
-    U[User Browser] -->|GET /| HP[Home Page<br/>page.tsx — 'use client']
-    U -->|GET /oil-trading| OT[Oil Trading Category<br/>oil-trading/page.tsx]
-    U -->|GET /genai| GA[GenAI Category<br/>genai/page.tsx]
-    U -->|GET /oil-trading/:slug| OTS[Simulator Page<br/>oil-trading/[slug]/page.tsx]
-    U -->|GET /genai/:slug| GAS[Simulator Page<br/>genai/[slug]/page.tsx]
+    U[Browser] -->|GET /| HP[Home Page]
+    U -->|GET /oil-trading| OT[Oil Trading Category]
+    U -->|GET /genai| GA[GenAI Category]
+    U -->|GET /oil-trading/:slug| OTS[Simulator Page]
+    U -->|GET /genai/:slug| GAS[Simulator Page]
 
-    OTS --> SF[SimulatorFrame<br/>components/content/SimulatorFrame.tsx]
+    OTS --> SF[SimulatorFrame component]
     GAS --> SF
 
-    SF -->|iframe src=| SIM[/public/simulations/*.html<br/>Static asset — full JS preserved]
+    SF -->|iframe src=| SIM[/public/simulations/*.html\nFull JS preserved, sandboxed]
 
-    PR[posts.ts<br/>lib/posts.ts] -->|getPostsByCategory| OT
+    PR[src/lib/posts.ts\nsingle source of truth] -->|getPostsByCategory| OT
     PR -->|getPostsByCategory| GA
     PR -->|getAllPosts| HP
     PR -->|getPostBySlug| OTS
     PR -->|getPostBySlug| GAS
 ```
 
+---
+
 ## Component Tree
 
 ```mermaid
 graph TD
-    L[layout.tsx<br/>RootLayout] --> H[SiteHeader]
-    L --> M[main — children]
+    L[layout.tsx — RootLayout] --> H[SiteHeader]
+    L --> M[main]
     L --> F[SiteFooter]
 
-    M --> HP[HomePage]
+    M --> HP[HomePage — use client]
     HP --> SB[SearchBar]
     HP --> CF[CategoryFilter]
     HP --> PC[PostCard ×N]
 
-    M --> CP[CategoryPage<br/>oil-trading or genai]
+    M --> CP[CategoryPage — server]
     CP --> PC2[PostCard ×N]
 
-    M --> SP[SlugPage]
+    M --> SP[SlugPage — server]
     SP --> DB[DownloadButton]
     SP --> BA[Badge]
-    SP --> SF[SimulatorFrame]
-    SP --> PC3[PostCard ×2<br/>related]
+    SP --> SFR[SimulatorFrame — use client]
+    SP --> PC3[PostCard ×2 related]
 
-    SF --> IF[iframe<br/>sandboxed HTML]
+    SFR --> IF[iframe — sandboxed HTML]
 ```
+
+---
 
 ## Data Flow
 
+All content lives in `src/lib/posts.ts`. There is no CMS, database, or API — just a typed TypeScript array that drives static generation.
+
 ```mermaid
 flowchart LR
-    subgraph Registry
-        PT[posts.ts<br/>Post[]<br/>source of truth]
+    subgraph Registry ["src/lib/posts.ts"]
+        PT[Post\[\] array]
     end
 
     subgraph Pages
@@ -63,8 +75,8 @@ flowchart LR
         GS[/genai/:slug]
     end
 
-    subgraph Static Assets
-        SIM[/public/simulations/\n*.html]
+    subgraph Assets ["public/simulations/"]
+        SIM[*.html files]
     end
 
     PT -->|getAllPosts| HP
@@ -72,26 +84,61 @@ flowchart LR
     PT -->|getPostsByCategory| GA
     PT -->|getPostBySlug| OS
     PT -->|getPostBySlug| GS
-    OS -->|simulationFile path| SIM
-    GS -->|simulationFile path| SIM
+    OS -->|simulationFile| SIM
+    GS -->|simulationFile| SIM
 ```
+
+---
+
+## iframe Embedding Strategy
+
+Rather than converting each simulator to React (which would require rewriting thousands of lines of JS), each HTML file is served as a static asset and embedded via a sandboxed `<iframe>`. This preserves 100% of the original interactivity.
+
+```mermaid
+flowchart LR
+    HTML[HTML simulator\npublic/simulations/] -->|served at /simulations/*| CDN[Vercel CDN]
+    CDN -->|iframe src=| SF[SimulatorFrame component]
+    SF -->|sandbox=\nallow-scripts\nallow-same-origin\nallow-forms| IF[Rendered iframe]
+```
+
+**Security:** The `sandbox` attribute restricts the iframe to only what it needs. `allow-popups` and `allow-top-navigation` are intentionally excluded.
+
+---
 
 ## CI/CD Pipeline
 
 ```mermaid
 flowchart LR
-    DEV[Developer] -->|git push main| GH[GitHub]
+    DEV[git push main] --> GH[GitHub]
     GH -->|triggers| CI[GitHub Actions]
 
     subgraph CI Pipeline
-        I[pnpm install] --> V[pnpm ingest<br/>validate files]
-        V --> T[tsc --noEmit<br/>type check]
-        T --> B[pnpm build<br/>Next.js static gen]
+        I[pnpm install\nfrozen lockfile] --> V[pnpm ingest\nvalidate HTML files]
+        V --> T[tsc --noEmit\ntype check]
+        T --> TS[pnpm test\n117 tests]
+        TS --> B[pnpm build\nNext.js SSG]
     end
 
-    B -->|on main| VD[vercel deploy --prod]
-    B -->|on PR| VP[vercel deploy<br/>preview URL]
+    B -->|main branch| VP[vercel deploy --prod]
+    B -->|pull request| VPR[vercel deploy preview URL]
 ```
+
+---
+
+## Adding a New Category
+
+The site supports any number of categories. To add one beyond `oil-trading` and `genai`:
+
+```mermaid
+flowchart TD
+    A[1. Add entry to CATEGORIES\nin src/lib/posts.ts] --> B[2. Create app/new-category/page.tsx\ncopy from existing category page]
+    B --> C[3. Create app/new-category/slug/page.tsx\ncopy from existing slug page]
+    C --> D[4. Add nav link in\nSiteHeader.tsx]
+    D --> E[5. Add accent color\nin utils.ts if needed]
+    E --> F[pnpm dev — verify routing]
+```
+
+---
 
 ## Content Ingestion
 
@@ -100,7 +147,61 @@ flowchart TD
     NEW[New .html simulator] -->|1. copy| SIM[public/simulations/]
     NEW -->|2. register| PT[posts.ts entry]
     PT -->|3. pnpm ingest| V{Validation}
-    V -->|all files match| OK[✅ Ready to commit]
-    V -->|missing file| ERR[❌ Error — add HTML first]
-    V -->|orphan on disk| WARN[⚠️ Warning — register in posts.ts]
+    V -->|registered + file exists| OK[✅ Ready]
+    V -->|registered but file missing| ERR[❌ Error — add HTML file]
+    V -->|file exists but not registered| WARN[⚠️ Warning — add posts.ts entry]
+```
+
+---
+
+## Directory Structure
+
+```
+Blog/
+├── .claude/                    # AI assistant context (Claude Code)
+│   ├── CLAUDE.md               # Project conventions and context
+│   └── skills/                 # Task-specific skill files
+├── .github/
+│   └── workflows/
+│       └── deploy.yml          # CI/CD: install → test → build → deploy
+├── docs/
+│   └── architecture.md         # This file
+├── public/
+│   └── simulations/            # HTML simulation files (6 total)
+├── scripts/
+│   └── ingest-html.ts          # Validation script
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── layout.tsx          # Root layout
+│   │   ├── page.tsx            # Home page
+│   │   ├── globals.css         # Global styles + CSS vars
+│   │   ├── oil-trading/
+│   │   │   ├── page.tsx        # Category listing
+│   │   │   └── [slug]/page.tsx # Simulator page
+│   │   └── genai/
+│   │       ├── page.tsx
+│   │       └── [slug]/page.tsx
+│   ├── components/
+│   │   ├── content/            # Domain components
+│   │   │   ├── PostCard.tsx
+│   │   │   ├── CategoryFilter.tsx
+│   │   │   ├── SimulatorFrame.tsx
+│   │   │   └── DownloadButton.tsx
+│   │   ├── layout/
+│   │   │   ├── SiteHeader.tsx
+│   │   │   └── SiteFooter.tsx
+│   │   └── ui/                 # Atomic components
+│   │       ├── Badge.tsx
+│   │       ├── Button.tsx
+│   │       └── SearchBar.tsx
+│   ├── hooks/
+│   │   └── useFilter.ts        # Category + difficulty + search filter
+│   └── lib/
+│       ├── posts.ts            # Content registry
+│       ├── types.ts            # Shared types
+│       └── utils.ts            # Utilities + color maps
+└── tests/
+    ├── lib/                    # Unit tests: utils, posts
+    ├── hooks/                  # Hook tests: useFilter
+    └── components/             # Component tests: Badge, PostCard, SimulatorFrame
 ```
