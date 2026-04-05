@@ -23,7 +23,7 @@ describe('SimulatorFrame', () => {
   it('iframe has correct sandbox attribute', () => {
     render(<SimulatorFrame {...defaultProps} />)
     const iframe = screen.getByTitle('Crude Oil Trading Simulator')
-    expect(iframe).toHaveAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms')
+    expect(iframe).toHaveAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups')
   })
 
   it('iframe has lazy loading', () => {
