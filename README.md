@@ -104,6 +104,10 @@ pnpm lint           # ESLint
 
 ### Adding a new simulator
 
+The easiest way is the `/publish` command inside Claude Code — drop your HTML file in, type `/publish`, and Claude handles the rest interactively.
+
+**Manual steps:**
+
 1. Drop your `.html` file into `public/simulations/`
 2. Add an entry to `src/lib/posts.ts`:
 

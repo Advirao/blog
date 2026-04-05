@@ -1,7 +1,12 @@
 # Skill: Add a New Interactive Post
 
-## When to use
-When the user wants to publish a new topic/simulation to the blog.
+## Quickest way
+Tell the user to run `/publish` — it automates this entire flow interactively.
+The `/publish` command detects new HTML files, asks for metadata, writes the
+`posts.ts` entry, validates, commits, and pushes in one go.
+
+## When to use this manual guide
+When the user wants to do it step-by-step themselves, or when `/publish` isn't available.
 
 ## Steps
 

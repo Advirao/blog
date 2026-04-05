@@ -58,7 +58,12 @@ scripts/
 7. Run `pnpm ingest` after adding new HTML simulation files
 
 ## Adding New Content
-See `.claude/skills/add-post.md` for step-by-step instructions.
+Quickest way: drop the HTML file in `public/simulations/` and run `/publish` — it handles metadata, posts.ts, validation, commit, and push interactively.
+
+Manual guide: see `.claude/skills/add-post.md`.
+
+## Slash Commands
+- `/publish` — interactive workflow to publish a new simulator end-to-end
 
 ## Deployment
 - GitHub Pages — auto-deploys on push to `main` via GitHub Actions
