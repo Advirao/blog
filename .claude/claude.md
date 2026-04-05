@@ -31,8 +31,8 @@ Hosts interactive HTML simulations on Oil Trading and Generative AI Engineering.
 src/
   app/           — Next.js App Router pages
   components/
-    layout/      — SiteHeader, SiteNav, SiteFooter
-    ui/          — Atomic: Button, Badge, SearchBar, Card
+    layout/      — SiteHeader, SiteFooter
+    ui/          — Atomic: Button, Badge, SearchBar
     content/     — Domain: PostCard, CategoryFilter, DownloadButton, SimulatorFrame
   lib/
     posts.ts     — Central content registry (ALL posts defined here)
@@ -43,8 +43,6 @@ src/
 
 public/
   simulations/   — Original HTML simulation files (served statically)
-
-content/         — Future: MDX blog posts
 
 scripts/
   ingest-html.ts — CLI to index new HTML files into the registry
@@ -63,6 +61,6 @@ scripts/
 See `.claude/skills/add-post.md` for step-by-step instructions.
 
 ## Deployment
-- Vercel (primary) — auto-deploys on push to `main`
-- GitHub Actions workflow at `.github/workflows/deploy.yml`
-- Environment variables: `NEXT_PUBLIC_SITE_URL` in `.env.local`
+- GitHub Pages — auto-deploys on push to `main` via GitHub Actions
+- Workflow at `.github/workflows/deploy.yml`
+- `NEXT_PUBLIC_BASE_PATH=/blog` is set in CI only — do NOT set it locally

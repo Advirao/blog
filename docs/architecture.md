@@ -96,7 +96,7 @@ Rather than converting each simulator to React (which would require rewriting th
 
 ```mermaid
 flowchart LR
-    HTML[HTML simulator\npublic/simulations/] -->|served at /simulations/*| CDN[Vercel CDN]
+    HTML[HTML simulator\npublic/simulations/] -->|served at /simulations/*| CDN[GitHub Pages CDN]
     CDN -->|iframe src=| SF[SimulatorFrame component]
     SF -->|sandbox=\nallow-scripts\nallow-same-origin\nallow-forms| IF[Rendered iframe]
 ```
@@ -116,11 +116,11 @@ flowchart LR
         I[pnpm install\nfrozen lockfile] --> V[pnpm ingest\nvalidate HTML files]
         V --> T[tsc --noEmit\ntype check]
         T --> TS[pnpm test\n117 tests]
-        TS --> B[pnpm build\nNext.js SSG]
+        TS --> B[pnpm build\nNext.js static export]
     end
 
-    B -->|main branch| VP[vercel deploy --prod]
-    B -->|pull request| VPR[vercel deploy preview URL]
+    B -->|upload artifact| GP[GitHub Pages deploy]
+    GP --> LIVE[advirao.github.io/blog]
 ```
 
 ---
@@ -163,10 +163,11 @@ Blog/
 │   └── skills/                 # Task-specific skill files
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml          # CI/CD: install → test → build → deploy
+│       └── deploy.yml          # CI/CD: install → validate → test → build → deploy
 ├── docs/
 │   └── architecture.md         # This file
 ├── public/
+│   ├── .nojekyll               # Prevents GitHub Pages Jekyll processing
 │   └── simulations/            # HTML simulation files (6 total)
 ├── scripts/
 │   └── ingest-html.ts          # Validation script

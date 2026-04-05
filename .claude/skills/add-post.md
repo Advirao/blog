@@ -49,4 +49,4 @@ git add .
 git commit -m "feat: add post — Your Title"
 git push origin main
 ```
-GitHub Actions will auto-deploy to Vercel.
+GitHub Actions will build and deploy to GitHub Pages automatically.
