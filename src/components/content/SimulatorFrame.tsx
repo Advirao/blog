@@ -65,7 +65,7 @@ export function SimulatorFrame({ src, title, className }: SimulatorFrameProps) {
         className="sim-frame flex-1"
         style={{ minHeight: isFullscreen ? '100%' : '85vh' }}
         loading="lazy"
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
       />
     </div>
   )
