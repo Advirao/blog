@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Custom Properties ─────────────────────────────────────────────────── */
+:root {
+  --bg:       #0a0e14;
+  --surface:  #111820;
+  --surface2: #1a2332;
+  --border:   #1e3a52;
+  --accent:   #00c896;
+  --gold:     #f5a623;
+  --danger:   #ff4d6d;
+  --blue:     #378ADD;
+  --purple:   #8b5cf6;
+  --teal:     #14b8a6;
+  --text:     #c8d8e8;
+  --text2:    #6a8aaa;
+  --white:    #e8f4ff;
+
+  --font-bebas: 'Bebas Neue', cursive;
+}
+
+/* ─── Base Styles ────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', var(--font-sans), system-ui, sans-serif;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ─── Grid background pattern ────────────────────────────────────────────────── */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 200, 150, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 200, 150, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Bebas Neue display font ────────────────────────────────────────────────── */
+.font-bebas {
+  font-family: var(--font-bebas);
+  letter-spacing: 0.05em;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: var(--bg); }
+::-webkit-scrollbar-thumb  { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text2); }
+
+/* ─── Selection ──────────────────────────────────────────────────────────────── */
+::selection {
+  background-color: rgba(0, 200, 150, 0.25);
+  color: var(--white);
+}
+
+/* ─── Simulator iframe ───────────────────────────────────────────────────────── */
+.sim-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: var(--bg);
+}
+
+/* ─── Focus rings ────────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Utility layer additions ────────────────────────────────────────────────── */
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+
+  .section-label {
+    @apply font-mono text-[10px] tracking-[3px] text-ink2 uppercase;
+  }
+
+  .mono-label {
+    @apply font-mono text-[11px] tracking-[2px] text-ink2 uppercase;
+  }
+
+  .card-base {
+    @apply bg-surface border border-border rounded-xl;
+  }
+
+  .card-hover {
+    @apply transition-all duration-200 hover:border-accent/40 hover:shadow-glow-accent;
+  }
+
+  /* Pill / badge base */
+  .pill {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider;
+  }
+}

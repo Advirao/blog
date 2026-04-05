@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenAI Engineering Deep-Dive Curriculum — Phases 4–6</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --border: #2a2a3a;
+  --text: #e8e8f0;
+  --text-dim: #8888a0;
+  --accent1: #8b5cf6;
+  --accent1-glow: rgba(139,92,246,0.3);
+  --accent2: #06b6d4;
+  --accent3: #f59e0b;
+  --accent4: #10b981;
+  --accent5: #ec4899;
+  --gradient1: linear-gradient(135deg, #8b5cf6, #ec4899);
+  --gradient2: linear-gradient(135deg, #f59e0b, #ef4444);
+  --gradient3: linear-gradient(135deg, #10b981, #06b6d4);
+  --radius: 12px;
+  --font-display: 'Outfit', sans-serif;
+  --font-serif: 'Instrument Serif', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-display);line-height:1.7}
+
+.hero{min-height:50vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 24px 60px;background:radial-gradient(ellipse at 50% 0%,rgba(139,92,246,.15) 0%,transparent 60%),radial-gradient(ellipse at 80% 100%,rgba(236,72,153,.1) 0%,transparent 50%)}
+.hero-badge{font-family:var(--font-mono);font-size:.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent5);margin-bottom:20px}
+.hero h1{font-size:clamp(2.4rem,5vw,4rem);font-weight:800;line-height:1.15;max-width:800px}
+.hero h1 span{background:var(--gradient1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1.1rem;color:var(--text-dim);max-width:600px;margin-top:16px;font-weight:300}
+.hero-nav{display:flex;flex-wrap:wrap;gap:10px;margin-top:36px;justify-content:center}
+.hero-nav a{font-family:var(--font-mono);font-size:.78rem;padding:10px 18px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);text-decoration:none;transition:all .2s}
+.hero-nav a:hover{border-color:var(--accent1);background:rgba(139,92,246,.1)}
+.hero-nav a .num{color:var(--accent5);margin-right:6px}
+
+.phase{max-width:960px;margin:0 auto;padding:0 24px}
+.phase-header{padding:80px 0 40px;border-top:1px solid var(--border)}
+.phase-header .phase-num{font-family:var(--font-mono);font-size:.7rem;letter-spacing:4px;text-transform:uppercase;color:var(--accent1);margin-bottom:8px}
+.phase-header h2{font-size:2.4rem;font-weight:800}
+.phase-header h2 .serif{font-family:var(--font-serif);font-style:italic;font-weight:400}
+.phase-meta{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.phase-meta .tag{font-size:.78rem;font-family:var(--font-mono);padding:4px 12px;border-radius:6px;background:var(--surface2);border:1px solid var(--border);color:var(--text-dim)}
+
+.module{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:24px;overflow:hidden}
+.module-head{display:flex;align-items:center;padding:20px 24px;cursor:pointer;transition:background .2s;gap:14px}
+.module-head:hover{background:var(--surface2)}
+.module-head .icon{font-size:1.5rem;flex-shrink:0}
+.module-head .title{flex:1}
+.module-head .title h3{font-size:1.1rem;font-weight:600}
+.module-head .title .sub{font-size:.8rem;color:var(--text-dim)}
+.module-head .chevron{font-size:1.2rem;color:var(--text-dim);transition:transform .3s}
+.module.open .module-head .chevron{transform:rotate(180deg)}
+.module-body{display:none;padding:0 24px 24px}
+.module.open .module-body{display:block}
+
+.section-label{font-family:var(--font-mono);font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent2);margin:28px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.section-label:first-child{margin-top:0}
+.content p{margin-bottom:12px;font-weight:300;font-size:.95rem}
+.content strong{font-weight:600;color:#fff}
+.content code{font-family:var(--font-mono);font-size:.85rem;background:var(--surface2);padding:2px 6px;border-radius:4px;color:var(--accent2)}
+
+.explainer{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0}
+.explainer-box{padding:16px;border-radius:10px;border:1px solid var(--border)}
+.explainer-box.layman{background:rgba(139,92,246,.06);border-color:rgba(139,92,246,.2)}
+.explainer-box.el5{background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.2)}
+.explainer-box .label{font-family:var(--font-mono);font-size:.65rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.explainer-box.layman .label{color:var(--accent1)}
+.explainer-box.el5 .label{color:var(--accent3)}
+.explainer-box p{font-size:.88rem;margin-bottom:0}
+
+.vault{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;margin:12px 0}
+.vault a{display:flex;align-items:center;gap:12px;padding:14px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);text-decoration:none;color:var(--text);transition:all .2s}
+.vault a:hover{border-color:var(--accent1);transform:translateY(-2px)}
+.vault a .v-icon{font-size:1.5rem;flex-shrink:0}
+.vault a .v-label{font-size:.78rem;font-family:var(--font-mono);color:var(--text-dim)}
+.vault a .v-title{font-size:.88rem;font-weight:500}
+
+.sim-container{margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);background:var(--surface2)}
+.sim-bar{display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(0,0,0,.3);font-family:var(--font-mono);font-size:.72rem;color:var(--text-dim)}
+.sim-bar .dot{width:10px;height:10px;border-radius:50%}
+.sim-bar .dot.r{background:#ff5f57}.sim-bar .dot.y{background:#ffbd2e}.sim-bar .dot.g{background:#28c840}
+.sim-canvas{padding:24px;min-height:320px}
+
+.sim-btn{padding:8px 18px;border:1px solid var(--accent1);background:rgba(139,92,246,.1);color:var(--accent1);font-family:var(--font-mono);font-size:.78rem;border-radius:6px;cursor:pointer;transition:all .2s;margin:4px}
+.sim-btn:hover{background:rgba(139,92,246,.25)}
+.sim-btn.active{background:var(--accent1);color:#fff}
+.sim-output{margin-top:16px;padding:16px;border-radius:8px;background:rgba(0,0,0,.3);font-family:var(--font-mono);font-size:.82rem;white-space:pre-wrap;line-height:1.6;min-height:80px}
+.slider-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:.85rem}
+.slider-row label{min-width:140px;font-family:var(--font-mono);font-size:.75rem;color:var(--text-dim)}
+.slider-row input[type="range"]{flex:1;accent-color:var(--accent1)}
+.slider-row .val{min-width:50px;text-align:right;font-family:var(--font-mono);color:var(--accent2)}
+select.sim-select{flex:1;padding:6px 10px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;font-family:var(--font-mono);font-size:.8rem}
+
+/* Tool call flow */
+.flow-diagram{display:flex;align-items:stretch;gap:6px;margin:16px 0;flex-wrap:wrap}
+.flow-node{padding:14px 16px;border-radius:10px;border:1px solid var(--border);flex:1;min-width:130px;text-align:center;font-size:.82rem;transition:all .5s;position:relative}
+.flow-node .fn{font-family:var(--font-mono);font-size:.7rem;color:var(--text-dim);margin-top:4px}
+.flow-node.active{box-shadow:0 0 20px var(--accent1-glow);transform:scale(1.04)}
+.flow-arrow{display:flex;align-items:center;color:var(--text-dim);font-size:1.3rem;flex-shrink:0}
+
+/* MCP diagram */
+.mcp-grid{display:grid;grid-template-columns:1fr 80px 1fr 80px 1fr;align-items:center;gap:0;margin:16px 0}
+.mcp-col{display:flex;flex-direction:column;gap:8px}
+.mcp-box{padding:12px;border-radius:8px;border:1px solid var(--border);text-align:center;font-size:.82rem;transition:all .4s;cursor:pointer}
+.mcp-box:hover{border-color:var(--accent1)}
+.mcp-box.lit{box-shadow:0 0 16px var(--accent1-glow);border-color:var(--accent1)}
+.mcp-box .mcp-label{font-family:var(--font-mono);font-size:.65rem;color:var(--text-dim);margin-top:4px}
+.mcp-connector{text-align:center;color:var(--text-dim);font-size:1.4rem}
+
+/* SDK timeline */
+.sdk-timeline{position:relative;padding-left:32px;margin:16px 0}
+.sdk-timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:var(--border)}
+.sdk-step{position:relative;margin-bottom:20px;padding:14px;border-radius:10px;border:1px solid var(--border);background:var(--surface);transition:all .4s;cursor:pointer}
+.sdk-step:hover{border-color:var(--accent1)}
+.sdk-step.active{border-color:var(--accent4);background:rgba(16,185,129,.06)}
+.sdk-step::before{content:'';position:absolute;left:-24px;top:18px;width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .4s}
+.sdk-step.active::before{background:var(--accent4)}
+.sdk-step .step-title{font-weight:600;font-size:.9rem}
+.sdk-step .step-detail{font-size:.82rem;color:var(--text-dim);margin-top:4px}
+.sdk-step code{font-family:var(--font-mono);font-size:.78rem;background:rgba(0,0,0,.3);padding:1px 5px;border-radius:3px;color:var(--accent2)}
+
+@media(max-width:700px){
+  .explainer{grid-template-columns:1fr}
+  .vault{grid-template-columns:1fr}
+  .flow-diagram{flex-direction:column;align-items:center}
+  .flow-arrow{transform:rotate(90deg)}
+  .mcp-grid{grid-template-columns:1fr;gap:12px}
+  .mcp-connector{transform:rotate(90deg)}
+}
+
+.footer{text-align:center;padding:60px 24px;color:var(--text-dim);font-size:.85rem;border-top:1px solid var(--border);margin-top:80px}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="hero">
+  <div class="hero-badge">Batch 2 of 3 · Generative AI Engineering Curriculum</div>
+  <h1>From Chatbot to <span>Action Machine</span></h1>
+  <p>Phases 4–6: Where LLMs stop just talking and start actually doing things — tool use, MCP, and production SDKs.</p>
+  <nav class="hero-nav">
+    <a href="#phase4"><span class="num">04</span> Tool Use</a>
+    <a href="#phase5"><span class="num">05</span> MCP</a>
+    <a href="#phase6"><span class="num">06</span> SDKs</a>
+  </nav>
+</section>
+
+<!-- ═══════════════════ PHASE 4: TOOL USE ═══════════════════ -->
+<section class="phase" id="phase4">
+  <div class="phase-header">
+    <div class="phase-num">Phase 04</div>
+    <h2>Tool <span class="serif">Use</span></h2>
+    <div class="phase-meta">
+      <span class="tag">Tool Calling</span><span class="tag">APIs</span><span class="tag">Database Queries</span>
+      <span class="tag">File Access</span><span class="tag">Web Search</span><span class="tag">Workflow Actions</span>
+    </div>
+  </div>
+
+  <!-- Module: Tool Calling Fundamentals -->
+  <div class="module open" id="mod-toolcalling">
+    <div class="module-head" onclick="toggleModule(this)">
+      <div class="icon">🔧</div>
+      <div class="title">
+        <h3>Tool Calling — From Talk to Action</h3>
+        <div class="sub">How LLMs decide when and how to invoke external functions</div>
+      </div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="module-body content">
+      <div class="section-label">🏛 History & Origin</div>
+      <p>OpenAI introduced <strong>function calling</strong> in June 2023 as an extension to the Chat Completions API. The breakthrough insight: instead of trying to make the model execute code (which it can't), let it output <strong>structured JSON</strong> describing which function to call and with what arguments. The orchestration layer then executes the function and feeds the result back. Anthropic shipped tool use for Claude shortly after. By 2025, every major LLM provider supported it, and the concept had evolved into the foundation of all agentic AI systems.</p>
+
+      <div class="section-label">🔧 The "Why" & "What"</div>
+      <p><strong>Critical misconception:</strong> LLMs do NOT execute functions. They are next-token predictors. When "calling a tool," the model outputs tokens in a structured format (JSON) that the surrounding code interprets as a function invocation. The code executes the function and passes the result back as new context.</p>
+      <p><strong>The 5-step loop:</strong> (1) User asks a question → (2) LLM receives query + tool definitions (JSON schemas) → (3) LLM outputs a structured tool call → (4) Your code executes the function → (5) Result is fed back to the LLM, which generates a final response.</p>
+      <p><strong>Why it matters for GenAI:</strong> Tool calling is what transforms an LLM from a text generator into an agent. It can search the web, query databases, read files, send emails, update CRMs, create tickets — anything you can wrap in a function.</p>
+
+      <div class="section-label">💥 Impact & Counterfactual</div>
+      <p><strong>Real-world uses:</strong> Customer support bots that look up orders, coding assistants that run tests, research agents that search the web and synthesize findings, data analysts that query databases with natural language.</p>
+      <p><strong>Without tool calling:</strong> LLMs would be trapped inside their training data. They couldn't check the weather, look up a stock price, or tell you the status of your order. They'd be brilliant librarians locked in a room with no books.</p>
+
+      <div class="section-label">⚔️ Alternatives</div>
+      <p><strong>Before tool calling:</strong> Developers used regex parsing of free-text responses (fragile), fine-tuned models for specific tasks (expensive), or multi-model pipelines with classifiers (complex). Tool calling unified all of this into one clean pattern.</p>
+
+      <div class="section-label">🧠 Multi-Level Explainer</div>
+      <div class="explainer">
+        <div class="explainer-box layman">
+          <div class="label">Layman's Terms</div>
+          <p>Imagine you hire a brilliant consultant who knows everything about strategy but can't use a phone. Tool calling is like giving them a phone and a contact list. They can now say "Call the sales department and ask for Q3 numbers" — they don't make the call themselves, but they know exactly who to call and what to ask.</p>
+        </div>
+        <div class="explainer-box el5">
+          <div class="label">Explain Like I'm 10</div>
+          <p>Picture a super-smart kid in a game show. They know the answer to everything, but sometimes the answer isn't in their head — it's in a locked box. Tool calling is giving them keys to different boxes: one for math, one for weather, one for finding things online. They pick the right key, open the box, read what's inside, and give you the answer!</p>
+        </div>
+      </div>
+
+      <div class="section-label">📚 Resource Vault</div>
+      <div class="vault">
+        <a href="https://www.youtube.com/watch?v=LPZh9BOjkQs" target="_blank">
+          <div class="v-icon">🎬</div>
+          <div><div class="v-label">YouTube · Andrej Karpathy</div><div class="v-title">How I Use LLMs (tool use deep-dive at 31:00)</div></div>
+        </a>
+        <a href="https://martinfowler.com/articles/function-call-LLM.html" target="_blank">
+          <div class="v-icon">📖</div>
+          <div><div class="v-label">Article · Martin Fowler</div><div class="v-title">Function Calling Using LLMs — Definitive Guide</div></div>
+        </a>
+        <a href="https://platform.openai.com/docs/guides/function-calling" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · OpenAI</div><div class="v-title">Function Calling Guide</div></div>
+        </a>
+        <a href="https://docs.anthropic.com/en/docs/build-with-claude/tool-use/overview" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · Anthropic</div><div class="v-title">Claude Tool Use Overview</div></div>
+        </a>
+      </div>
+
+      <div class="section-label">🎮 Interactive Simulator — Tool Call Flow Visualizer</div>
+      <div class="sim-container">
+        <div class="sim-bar">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span>tool_call_simulator.py</span>
+        </div>
+        <div class="sim-canvas" id="sim-toolcall">
+          <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:12px;">Select a user query to watch the complete tool-calling loop animate step by step.</p>
+          <div class="slider-row">
+            <label>User Query</label>
+            <select id="tc-query" class="sim-select" onchange="resetToolFlow()">
+              <option value="weather">What's the weather in Houston?</option>
+              <option value="stock">What's Tesla's stock price?</option>
+              <option value="db">How many orders shipped last week?</option>
+              <option value="email">Send a follow-up email to Sarah</option>
+            </select>
+          </div>
+          <button class="sim-btn" onclick="runToolFlow()" style="margin-bottom:16px">▶ Run Tool Call Loop</button>
+
+          <div class="flow-diagram" id="tc-flow">
+            <div class="flow-node" id="tc-n1" style="border-color:var(--accent1)">
+              👤 User Query<div class="fn">input</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node" id="tc-n2" style="border-color:var(--accent5)">
+              🧠 LLM Decides<div class="fn">tool selection</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node" id="tc-n3" style="border-color:var(--accent3)">
+              ⚡ Execute Tool<div class="fn">your code runs</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node" id="tc-n4" style="border-color:var(--accent2)">
+              📋 Return Result<div class="fn">feed to LLM</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node" id="tc-n5" style="border-color:var(--accent4)">
+              💬 Final Answer<div class="fn">response</div>
+            </div>
+          </div>
+          <div class="sim-output" id="tc-output">Select a query and click "Run" to visualize the tool call loop…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Module: Tool Types -->
+  <div class="module" id="mod-tooltypes">
+    <div class="module-head" onclick="toggleModule(this)">
+      <div class="icon">🗂</div>
+      <div class="title">
+        <h3>Tool Types — APIs, Databases, Files & Web</h3>
+        <div class="sub">The different categories of tools an LLM can leverage</div>
+      </div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="module-body content">
+      <div class="section-label">🔧 The "Why" & "What"</div>
+      <p><strong>API Tools:</strong> The most common type. Wrap any REST or GraphQL API as a tool — weather services, CRM lookups, payment processing, shipping tracking. The LLM generates the right parameters and your code makes the HTTP call.</p>
+      <p><strong>Database Tools:</strong> Let the LLM generate SQL queries against your databases. A user asks "What were our top 5 products last month?" and the LLM writes <code>SELECT product, SUM(revenue) FROM sales WHERE date >= '2026-03-01' GROUP BY product ORDER BY 2 DESC LIMIT 5</code>.</p>
+      <p><strong>File Access Tools:</strong> Read documents, parse PDFs, analyze CSVs, write reports. Critical for document-heavy workflows like legal review, financial analysis, or research synthesis.</p>
+      <p><strong>Web Search Tools:</strong> Give the LLM real-time access to the internet. It can search for current events, verify facts, find pricing, and research competitors. Both OpenAI and Anthropic offer built-in web search tools.</p>
+      <p><strong>Workflow/Action Tools:</strong> The most powerful category — tools that actually DO things. Send emails, create Jira tickets, update Salesforce records, deploy code, schedule meetings. These turn chatbots into digital coworkers.</p>
+
+      <div class="section-label">🧠 Multi-Level Explainer</div>
+      <div class="explainer">
+        <div class="explainer-box layman">
+          <div class="label">Layman's Terms</div>
+          <p>Think of tools as the AI's Swiss Army knife. An API tool is like a phone (it can call services). A database tool is like a filing cabinet key. A web tool is like a browser. An action tool is like a remote control — it can actually press buttons in your software systems.</p>
+        </div>
+        <div class="explainer-box el5">
+          <div class="label">Explain Like I'm 10</div>
+          <p>Imagine your robot has different attachments: a magnifying glass (search), a calculator (math), a walkie-talkie (send messages), and a drill (build things). Depending on what you ask, it snaps on the right tool and gets to work!</p>
+        </div>
+      </div>
+
+      <div class="section-label">📚 Resource Vault</div>
+      <div class="vault">
+        <a href="https://www.promptingguide.ai/applications/function_calling" target="_blank">
+          <div class="v-icon">📖</div>
+          <div><div class="v-label">Guide · Prompting Guide</div><div class="v-title">Function Calling with LLMs — Complete Walkthrough</div></div>
+        </a>
+        <a href="https://docs.anthropic.com/en/docs/build-with-claude/tool-use/overview" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · Anthropic</div><div class="v-title">Tool Use Patterns & Best Practices</div></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PHASE 5: MCP ═══════════════════ -->
+<section class="phase" id="phase5">
+  <div class="phase-header">
+    <div class="phase-num">Phase 05</div>
+    <h2>Model Context <span class="serif">Protocol</span></h2>
+    <div class="phase-meta">
+      <span class="tag">MCP Clients</span><span class="tag">MCP Servers</span><span class="tag">Tool Exposure</span>
+      <span class="tag">Context Sharing</span><span class="tag">Permissions</span>
+    </div>
+  </div>
+
+  <!-- Module: MCP Fundamentals -->
+  <div class="module open" id="mod-mcp">
+    <div class="module-head" onclick="toggleModule(this)">
+      <div class="icon">🔌</div>
+      <div class="title">
+        <h3>MCP — The USB-C of AI</h3>
+        <div class="sub">The open protocol that standardizes how AI connects to everything</div>
+      </div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="module-body content">
+      <div class="section-label">🏛 History & Origin</div>
+      <p><strong>Anthropic introduced MCP in November 2024</strong> as an open-source protocol, initially targeting Claude Desktop. The genius was solving the <strong>N×M integration problem</strong>: if you have 3 AI models and 10 tools, you'd traditionally need 30 custom integrations. MCP reduces this to 3 clients + 10 servers = 13 total components, each built once and reusable everywhere.</p>
+      <p>Adoption was explosive. By March 2025, OpenAI officially adopted MCP. Google DeepMind and Microsoft followed. By December 2025, Anthropic donated MCP to the <strong>Agentic AI Foundation (AAIF)</strong> under the Linux Foundation, co-founded by Anthropic, Block, and OpenAI. As of early 2026, MCP has reached 97 million monthly SDK downloads with over 5,800 community-built servers.</p>
+
+      <div class="section-label">🔧 The "Why" & "What"</div>
+      <p><strong>The Problem ("Context Starvation"):</strong> LLMs are incredibly capable but isolated from real-world data and systems. A model that can't read your codebase, check your calendar, or query your database is limited to operating on whatever text you paste into a prompt.</p>
+      <p><strong>How MCP Works:</strong> It's a client-server protocol built on <strong>JSON-RPC 2.0</strong>. The architecture has three layers:</p>
+      <p><strong>1. Host:</strong> The AI application (Claude Desktop, Cursor, VS Code) that contains the MCP client.<br>
+      <strong>2. Client:</strong> Maintains a 1:1 connection to an MCP server, handling protocol negotiation and message routing.<br>
+      <strong>3. Server:</strong> A lightweight program that exposes capabilities via three primitives: <strong>Tools</strong> (functions the model can invoke), <strong>Resources</strong> (data the model can read), and <strong>Prompts</strong> (pre-crafted instruction templates).</p>
+
+      <div class="section-label">💥 Impact & Counterfactual</div>
+      <p><strong>Real-world impact:</strong> Claude Code can generate an entire web app from a Figma design (via MCP). Enterprise chatbots connect to multiple databases across an organization. AI coding assistants access GitHub, Jira, and CI/CD pipelines through a single standard protocol.</p>
+      <p><strong>Without MCP:</strong> Every AI app would need custom integrations for every tool. Switching from OpenAI to Claude would mean rebuilding all your connectors. The ecosystem would be fragmented, slow, and expensive — exactly where we were before November 2024.</p>
+
+      <div class="section-label">⚔️ Alternatives</div>
+      <p><strong>Before MCP:</strong> OpenAI's ChatGPT plugin system (2023, now deprecated), custom REST wrappers per tool, LangChain tool abstractions (framework-specific, not universal). <strong>Current competitors:</strong> Google's A2A (Agent-to-Agent) protocol focuses on agent-to-agent communication rather than tool connectivity, making it complementary rather than competitive.</p>
+
+      <div class="section-label">🧠 Multi-Level Explainer</div>
+      <div class="explainer">
+        <div class="explainer-box layman">
+          <div class="label">Layman's Terms</div>
+          <p>MCP is USB-C for AI. Before USB-C, every phone maker had a different charger — MagSafe, Micro-USB, Lightning. Now one cable charges everything. MCP does the same for AI: one protocol connects any AI model to any tool — your calendar, your database, your CRM, your code editor. Build the connector once, use it with every AI system.</p>
+        </div>
+        <div class="explainer-box el5">
+          <div class="label">Explain Like I'm 10</div>
+          <p>Imagine every game console used a different TV cable — one for PlayStation, one for Xbox, one for Nintendo. That would be so annoying! MCP is like making one magic cable that works with ALL consoles and ALL TVs. Now your AI "console" can plug into any "TV" (tool) without needing a special cable each time.</p>
+        </div>
+      </div>
+
+      <div class="section-label">📚 Resource Vault</div>
+      <div class="vault">
+        <a href="https://modelcontextprotocol.io/" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · Official</div><div class="v-title">Model Context Protocol — Official Documentation</div></div>
+        </a>
+        <a href="https://anthropic.skilljar.com/introduction-to-model-context-protocol" target="_blank">
+          <div class="v-icon">🎓</div>
+          <div><div class="v-label">Course · Anthropic</div><div class="v-title">Introduction to MCP — Free Course</div></div>
+        </a>
+        <a href="https://github.com/modelcontextprotocol" target="_blank">
+          <div class="v-icon">💻</div>
+          <div><div class="v-label">GitHub · MCP</div><div class="v-title">Official SDKs, Servers & Specification</div></div>
+        </a>
+        <a href="https://www.sitepoint.com/model-context-protocol-mcp/" target="_blank">
+          <div class="v-icon">📖</div>
+          <div><div class="v-label">Tutorial · SitePoint</div><div class="v-title">MCP Protocol Tutorial — Full Implementation Guide</div></div>
+        </a>
+      </div>
+
+      <div class="section-label">🎮 Interactive Simulator — MCP Architecture Explorer</div>
+      <div class="sim-container">
+        <div class="sim-bar">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span>mcp_architecture.py</span>
+        </div>
+        <div class="sim-canvas" id="sim-mcp">
+          <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:12px;">Click any MCP server (right column) to see how the request flows from Host → Client → Server and back.</p>
+
+          <div class="mcp-grid">
+            <!-- Hosts -->
+            <div class="mcp-col">
+              <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--accent1);letter-spacing:2px;text-align:center;margin-bottom:4px">HOSTS</div>
+              <div class="mcp-box" id="mcp-h1" style="border-color:rgba(139,92,246,.3)">🤖 Claude Desktop<div class="mcp-label">MCP Client built-in</div></div>
+              <div class="mcp-box" id="mcp-h2" style="border-color:rgba(139,92,246,.3)">💻 Cursor IDE<div class="mcp-label">MCP Client built-in</div></div>
+              <div class="mcp-box" id="mcp-h3" style="border-color:rgba(139,92,246,.3)">🌐 Your App<div class="mcp-label">MCP Client via SDK</div></div>
+            </div>
+
+            <div class="mcp-connector">⟷<br><span style="font-size:.6rem">JSON-RPC</span></div>
+
+            <!-- Protocol Layer -->
+            <div class="mcp-col">
+              <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--accent2);letter-spacing:2px;text-align:center;margin-bottom:4px">MCP PROTOCOL</div>
+              <div class="mcp-box" id="mcp-p1" style="border-color:rgba(6,182,212,.3)">🔧 Tools<div class="mcp-label">model-controlled functions</div></div>
+              <div class="mcp-box" id="mcp-p2" style="border-color:rgba(6,182,212,.3)">📄 Resources<div class="mcp-label">app-controlled data</div></div>
+              <div class="mcp-box" id="mcp-p3" style="border-color:rgba(6,182,212,.3)">💬 Prompts<div class="mcp-label">user-controlled templates</div></div>
+            </div>
+
+            <div class="mcp-connector">⟷<br><span style="font-size:.6rem">JSON-RPC</span></div>
+
+            <!-- Servers -->
+            <div class="mcp-col">
+              <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--accent4);letter-spacing:2px;text-align:center;margin-bottom:4px">MCP SERVERS</div>
+              <div class="mcp-box" id="mcp-s1" style="border-color:rgba(16,185,129,.3)" onclick="mcpClick('github')">🐙 GitHub<div class="mcp-label">repos, issues, PRs</div></div>
+              <div class="mcp-box" id="mcp-s2" style="border-color:rgba(16,185,129,.3)" onclick="mcpClick('slack')">💬 Slack<div class="mcp-label">messages, channels</div></div>
+              <div class="mcp-box" id="mcp-s3" style="border-color:rgba(16,185,129,.3)" onclick="mcpClick('postgres')">🗄 PostgreSQL<div class="mcp-label">queries, schemas</div></div>
+              <div class="mcp-box" id="mcp-s4" style="border-color:rgba(16,185,129,.3)" onclick="mcpClick('filesystem')">📁 File System<div class="mcp-label">read, write, search</div></div>
+            </div>
+          </div>
+
+          <div class="sim-output" id="mcp-output">Click an MCP Server to see the request/response flow…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Module: Building MCP Servers -->
+  <div class="module" id="mod-mcp-build">
+    <div class="module-head" onclick="toggleModule(this)">
+      <div class="icon">🏗</div>
+      <div class="title">
+        <h3>Building MCP Clients & Servers</h3>
+        <div class="sub">Hands-on: Creating your own MCP server with the Python SDK</div>
+      </div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="module-body content">
+      <div class="section-label">🔧 The "Why" & "What"</div>
+      <p><strong>MCP Servers</strong> are lightweight programs that expose tools, resources, and prompts. Using the official Python SDK, you define tools with simple decorators — no manual JSON schema writing required. The SDK handles protocol negotiation, message routing, and transport.</p>
+      <p><strong>MCP Clients</strong> connect to servers and make their capabilities available to the host application. In production, you'll typically use a host that already has a client built in (Claude Desktop, Cursor), but for custom apps, you build the client with the SDK.</p>
+      <p><strong>Transport:</strong> MCP is transport-agnostic. It supports <strong>stdio</strong> (for local processes), <strong>SSE</strong> (server-sent events over HTTP), and <strong>WebSocket</strong>. Most local tools use stdio; remote services use SSE.</p>
+      <p><strong>Security considerations:</strong> Prompt injection through malicious server responses is a real risk. Always validate tool outputs, enforce permission boundaries, and use OAuth 2.1 for remote authentication (shipping in MCP's 2026 roadmap).</p>
+
+      <div class="section-label">📚 Resource Vault</div>
+      <div class="vault">
+        <a href="https://github.com/modelcontextprotocol/python-sdk" target="_blank">
+          <div class="v-icon">💻</div>
+          <div><div class="v-label">GitHub · MCP</div><div class="v-title">Official Python SDK (22K+ stars)</div></div>
+        </a>
+        <a href="https://modelcontextprotocol.io/quickstart/server" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Quickstart · MCP</div><div class="v-title">Build Your First MCP Server</div></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PHASE 6: SDKs ═══════════════════ -->
+<section class="phase" id="phase6">
+  <div class="phase-header">
+    <div class="phase-num">Phase 06</div>
+    <h2>Agent <span class="serif">SDKs</span></h2>
+    <div class="phase-meta">
+      <span class="tag">OpenAI Agents SDK</span><span class="tag">Orchestration</span><span class="tag">Handoffs</span>
+      <span class="tag">Traces</span><span class="tag">Tool Schemas</span><span class="tag">LangChain/LangGraph</span>
+    </div>
+  </div>
+
+  <!-- Module: OpenAI Agents SDK -->
+  <div class="module open" id="mod-agentsdk">
+    <div class="module-head" onclick="toggleModule(this)">
+      <div class="icon">🚀</div>
+      <div class="title">
+        <h3>OpenAI Agents SDK & Orchestration</h3>
+        <div class="sub">The production-ready framework for building multi-agent workflows</div>
+      </div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="module-body content">
+      <div class="section-label">🏛 History & Origin</div>
+      <p>The OpenAI Agents SDK evolved from <strong>Swarm</strong>, an experimental multi-agent framework OpenAI released in October 2024. Swarm proved the pattern — lightweight agents with instructions, tools, and handoffs — but wasn't production-ready. In March 2025, OpenAI launched the <strong>Agents SDK</strong> alongside the Responses API, offering the same simplicity with production-grade features: built-in tracing, guardrails, sessions, and provider-agnostic design (it works with 100+ LLMs via LiteLLM).</p>
+      <p>By early 2026, OpenAI added <strong>Agent Builder</strong> (visual drag-and-drop), <strong>ChatKit</strong> (frontend toolkit), and <strong>Realtime Agents</strong> for voice. The legacy Assistants API is sunset in August 2026, making the Agents SDK the standard path forward.</p>
+
+      <div class="section-label">🔧 The "Why" & "What"</div>
+      <p><strong>Core Primitives:</strong></p>
+      <p><strong>Agents:</strong> LLMs configured with instructions, tools, and optional guardrails. Think of each agent as a specialist: one for research, one for coding, one for customer support.</p>
+      <p><strong>Handoffs:</strong> Let agents delegate to other agents. A triage agent might hand off to a billing agent or a technical support agent based on the user's issue. Handoffs carry full context.</p>
+      <p><strong>Guardrails:</strong> Input/output validators that run before or after the LLM responds. They catch policy violations, sensitive data leaks, or off-topic responses.</p>
+      <p><strong>Tracing:</strong> Built-in observability that logs every step — agent decisions, tool calls, handoffs, guardrail checks. Traces feed into OpenAI's dashboard for debugging, evaluation, and fine-tuning.</p>
+      <p><strong>Sessions:</strong> Persistent conversation state across turns. No more manually appending chat history — the SDK manages it automatically via SQLite or server-side storage.</p>
+
+      <div class="section-label">💥 Impact & Counterfactual</div>
+      <p><strong>Without agent SDKs:</strong> You'd be manually managing conversation history, writing custom routing logic, building your own tracing infrastructure, and handling state across turns. A 2023-era "agent" was 500+ lines of glue code. With the Agents SDK, the same thing is ~30 lines.</p>
+
+      <div class="section-label">⚔️ Alternatives</div>
+      <p><strong>LangChain/LangGraph:</strong> More mature ecosystem, excellent for complex workflows with cycles and conditional logic. Heavier abstraction layer. <strong>LlamaIndex:</strong> RAG-first, best for retrieval-heavy applications. <strong>CrewAI:</strong> Role-based multi-agent patterns, great for team simulations. <strong>Autogen:</strong> Microsoft's multi-agent conversation framework.</p>
+
+      <div class="section-label">🧠 Multi-Level Explainer</div>
+      <div class="explainer">
+        <div class="explainer-box layman">
+          <div class="label">Layman's Terms</div>
+          <p>The Agents SDK is a construction kit for AI workers. Instead of building an entire factory from raw materials, you get pre-made components: workers (agents) that know their job, a dispatch system (handoffs) that routes tasks to the right worker, a security team (guardrails) that checks everything, and cameras (tracing) that record what happens for debugging.</p>
+        </div>
+        <div class="explainer-box el5">
+          <div class="label">Explain Like I'm 10</div>
+          <p>Imagine a team of robot helpers. One knows about math, one about cooking, one about cleaning. The Agents SDK is the instruction manual that tells them how to work together. When someone asks about food, the team captain says "that's a job for the cooking robot!" and hands it over. If the cooking robot needs ingredients, it asks the shopping robot. They all work as a team!</p>
+        </div>
+      </div>
+
+      <div class="section-label">📚 Resource Vault</div>
+      <div class="vault">
+        <a href="https://openai.github.io/openai-agents-python/" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · OpenAI</div><div class="v-title">Agents SDK — Official Documentation</div></div>
+        </a>
+        <a href="https://github.com/openai/openai-agents-python" target="_blank">
+          <div class="v-icon">💻</div>
+          <div><div class="v-label">GitHub · OpenAI</div><div class="v-title">OpenAI Agents SDK — Source Code & Examples</div></div>
+        </a>
+        <a href="https://cookbook.openai.com/topic/agents" target="_blank">
+          <div class="v-icon">📖</div>
+          <div><div class="v-label">Cookbook · OpenAI</div><div class="v-title">Agent Recipes — Context Engineering, Sessions & More</div></div>
+        </a>
+        <a href="https://python.langchain.com/docs/introduction/" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · LangChain</div><div class="v-title">LangChain Python — Getting Started</div></div>
+        </a>
+      </div>
+
+      <div class="section-label">🎮 Interactive Simulator — Agent Workflow Builder</div>
+      <div class="sim-container">
+        <div class="sim-bar">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span>agent_workflow_builder.py</span>
+        </div>
+        <div class="sim-canvas" id="sim-sdk">
+          <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:12px;">Click each step to trace through a multi-agent workflow — from triage to specialized agent to final response.</p>
+
+          <div class="slider-row">
+            <label>Scenario</label>
+            <select id="sdk-scenario" class="sim-select" onchange="resetSDK()">
+              <option value="support">Customer Support Triage</option>
+              <option value="research">Research & Report</option>
+              <option value="code">Code Review Pipeline</option>
+            </select>
+          </div>
+          <button class="sim-btn" onclick="runSDKFlow()" style="margin-bottom:16px">▶ Run Agent Workflow</button>
+
+          <div class="sdk-timeline" id="sdk-timeline"></div>
+          <div class="sim-output" id="sdk-output">Select a scenario and click "Run" to trace the agent workflow…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Module: LangChain & LangGraph -->
+  <div class="module" id="mod-langchain">
+    <div class="module-head" onclick="toggleModule(this)">
+      <div class="icon">🔗</div>
+      <div class="title">
+        <h3>LangChain, LangGraph & LlamaIndex</h3>
+        <div class="sub">The broader orchestration ecosystem — chains, graphs, and retrieval</div>
+      </div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="module-body content">
+      <div class="section-label">🏛 History & Origin</div>
+      <p><strong>LangChain</strong> was created by Harrison Chase in October 2022, less than a month before ChatGPT launched. It became the first widely-adopted framework for building LLM applications, introducing the concept of "chains" — composable sequences of LLM calls, tool uses, and data transformations. <strong>LangGraph</strong> (2024) extended this with a graph-based execution model for cyclic, stateful workflows — essential for agents that loop and branch. <strong>LlamaIndex</strong> by Jerry Liu (originally GPT Index, 2022) focused specifically on connecting LLMs to data — the definitive framework for RAG systems.</p>
+
+      <div class="section-label">🔧 The "Why" & "What"</div>
+      <p><strong>LangChain:</strong> Best for linear and branching workflows. Its LCEL (LangChain Expression Language) provides clean syntax for composing retrieval, prompting, and output parsing. Strong for RAG pipelines, extraction chains, and structured output workflows.</p>
+      <p><strong>LangGraph:</strong> The agent-building layer. Uses directed graphs with nodes (functions) and edges (routing logic). Supports cycles (agent loops), persistence (state checkpoints), and human-in-the-loop patterns. Ideal for multi-step agents that need to iterate.</p>
+      <p><strong>LlamaIndex:</strong> The data framework. Best-in-class for ingesting documents from 160+ sources, chunking, indexing, and retrieving. If your application is primarily about connecting an LLM to data, LlamaIndex is often the fastest path.</p>
+
+      <div class="section-label">🧠 Multi-Level Explainer</div>
+      <div class="explainer">
+        <div class="explainer-box layman">
+          <div class="label">Layman's Terms</div>
+          <p>LangChain is like a recipe cookbook — it gives you step-by-step instructions for combining AI ingredients. LangGraph is a flow chart builder — when decisions need to loop back or branch, it handles the complexity. LlamaIndex is a librarian — it's the best at organizing and finding information in your documents so the AI can use it.</p>
+        </div>
+        <div class="explainer-box el5">
+          <div class="label">Explain Like I'm 10</div>
+          <p>LangChain is like train tracks — it moves your AI from station to station in order. LangGraph is like a choose-your-own-adventure book — the AI can go different directions and even loop back. LlamaIndex is like a super-organized binder with tabs — it helps the AI find the exact page of information it needs!</p>
+        </div>
+      </div>
+
+      <div class="section-label">📚 Resource Vault</div>
+      <div class="vault">
+        <a href="https://python.langchain.com/docs/introduction/" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · LangChain</div><div class="v-title">LangChain Python Introduction</div></div>
+        </a>
+        <a href="https://langchain-ai.github.io/langgraph/" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · LangGraph</div><div class="v-title">Build Stateful Agents with LangGraph</div></div>
+        </a>
+        <a href="https://docs.llamaindex.ai/en/stable/" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · LlamaIndex</div><div class="v-title">LlamaIndex — Data Framework for LLMs</div></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<div class="footer">
+  <p>GenAI Engineering Curriculum · Batch 2 of 3 · Phases 4–6 Complete</p>
+  <p style="margin-top:8px">Say <strong>"Continue"</strong> for Batch 3: Phases 7–8 (Agentic AI, Production) + Tech Stack Deep-Dive</p>
+</div>
+
+<script>
+// ═══════════════════ MODULE TOGGLE ═══════════════════
+function toggleModule(head){head.closest('.module').classList.toggle('open')}
+
+// ═══════════════════ TOOL CALL FLOW ═══════════════════
+const tcScenarios = {
+  weather: {
+    query: "What's the weather in Houston?",
+    tool: "get_current_weather",
+    args: '{"location":"Houston, TX","unit":"fahrenheit"}',
+    result: '{"temperature":82,"condition":"partly cloudy","humidity":65}',
+    answer: "It's currently 82°F and partly cloudy in Houston with 65% humidity."
+  },
+  stock: {
+    query: "What's Tesla's stock price?",
+    tool: "get_stock_price",
+    args: '{"symbol":"TSLA"}',
+    result: '{"price":248.53,"change":"+3.21","pct":"+1.31%"}',
+    answer: "Tesla (TSLA) is currently at $248.53, up $3.21 (+1.31%) today."
+  },
+  db: {
+    query: "How many orders shipped last week?",
+    tool: "query_database",
+    args: '{"sql":"SELECT COUNT(*) FROM orders WHERE status=\'shipped\' AND ship_date >= \'2026-03-29\'"}',
+    result: '{"count":1847}',
+    answer: "1,847 orders were shipped last week (March 29 – April 4)."
+  },
+  email: {
+    query: "Send a follow-up email to Sarah",
+    tool: "send_email",
+    args: '{"to":"sarah@company.com","subject":"Following up on our discussion","body":"Hi Sarah, ..."}',
+    result: '{"status":"sent","message_id":"msg_abc123"}',
+    answer: "Done! I've sent the follow-up email to sarah@company.com."
+  }
+};
+
+function resetToolFlow(){
+  ['tc-n1','tc-n2','tc-n3','tc-n4','tc-n5'].forEach(id=>document.getElementById(id).classList.remove('active'));
+  document.getElementById('tc-output').textContent='Select a query and click "Run" to visualize the tool call loop…';
+}
+
+function runToolFlow(){
+  const q=document.getElementById('tc-query').value;
+  const s=tcScenarios[q];
+  const nodes=['tc-n1','tc-n2','tc-n3','tc-n4','tc-n5'];
+  const out=document.getElementById('tc-output');
+  nodes.forEach(id=>document.getElementById(id).classList.remove('active'));
+
+  const steps=[
+    {node:'tc-n1',text:`👤 USER: "${s.query}"\n\n   + Attached tool definitions (JSON schemas)\n   Sending to LLM…`},
+    {node:'tc-n2',text:`🧠 LLM DECIDES to call a tool:\n\n   Tool: ${s.tool}\n   Arguments: ${s.args}\n\n   ⚠ Note: LLM does NOT execute this.\n   It outputs structured JSON for YOUR code to handle.`},
+    {node:'tc-n3',text:`⚡ YOUR CODE EXECUTES the function:\n\n   ${s.tool}(${s.args})\n\n   Making external API call…\n   Waiting for response…`},
+    {node:'tc-n4',text:`📋 TOOL RESULT returned to LLM:\n\n   ${s.result}\n\n   LLM now has the data it needs.\n   Generating final response…`},
+    {node:'tc-n5',text:`💬 FINAL ANSWER:\n\n   "${s.answer}"\n\n   ✅ Complete! The LLM used real-time data\n   from an external tool to answer accurately.`}
+  ];
+
+  let delay=0;
+  steps.forEach((step,i)=>{
+    setTimeout(()=>{
+      if(i>0)document.getElementById(nodes[i-1]).classList.remove('active');
+      document.getElementById(step.node).classList.add('active');
+      out.textContent=step.text;
+    },delay);
+    delay+=1200;
+  });
+}
+
+// ═══════════════════ MCP ARCHITECTURE ═══════════════════
+const mcpScenarios={
+  github:{server:'GitHub',icon:'🐙',
+    flow:`🔌 MCP REQUEST FLOW: GitHub Server\n\n1. HOST (Claude Desktop) receives: "List open PRs in my-repo"\n2. CLIENT discovers GitHub server's capabilities via tools/list\n3. CLIENT sends tools/call → github.list_pull_requests\n   {\n     "repo": "my-org/my-repo",\n     "state": "open"\n   }\n4. SERVER executes GitHub API call: GET /repos/my-org/my-repo/pulls\n5. SERVER returns structured result via JSON-RPC\n6. CLIENT feeds result to HOST → LLM generates response\n\n📋 Available MCP Primitives:\n   🔧 Tools: list_pull_requests, create_issue, search_code\n   📄 Resources: repo://my-org/my-repo/README.md\n   💬 Prompts: "Code review for {{file_path}}"`},
+  slack:{server:'Slack',icon:'💬',
+    flow:`🔌 MCP REQUEST FLOW: Slack Server\n\n1. HOST (Your App) receives: "Post a summary to #engineering"\n2. CLIENT discovers Slack server tools via tools/list\n3. CLIENT sends tools/call → slack.post_message\n   {\n     "channel": "#engineering",\n     "text": "Weekly summary: 12 PRs merged, 3 bugs fixed"\n   }\n4. SERVER calls Slack Web API: chat.postMessage\n5. SERVER returns: {"ok": true, "ts": "1712345678.000100"}\n6. LLM confirms: "Posted the summary to #engineering"\n\n📋 Available MCP Primitives:\n   🔧 Tools: post_message, search_messages, list_channels\n   📄 Resources: slack://channels/#engineering/recent\n   💬 Prompts: "Summarize thread {{thread_ts}}"`},
+  postgres:{server:'PostgreSQL',icon:'🗄',
+    flow:`🔌 MCP REQUEST FLOW: PostgreSQL Server\n\n1. HOST (Cursor) receives: "What tables have user data?"\n2. CLIENT connects to PostgreSQL MCP server (stdio transport)\n3. CLIENT first reads RESOURCE: postgres://schema/public\n   → Returns table list and column definitions\n4. CLIENT sends tools/call → postgres.query\n   {\n     "sql": "SELECT table_name FROM information_schema.columns\\n         WHERE column_name LIKE '%user%'"\n   }\n5. SERVER executes query (read-only by default)\n6. Results streamed back: users, user_sessions, user_preferences\n\n📋 Available MCP Primitives:\n   🔧 Tools: query (read-only), describe_table\n   📄 Resources: postgres://schema/{schema_name}\n   💬 Prompts: "Optimize query for {{table}}"`},
+  filesystem:{server:'File System',icon:'📁',
+    flow:`🔌 MCP REQUEST FLOW: File System Server\n\n1. HOST (Claude Code) receives: "Find all TODO comments"\n2. CLIENT connects to filesystem MCP server (stdio)\n3. CLIENT sends tools/call → fs.search_files\n   {\n     "path": "/project/src",\n     "pattern": "TODO",\n     "file_types": [".py", ".ts"]\n   }\n4. SERVER searches within allowed directories ONLY\n   ⚠ Security: Server is sandboxed to specified root paths\n5. Returns matches with file paths and line numbers\n6. LLM summarizes: "Found 23 TODOs across 8 files"\n\n📋 Available MCP Primitives:\n   🔧 Tools: read_file, write_file, search_files, list_dir\n   📄 Resources: file:///project/src/main.py\n   💬 Prompts: "Refactor {{file_path}} for readability"`}
+};
+
+function mcpClick(key){
+  const s=mcpScenarios[key];
+  document.querySelectorAll('.mcp-box').forEach(b=>b.classList.remove('lit'));
+  // Light up the flow
+  const serverMap={github:'mcp-s1',slack:'mcp-s2',postgres:'mcp-s3',filesystem:'mcp-s4'};
+  document.getElementById(serverMap[key]).classList.add('lit');
+  document.getElementById('mcp-h1').classList.add('lit');
+  document.getElementById('mcp-p1').classList.add('lit');
+  document.getElementById('mcp-output').textContent=s.flow;
+
+  setTimeout(()=>{
+    document.querySelectorAll('.mcp-box').forEach(b=>b.classList.remove('lit'));
+  },6000);
+}
+
+// ═══════════════════ SDK WORKFLOW ═══════════════════
+const sdkScenarios={
+  support:{
+    title:'Customer Support Triage',
+    steps:[
+      {title:'📥 Incoming Request',detail:'User: "I was charged twice for my subscription"',code:'Runner.run(triage_agent, user_message)'},
+      {title:'🧠 Triage Agent',detail:'Analyzes intent → classifies as "billing issue".\nDecides to handoff to billing specialist.',code:'Agent(name="Triage", instructions="Classify and route...")'},
+      {title:'🔀 Handoff → Billing Agent',detail:'Full context transferred. Billing agent receives the conversation history + classification.',code:'handoff(target=billing_agent, context=full_history)'},
+      {title:'🔧 Billing Agent + Tools',detail:'Calls lookup_subscription(user_id) tool.\nFinds duplicate charge. Calls initiate_refund().',code:'@function_tool\ndef lookup_subscription(user_id): ...'},
+      {title:'🛡 Guardrail Check',detail:'Output guardrail verifies: no PII leaked, refund amount matches, tone is professional.',code:'OutputGuardrail(validate_no_pii, validate_tone)'},
+      {title:'💬 Final Response',detail:'"I found the duplicate charge of $14.99 on March 28. I\'ve initiated a refund — you\'ll see it in 3-5 business days."',code:'result.final_output → send to user'}
+    ]
+  },
+  research:{
+    title:'Research & Report',
+    steps:[
+      {title:'📥 Research Request',detail:'User: "Compare Pinecone vs pgvector for our RAG system"',code:'Runner.run(research_lead, query)'},
+      {title:'🧠 Research Lead Agent',detail:'Creates a research plan. Delegates sub-tasks to specialist agents.',code:'Agent(name="ResearchLead", instructions="Plan and delegate...")'},
+      {title:'🔀 Handoff → Web Researcher',detail:'Searches for latest benchmarks, pricing, and case studies for both.',code:'handoff(target=web_agent, task="Find benchmarks...")'},
+      {title:'🔀 Handoff → Docs Analyst',detail:'Reads internal docs to understand current infrastructure and requirements.',code:'handoff(target=docs_agent, task="Analyze our stack...")'},
+      {title:'🔧 Synthesize Results',detail:'Research lead combines web findings + internal analysis into structured comparison.',code:'Agent combines tool_results from both sub-agents'},
+      {title:'💬 Final Report',detail:'Delivers a structured comparison table with recommendation and rationale, citing sources.',code:'result.final_output → formatted report'}
+    ]
+  },
+  code:{
+    title:'Code Review Pipeline',
+    steps:[
+      {title:'📥 PR Submitted',detail:'Developer pushes PR #423: "Add caching layer to API"',code:'Runner.run(review_agent, pr_diff)'},
+      {title:'🧠 Review Orchestrator',detail:'Reads the diff. Identifies files changed. Plans review strategy.',code:'Agent(name="ReviewBot", tools=[read_file, run_tests])'},
+      {title:'🔧 Run Test Suite',detail:'Calls run_tests() tool. All 147 tests pass. 2 new tests added.',code:'@function_tool\ndef run_tests(): subprocess.run(["pytest"])'},
+      {title:'🔧 Security Scan',detail:'Calls security_scan(diff) tool. No vulnerabilities found. 1 warning: missing input validation.',code:'@function_tool\ndef security_scan(code): ...'},
+      {title:'🛡 Guardrail: Style Check',detail:'Guardrail validates: code follows style guide, docstrings present, type hints complete.',code:'InputGuardrail(check_style_compliance)'},
+      {title:'💬 Review Posted',detail:'Posts review on GitHub: "LGTM with 1 suggestion: add input validation on the cache key parameter."',code:'post_github_review(pr=423, body=review)'}
+    ]
+  }
+};
+
+function resetSDK(){
+  document.getElementById('sdk-timeline').innerHTML='';
+  document.getElementById('sdk-output').textContent='Select a scenario and click "Run" to trace the agent workflow…';
+}
+
+function runSDKFlow(){
+  const key=document.getElementById('sdk-scenario').value;
+  const s=sdkScenarios[key];
+  const timeline=document.getElementById('sdk-timeline');
+  const out=document.getElementById('sdk-output');
+  timeline.innerHTML='';
+
+  // Build all steps
+  s.steps.forEach((step,i)=>{
+    const div=document.createElement('div');
+    div.className='sdk-step';
+    div.id='sdk-s-'+i;
+    div.innerHTML=`<div class="step-title">${step.title}</div><div class="step-detail">${step.detail}</div><div style="margin-top:6px"><code>${step.code}</code></div>`;
+    div.onclick=()=>{
+      document.querySelectorAll('.sdk-step').forEach(s=>s.classList.remove('active'));
+      div.classList.add('active');
+      out.textContent=`Step ${i+1}/${s.steps.length}: ${step.title}\n\n${step.detail}\n\nCode: ${step.code}`;
+    };
+    timeline.appendChild(div);
+  });
+
+  // Animate through steps
+  let delay=0;
+  s.steps.forEach((step,i)=>{
+    setTimeout(()=>{
+      document.querySelectorAll('.sdk-step').forEach(s=>s.classList.remove('active'));
+      document.getElementById('sdk-s-'+i).classList.add('active');
+      out.textContent=`▶ Step ${i+1}/${s.steps.length}: ${step.title}\n\n${step.detail}\n\n💻 ${step.code}`;
+    },delay);
+    delay+=1500;
+  });
+}
+</script>
+</body>
+</html>

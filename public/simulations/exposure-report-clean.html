@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exposure Report Explained — Oil Trading</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0a0e14;
+    --surface: #111820;
+    --surface2: #1a2332;
+    --border: #1e3a52;
+    --accent: #00c896;
+    --gold: #f5a623;
+    --danger: #ff4d6d;
+    --blue: #378ADD;
+    --text: #c8d8e8;
+    --text2: #6a8aaa;
+    --white: #e8f4ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,150,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,150,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; padding: 30px 20px; }
+
+  header {
+    text-align: center;
+    padding: 40px 20px 36px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 36px;
+  }
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(36px, 6vw, 60px);
+    color: var(--white);
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+  h1 span { color: var(--accent); }
+  .subtitle { font-size: 14px; color: var(--text2); margin-top: 8px; }
+
+  /* TAB NAV */
+  .tab-nav {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 30px;
+  }
+  .tnav {
+    padding: 16px 8px;
+    text-align: center;
+    cursor: pointer;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    background: var(--surface);
+    color: var(--text2);
+    border-right: 1px solid var(--border);
+    transition: all 0.2s;
+    line-height: 1.4;
+    user-select: none;
+  }
+  .tnav:last-child { border-right: none; }
+  .tnav .num {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+  }
+  .tnav:hover { background: var(--surface2); color: var(--text); }
+  .tnav.on {
+    background: var(--surface2);
+    color: var(--white);
+    border-bottom: 3px solid var(--blue);
+  }
+  .tnav.on .num { color: var(--blue); }
+
+  /* PANELS */
+  .panel { display: none; animation: fadeIn 0.25s ease; }
+  .panel.on { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(6px);} to {opacity:1; transform:translateY(0);} }
+
+  /* CALLOUT */
+  .callout {
+    border-left: 3px solid;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .c-blue  { border-color:var(--blue);   background:rgba(55,138,221,0.08);  color:var(--text); }
+  .c-amber { border-color:var(--gold);   background:rgba(245,166,35,0.08);  color:var(--text); }
+  .c-red   { border-color:var(--danger); background:rgba(255,77,109,0.08);  color:var(--text); }
+  .c-green { border-color:var(--accent); background:rgba(0,200,150,0.08);   color:var(--text); }
+  .c-blue  strong { color:#7ab8f0; }
+  .c-amber strong { color:var(--gold); }
+  .c-red   strong { color:var(--danger); }
+  .c-green strong { color:var(--accent); }
+
+  /* METRIC CARDS */
+  .metrow { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+  @media(max-width:600px){ .metrow{grid-template-columns:repeat(2,1fr);} .tab-nav{grid-template-columns:repeat(3,1fr);} }
+  .met { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; }
+  .met .ml { font-size:11px; color:var(--text2); font-family:'IBM Plex Mono',monospace; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+  .met .mv { font-size:20px; font-weight:500; }
+  .met .ms { font-size:11px; color:var(--text2); margin-top:5px; }
+
+  /* BAR ROWS */
+  .barrow { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+  .barlabel { font-size:13px; color:var(--text2); width:160px; flex-shrink:0; }
+  .bartrack { flex:1; height:10px; background:var(--surface2); border-radius:5px; overflow:hidden; }
+  .barfill { height:100%; border-radius:5px; transition:width 0.5s ease; }
+  .barval { font-size:13px; font-weight:600; width:130px; text-align:right; font-family:'IBM Plex Mono',monospace; }
+
+  /* PILL */
+  .pill { display:inline-block; padding:3px 10px; border-radius:100px; font-size:11px; font-weight:600; font-family:'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:1px; }
+  .p-ok   { background:rgba(0,200,150,0.15);  color:var(--accent); }
+  .p-warn { background:rgba(245,166,35,0.15); color:var(--gold); }
+  .p-bad  { background:rgba(255,77,109,0.15); color:var(--danger); }
+
+  /* SLIDER */
+  .srow { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+  .slabel { font-size:13px; color:var(--text2); width:200px; flex-shrink:0; }
+  .srow input[type=range] { flex:1; accent-color:var(--accent); cursor:pointer; }
+  .sval { font-size:13px; font-weight:600; width:130px; text-align:right; color:var(--accent); font-family:'IBM Plex Mono',monospace; }
+
+  /* DIVIDER */
+  .divider { border:none; border-top:1px solid var(--border); margin:20px 0; }
+
+  /* SECTION HEAD */
+  .section-head { font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:3px; color:var(--text2); text-transform:uppercase; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .section-head::before { content:''; width:3px; height:12px; background:var(--accent); border-radius:2px; display:inline-block; }
+
+  /* LIMITS TABLE */
+  .ltable { width:100%; border-collapse:collapse; }
+  .ltable th { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text2); font-weight:400; padding:8px 12px; text-align:left; border-bottom:1px solid var(--border); letter-spacing:1px; text-transform:uppercase; }
+  .ltable td { font-size:13px; padding:12px; border-bottom:1px solid rgba(30,58,82,0.5); vertical-align:middle; font-family:'IBM Plex Mono',monospace; }
+  .ltable tr:last-child td { border-bottom:none; }
+  .ltable tbody tr:hover { background:var(--surface2); }
+
+  /* STRESS CARDS */
+  .sgrid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:20px; }
+  .scard { border:1px solid var(--border); border-radius:10px; padding:16px; border-left-width:3px; background:var(--surface); }
+  .scard .st { font-size:12px; color:var(--text2); margin-bottom:6px; font-family:'IBM Plex Mono',monospace; }
+  .scard .sv { font-size:22px; font-weight:500; margin-bottom:6px; }
+  .scard .sn { font-size:12px; color:var(--text2); line-height:1.6; }
+
+  /* MINI BAR */
+  .mini-bar-wrap { flex:1; height:7px; background:var(--surface2); border-radius:3px; overflow:hidden; }
+  .mini-bar { height:100%; border-radius:3px; transition:width 0.4s; }
+
+  /* CARD */
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px; margin-bottom:20px; }
+
+  /* MATH BOX */
+  .mathbox {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    line-height: 2;
+  }
+  .mathbox .mline { display:flex; align-items:center; gap:12px; }
+  .mathbox .mop { color:var(--text2); width:20px; text-align:center; }
+  .mathbox .mval { color:var(--white); font-weight:600; }
+  .mathbox .mlabel { color:var(--text2); font-size:12px; }
+  .mathbox .mresult { color:var(--accent); font-size:18px; font-weight:600; border-top:1px solid var(--border); padding-top:12px; margin-top:8px; }
+  .mathbox .mresult-label { color:var(--text2); font-size:12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">🛢️ Oil Trading — Risk Management</div>
+    <h1>EXPOSURE <span>REPORT</span> EXPLAINED</h1>
+    <div class="subtitle">No assumptions — every number is derived from scratch. Use sliders to simulate your own position.</div>
+  </header>
+
+  <!-- TAB NAV -->
+  <div class="tab-nav">
+    <div class="tnav on" onclick="go(0,this)"><span class="num">01</span>What is Exposure?</div>
+    <div class="tnav"    onclick="go(1,this)"><span class="num">02</span>DV01 Simulator</div>
+    <div class="tnav"    onclick="go(2,this)"><span class="num">03</span>VaR Explained</div>
+    <div class="tnav"    onclick="go(3,this)"><span class="num">04</span>Limits Report</div>
+    <div class="tnav"    onclick="go(4,this)"><span class="num">05</span>Stress Tests</div>
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PANEL 0 — WHAT IS EXPOSURE        -->
+  <!-- ══════════════════════════════════ -->
+  <div class="panel on" id="p0">
+
+    <div class="callout c-blue">
+      <strong>Exposure = how much money you gain or lose when the market moves by $1 per barrel.</strong><br>
+      You bought 1,000,000 barrels. You have sold nothing yet. Every single barrel is still exposed to the differential moving against you.
+    </div>
+
+    <!-- THE CLEAN MATH -->
+    <div class="section-head">The only calculation — no assumptions</div>
+    <div class="mathbox">
+      <div class="mline"><span class="mlabel">You bought</span><span class="mval">1,000,000 barrels</span></div>
+      <div class="mline"><span class="mlabel">You sold so far</span><span class="mval" style="color:var(--text2);">0 barrels</span></div>
+      <div class="mline"><span class="mop">=</span><span class="mlabel">Open (unsold) volume</span><span class="mval" style="color:var(--gold);">1,000,000 barrels</span></div>
+      <div class="divider" style="margin:10px 0;"></div>
+      <div class="mline"><span class="mlabel">Differential DV01</span><span class="mval">1,000,000 bbls × $1 move</span></div>
+      <div class="mresult">= $1,000,000 per $1/bbl differential move</div>
+      <div class="mresult-label">Every $1 the differential moves, your book gains or loses exactly $1,000,000</div>
+    </div>
+
+    <div class="callout c-amber">
+      <strong>Why is it exactly $1,000,000?</strong><br>
+      Because you hold 1,000,000 barrels and each barrel moves dollar-for-dollar with the differential. If the diff moves $1 — every single barrel you hold gains or loses $1. So 1,000,000 barrels × $1 = $1,000,000. That is the entire calculation.
+    </div>
+
+    <div class="section-head">What happens as you sell barrels — exposure shrinks</div>
+    <div class="card">
+      <div class="barrow">
+        <div class="barlabel">Sold 0 bbls (now)</div>
+        <div class="bartrack"><div class="barfill" style="width:100%; background:var(--danger);"></div></div>
+        <div class="barval" style="color:var(--danger);">$1,000,000 DV01</div>
+      </div>
+      <div class="barrow">
+        <div class="barlabel">Sold 250k bbls</div>
+        <div class="bartrack"><div class="barfill" style="width:75%; background:var(--gold);"></div></div>
+        <div class="barval" style="color:var(--gold);">$750,000 DV01</div>
+      </div>
+      <div class="barrow">
+        <div class="barlabel">Sold 500k bbls</div>
+        <div class="bartrack"><div class="barfill" style="width:50%; background:var(--gold);"></div></div>
+        <div class="barval" style="color:var(--gold);">$500,000 DV01</div>
+      </div>
+      <div class="barrow">
+        <div class="barlabel">Sold 750k bbls</div>
+        <div class="bartrack"><div class="barfill" style="width:25%; background:var(--accent);"></div></div>
+        <div class="barval" style="color:var(--accent);">$250,000 DV01</div>
+      </div>
+      <div class="barrow">
+        <div class="barlabel">Sold all 1,000k bbls</div>
+        <div class="bartrack"><div class="barfill" style="width:2%; background:var(--accent);"></div></div>
+        <div class="barval" style="color:var(--accent);">$0 DV01</div>
+      </div>
+      <div style="font-size:12px; color:var(--text2); margin-top:6px; font-family:'IBM Plex Mono',monospace;">
+        DV01 = (1,000,000 − barrels sold) × $1
+      </div>
+    </div>
+
+    <div class="metrow">
+      <div class="met">
+        <div class="ml">Barrels bought</div>
+        <div class="mv" style="color:var(--blue);">1,000,000 bbls</div>
+        <div class="ms">Your full physical position</div>
+      </div>
+      <div class="met">
+        <div class="ml">Barrels sold</div>
+        <div class="mv" style="color:var(--accent);">0 bbls</div>
+        <div class="ms">Nothing sold yet</div>
+      </div>
+      <div class="met">
+        <div class="ml">Open exposure</div>
+        <div class="mv" style="color:var(--danger);">1,000,000 bbls</div>
+        <div class="ms">All barrels still at risk</div>
+      </div>
+      <div class="met">
+        <div class="ml">Differential DV01</div>
+        <div class="mv" style="color:var(--danger);">$1,000,000</div>
+        <div class="ms">Per $1/bbl diff move</div>
+      </div>
+    </div>
+
+    <div class="callout c-green">
+      <strong>SAP BW analogy:</strong> DV01 is like a sensitivity analysis in your BW report — how much does the output KPI (P&amp;L) change if one input variable (differential price) shifts by exactly 1 unit ($1/bbl)? The answer is simply: open volume × $1.
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PANEL 1 — DV01 SIMULATOR          -->
+  <!-- ══════════════════════════════════ -->
+  <div class="panel" id="p1">
+
+    <div class="callout c-blue">
+      <strong>DV01 = open barrels × $1.</strong><br>
+      Nothing more. Use the sliders below to set exactly how many barrels you bought and how many you have sold. The DV01 and all P&amp;L impacts calculate automatically — no hidden assumptions.
+    </div>
+
+    <div class="card">
+      <div class="section-head">Your position — set it yourself</div>
+      <div class="srow">
+        <div class="slabel">Barrels bought (k bbls)</div>
+        <input type="range" min="100" max="3000" step="100" value="1000" id="sv" oninput="dv01()">
+        <div class="sval" id="ov">1,000,000 bbls</div>
+      </div>
+      <div class="srow">
+        <div class="slabel">Barrels sold so far (k bbls)</div>
+        <input type="range" min="0" max="3000" step="100" value="0" id="ss" oninput="dv01()">
+        <div class="sval" id="os">0 bbls</div>
+      </div>
+    </div>
+
+    <!-- LIVE MATH BOX -->
+    <div class="section-head">The calculation — live</div>
+    <div class="mathbox" id="live-math">
+      <div class="mline"><span class="mlabel">Barrels bought</span><span class="mval" id="lm-buy">1,000,000 bbls</span></div>
+      <div class="mline"><span class="mop">−</span><span class="mlabel">Barrels sold</span><span class="mval" id="lm-sold" style="color:var(--text2);">0 bbls</span></div>
+      <div class="mline"><span class="mop">=</span><span class="mlabel">Open volume</span><span class="mval" style="color:var(--gold);" id="lm-open">1,000,000 bbls</span></div>
+      <div class="divider" style="margin:10px 0;"></div>
+      <div class="mline"><span class="mlabel">DV01 formula</span><span class="mval" id="lm-formula">1,000,000 × $1</span></div>
+      <div class="mresult" id="lm-result">= $1,000,000 per $1 diff move</div>
+    </div>
+
+    <div class="metrow">
+      <div class="met">
+        <div class="ml">Open volume</div>
+        <div class="mv" id="d-open" style="color:var(--gold);">1,000,000 bbls</div>
+        <div class="ms">Bought minus sold</div>
+      </div>
+      <div class="met">
+        <div class="ml">Differential DV01</div>
+        <div class="mv" id="d-dv01" style="color:var(--danger);">$1,000,000</div>
+        <div class="ms">Per $1/bbl diff move</div>
+      </div>
+      <div class="met">
+        <div class="ml">If diff moves +$1</div>
+        <div class="mv" id="d-up1" style="color:var(--accent);">+$1,000,000</div>
+        <div class="ms">Your profit</div>
+      </div>
+      <div class="met">
+        <div class="ml">If diff falls −$1</div>
+        <div class="mv" id="d-dn1" style="color:var(--danger);">−$1,000,000</div>
+        <div class="ms">Your loss</div>
+      </div>
+    </div>
+
+    <div class="section-head">P&amp;L for different diff moves — based on your open position</div>
+    <div class="card" id="pnl-bars"></div>
+
+    <div class="callout c-amber">
+      <strong>Try this:</strong> drag "barrels sold" all the way to match "barrels bought". Notice the DV01 drops to exactly zero — you have no more differential exposure because every barrel has a locked-in sale price. This is your end goal as a trader — sell everything at a profit before the month ends.
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PANEL 2 — VAR                     -->
+  <!-- ══════════════════════════════════ -->
+  <div class="panel" id="p2">
+
+    <div class="callout c-blue">
+      <strong>VaR = Value at Risk.</strong><br>
+      DV01 tells you the loss per $1 move. But the market rarely moves exactly $1. VaR uses the <em>actual daily volatility</em> of the differential to tell you: "on a normal bad day, this is the most I should lose."
+    </div>
+
+    <div class="callout c-amber">
+      <strong>Weather forecast analogy:</strong> if your VaR is $1,100,000 — on <strong>19 out of every 20 trading days</strong>, your loss will stay below $1.1M. On the 1-in-20 really bad day it could be more. VaR covers normal volatility — not black swan events.
+    </div>
+
+    <div class="section-head">VaR built from scratch — step by step</div>
+    <div class="mathbox">
+      <div class="mline"><span class="mlabel">Open volume</span><span class="mval">1,000,000 bbls</span></div>
+      <div class="mline"><span class="mop">×</span><span class="mlabel">Daily diff volatility</span><span class="mval">$0.70 / bbl</span><span class="mlabel" style="margin-left:8px;">(how much diff typically moves in 1 day)</span></div>
+      <div class="mline"><span class="mop">×</span><span class="mlabel">95% confidence factor</span><span class="mval">1.65</span><span class="mlabel" style="margin-left:8px;">(captures 19 of 20 days)</span></div>
+      <div class="divider" style="margin:10px 0;"></div>
+      <div class="mresult">= $1,155,000 — 1-day VaR (95%)</div>
+      <div class="mresult-label">On 19 out of 20 days, your book won't lose more than $1,155,000</div>
+    </div>
+
+    <div class="metrow">
+      <div class="met">
+        <div class="ml">Differential DV01</div>
+        <div class="mv" style="color:var(--danger);">$1,000,000</div>
+        <div class="ms">1,000,000 bbls × $1</div>
+      </div>
+      <div class="met">
+        <div class="ml">Daily volatility</div>
+        <div class="mv" style="color:var(--blue);">$0.70 / bbl</div>
+        <div class="ms">Typical daily diff move</div>
+      </div>
+      <div class="met">
+        <div class="ml">1-day VaR (95%)</div>
+        <div class="mv" style="color:var(--danger);">$1,155,000</div>
+        <div class="ms">= $1M × $0.70 × 1.65</div>
+      </div>
+      <div class="met">
+        <div class="ml">10-day VaR (95%)</div>
+        <div class="mv" style="color:var(--danger);">$3,653,000</div>
+        <div class="ms">= 1-day × √10</div>
+      </div>
+    </div>
+
+    <div class="section-head">VaR vs DV01 — the difference</div>
+    <div class="card">
+      <div class="barrow">
+        <div class="barlabel">DV01 — per $1 move</div>
+        <div class="bartrack"><div class="barfill" style="width:87%; background:var(--blue);"></div></div>
+        <div class="barval" style="color:var(--blue);">$1,000,000</div>
+      </div>
+      <div style="font-size:12px; color:var(--text2); margin:-8px 0 14px 172px; font-family:'IBM Plex Mono',monospace;">Mechanical — exactly $1 × open volume. No probability.</div>
+      <div class="barrow">
+        <div class="barlabel">VaR — realistic bad day</div>
+        <div class="bartrack"><div class="barfill" style="width:100%; background:var(--danger);"></div></div>
+        <div class="barval" style="color:var(--danger);">$1,155,000</div>
+      </div>
+      <div style="font-size:12px; color:var(--text2); margin:-8px 0 0 172px; font-family:'IBM Plex Mono',monospace;">Statistical — based on actual market volatility. Has a probability attached.</div>
+    </div>
+
+    <div class="callout c-red">
+      <strong>What VaR does NOT cover:</strong> extreme events — a $5 diff collapse in one day, a refinery explosion, a sudden OPEC cut. On those days losses can be 3–10× the VaR number. That is why you also run stress tests every day (Tab 05).
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PANEL 3 — LIMITS                  -->
+  <!-- ══════════════════════════════════ -->
+  <div class="panel" id="p3">
+
+    <div class="callout c-blue">
+      <strong>The limits report is a live dashboard</strong> showing every risk metric next to its approved ceiling.<br>
+      All numbers below are derived from the same 1,000,000 barrel position — no invented numbers. If any row turns red, you must stop trading and reduce positions immediately.
+    </div>
+
+    <div class="card">
+      <div class="section-head">Crude Americas — limits dashboard — 28-Mar-2026 17:00</div>
+      <table class="ltable">
+        <thead>
+          <tr>
+            <th>Risk metric</th>
+            <th>How it's derived</th>
+            <th>Current value</th>
+            <th>Approved limit</th>
+            <th style="width:160px;">Usage</th>
+            <th style="text-align:center;">Status</th>
+          </tr>
+        </thead>
+        <tbody id="lim-body"></tbody>
+      </table>
+    </div>
+
+    <div class="callout c-amber">
+      <strong>Usage % guide:</strong><br>
+      <strong style="color:var(--accent);">0–50%</strong> — Comfortable. Trade freely.<br>
+      <strong style="color:var(--gold);">50–80%</strong> — Monitor closely. Tell your risk manager.<br>
+      <strong style="color:var(--gold);">80–95%</strong> — Stop adding. Start reducing now.<br>
+      <strong style="color:var(--danger);">95%+</strong> — Compliance breach. Reduce immediately. No exceptions.
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PANEL 4 — STRESS TESTS            -->
+  <!-- ══════════════════════════════════ -->
+  <div class="panel" id="p4">
+
+    <div class="callout c-blue">
+      <strong>Stress tests ask: what if the absolute worst happens?</strong><br>
+      All scenarios below start from the same position — 1,000,000 barrels bought, nothing sold, diff exposure = $1,000,000 DV01. No assumptions added.
+    </div>
+
+    <div class="section-head">Pre-built extreme scenarios — 1,000,000 bbls open</div>
+    <div class="sgrid" id="sg"></div>
+
+    <div class="section-head">Build your own stress scenario</div>
+    <div class="card">
+      <div class="srow">
+        <div class="slabel">Flat price crash ($/bbl)</div>
+        <input type="range" min="-20" max="0" step="1" value="-10" id="sc" oninput="stress()">
+        <div class="sval" id="oc">−$10 / bbl</div>
+      </div>
+      <div class="srow">
+        <div class="slabel">Diff collapse ($/bbl)</div>
+        <input type="range" min="-3" max="0" step="0.1" value="-1.0" id="sdc" oninput="stress()">
+        <div class="sval" id="odc">−$1.00 / bbl</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- LIVE STRESS MATH -->
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">Flat price impact</span><span class="mval" id="st-fp-calc">1,000,000 × $0 (hedge) = $0</span></div>
+        <div class="mline"><span class="mlabel">Diff collapse impact</span><span class="mval" id="st-dc-calc">1,000,000 × −$1.00 = −$1,000,000</span></div>
+        <div class="divider" style="margin:10px 0;"></div>
+        <div class="mresult" id="st-result">Total stress P&amp;L = −$1,000,000</div>
+      </div>
+
+      <div class="metrow" style="margin-top:16px;">
+        <div class="met">
+          <div class="ml">Flat price impact</div>
+          <div class="mv" id="st-fp" style="color:var(--accent);">+$0</div>
+          <div class="ms">Hedge absorbs — zero</div>
+        </div>
+        <div class="met">
+          <div class="ml">Diff collapse impact</div>
+          <div class="mv" id="st-di" style="color:var(--danger);">−$1,000,000</div>
+          <div class="ms">Real loss — no hedge</div>
+        </div>
+        <div class="met">
+          <div class="ml">Total stress P&amp;L</div>
+          <div class="mv" id="st-tot" style="color:var(--danger);">−$1,000,000</div>
+          <div class="ms">Combined impact</div>
+        </div>
+        <div class="met">
+          <div class="ml">Vs monthly target</div>
+          <div class="mv" id="st-vs" style="color:var(--gold);">−80%</div>
+          <div class="ms">Of $1.25M target</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout c-green">
+      <strong>The key lesson:</strong> drag the flat price crash to −$20/bbl. Your flat price impact stays at zero — the hedge works even in a crash. Now move the diff collapse even slightly — the loss appears immediately. <strong>Every dollar of diff collapse × 1,000,000 open barrels = your real P&amp;L risk.</strong>
+    </div>
+
+  </div>
+
+</div>
+<script>
+function go(idx, el) {
+  document.querySelectorAll('.tnav').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('p' + idx).classList.add('on');
+}
+
+function fmt(v) {
+  if (v === 0) return '$0';
+  return (v > 0 ? '+$' : '−$') + Math.abs(Math.round(v)).toLocaleString();
+}
+
+function dv01() {
+  const bought = parseInt(document.getElementById('sv').value) * 1000;
+  let   sold   = parseInt(document.getElementById('ss').value) * 1000;
+  if (sold > bought) { sold = bought; document.getElementById('ss').value = bought / 1000; }
+  const open = bought - sold;
+  const dv   = open;
+
+  document.getElementById('ov').textContent = bought.toLocaleString() + ' bbls';
+  document.getElementById('os').textContent = sold.toLocaleString() + ' bbls';
+
+  document.getElementById('lm-buy').textContent     = bought.toLocaleString() + ' bbls';
+  document.getElementById('lm-sold').textContent    = sold.toLocaleString() + ' bbls';
+  document.getElementById('lm-open').textContent    = open.toLocaleString() + ' bbls';
+  document.getElementById('lm-formula').textContent = open.toLocaleString() + ' × $1';
+  document.getElementById('lm-result').textContent  = '= $' + dv.toLocaleString() + ' per $1 diff move';
+
+  document.getElementById('d-open').textContent = open.toLocaleString() + ' bbls';
+  document.getElementById('d-dv01').textContent = '$' + dv.toLocaleString();
+  document.getElementById('d-dv01').style.color  = dv === 0 ? '#00c896' : '#ff4d6d';
+  document.getElementById('d-up1').textContent  = '+$' + dv.toLocaleString();
+  document.getElementById('d-dn1').textContent  = '−$' + dv.toLocaleString();
+
+  const moves = [0.25, 0.50, 1.00, 2.00, 3.00];
+  const bars = document.getElementById('pnl-bars');
+  bars.innerHTML = moves.map(m => {
+    const loss = dv * m;
+    const pct  = Math.min(100, Math.round((loss / 3000000) * 100));
+    const col  = m <= 0.5 ? '#f5a623' : '#ff4d6d';
+    return `<div class="barrow">
+      <div class="barlabel">Diff falls $${m.toFixed(2)}/bbl</div>
+      <div class="bartrack"><div class="barfill" style="width:${pct}%;background:${col};"></div></div>
+      <div class="barval" style="color:${col};">−$${loss.toLocaleString()}</div>
+    </div>`;
+  }).join('') + `<div style="font-size:12px;color:var(--text2);margin-top:6px;font-family:'IBM Plex Mono',monospace;">Loss = ${open.toLocaleString()} open bbls × diff move per bbl</div>`;
+}
+
+const limData = [
+  { n:'Diff DV01',                  how:'1,000,000 bbls × $1',          used:1000000,  lim:2000000,  f:v=>'$'+(v/1e6).toFixed(2)+'M'  },
+  { n:'VaR 1-day (95%)',            how:'$1M × $0.70 vol × 1.65',       used:1155000,  lim:2000000,  f:v=>'$'+(v/1000).toFixed(0)+'k' },
+  { n:'Net open volume',            how:'1,000k bought − 0 sold',        used:1000,     lim:5000,     f:v=>v.toLocaleString()+'k bbls'  },
+  { n:'Single counterparty credit', how:'Largest single buyer exposure', used:8200000,  lim:20000000, f:v=>'$'+(v/1e6).toFixed(1)+'M'  },
+  { n:'Total credit exposure',      how:'All counterparties combined',   used:12400000, lim:50000000, f:v=>'$'+(v/1e6).toFixed(1)+'M'  },
+  { n:'Monthly stop-loss used',     how:'Realized losses this month',    used:247000,   lim:5000000,  f:v=>'$'+(v/1000).toFixed(0)+'k' },
+];
+
+function renderLimits() {
+  document.getElementById('lim-body').innerHTML = limData.map(r => {
+    const pct     = Math.round(r.used / r.lim * 100);
+    const barCol  = pct < 50 ? '#00c896' : pct < 80 ? '#f5a623' : '#ff4d6d';
+    const pillCls = pct < 50 ? 'p-ok'   : pct < 80 ? 'p-warn'  : 'p-bad';
+    const pillTxt = pct < 50 ? 'OK ✓'  : pct < 80 ? 'Watch ⚠' : 'BREACH ✗';
+    return `<tr>
+      <td style="color:#c8d8e8;">${r.n}</td>
+      <td style="color:#6a8aaa;font-size:11px;">${r.how}</td>
+      <td style="font-weight:600;color:#e8f4ff;">${r.f(r.used)}</td>
+      <td style="color:#6a8aaa;">${r.f(r.lim)}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="mini-bar-wrap"><div class="mini-bar" style="width:${pct}%;background:${barCol};"></div></div>
+          <span style="font-size:12px;font-weight:600;width:36px;color:${barCol};">${pct}%</span>
+        </div>
+      </td>
+      <td style="text-align:center;"><span class="pill ${pillCls}">${pillTxt}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+const stressCards = [
+  { l:'WTI drops $10/bbl',        v:0,        col:'#00c896', bc:'#00c896', note:'Hedge absorbs flat price crash — net zero. Your physical loses $10M but swap gains $10M.' },
+  { l:'Diff collapses $1.00/bbl', v:-1000000, col:'#ff4d6d', bc:'#ff4d6d', note:'1,000,000 bbls × −$1.00 = −$1,000,000. No hedge exists for diff risk.'                   },
+  { l:'Diff collapses $2.00/bbl', v:-2000000, col:'#ff4d6d', bc:'#ff4d6d', note:'1,000,000 bbls × −$2.00 = −$2,000,000. Exceeds daily VaR limit.'                         },
+  { l:'WTI rallies $15/bbl',      v:0,        col:'#00c896', bc:'#00c896', note:'Short swap offsets physical gain perfectly — book stays completely flat.'                  },
+];
+
+function renderStress() {
+  document.getElementById('sg').innerHTML = stressCards.map(s =>
+    `<div class="scard" style="border-left-color:${s.bc};">
+      <div class="st">${s.l}</div>
+      <div class="sv" style="color:${s.col};">${s.v === 0 ? '~$0' : fmt(s.v)}</div>
+      <div class="sn">${s.note}</div>
+    </div>`
+  ).join('');
+}
+
+function stress() {
+  const crash = parseInt(document.getElementById('sc').value);
+  const dc    = parseFloat(document.getElementById('sdc').value);
+  document.getElementById('oc').textContent  = '−$' + Math.abs(crash) + ' / bbl';
+  document.getElementById('odc').textContent = dc.toFixed(1) + ' / bbl';
+  const di  = dc * 1000000;
+  const tot = di;
+  const vs  = Math.round((tot / 1250000) * 100);
+
+  document.getElementById('st-fp-calc').textContent = '1,000,000 × $0 (hedge absorbs) = $0';
+  document.getElementById('st-dc-calc').textContent = '1,000,000 × $' + dc.toFixed(2) + ' = ' + fmt(di);
+  document.getElementById('st-result').textContent  = 'Total stress P&L = ' + fmt(tot);
+  document.getElementById('st-result').style.color  = tot >= 0 ? '#00c896' : '#ff4d6d';
+
+  document.getElementById('st-fp').textContent  = '+$0';
+  document.getElementById('st-fp').style.color  = '#00c896';
+  document.getElementById('st-di').textContent  = fmt(di);
+  document.getElementById('st-di').style.color  = di >= 0 ? '#00c896' : '#ff4d6d';
+  document.getElementById('st-tot').textContent = fmt(tot);
+  document.getElementById('st-tot').style.color = tot >= 0 ? '#00c896' : '#ff4d6d';
+  document.getElementById('st-vs').textContent  = vs + '%';
+  document.getElementById('st-vs').style.color  = vs > -50 ? '#f5a623' : '#ff4d6d';
+}
+
+dv01();
+renderLimits();
+renderStress();
+stress();
+</script>
+</body>
+</html>

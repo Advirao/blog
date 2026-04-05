@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenAI Engineering Deep-Dive Curriculum — Phases 1–3</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --border: #2a2a3a;
+  --text: #e8e8f0;
+  --text-dim: #8888a0;
+  --accent1: #6366f1;
+  --accent1-glow: rgba(99,102,241,0.3);
+  --accent2: #06b6d4;
+  --accent3: #f59e0b;
+  --accent4: #10b981;
+  --accent5: #ec4899;
+  --gradient1: linear-gradient(135deg, #6366f1, #06b6d4);
+  --gradient2: linear-gradient(135deg, #f59e0b, #ec4899);
+  --gradient3: linear-gradient(135deg, #10b981, #06b6d4);
+  --radius: 12px;
+  --font-display: 'Outfit', sans-serif;
+  --font-serif: 'Instrument Serif', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-display); line-height: 1.7; }
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 80px 24px 60px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.15) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 100%, rgba(6,182,212,0.1) 0%, transparent 50%);
+}
+.hero-badge { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: var(--accent2); margin-bottom: 20px; }
+.hero h1 { font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 800; line-height: 1.15; max-width: 800px; }
+.hero h1 span { background: var(--gradient1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero p { font-size: 1.1rem; color: var(--text-dim); max-width: 600px; margin-top: 16px; font-weight: 300; }
+.hero-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 36px; justify-content: center; }
+.hero-nav a {
+  font-family: var(--font-mono); font-size: 0.78rem; padding: 10px 18px; border-radius: 8px;
+  background: var(--surface2); border: 1px solid var(--border); color: var(--text); text-decoration: none;
+  transition: all 0.2s;
+}
+.hero-nav a:hover { border-color: var(--accent1); background: rgba(99,102,241,0.1); }
+.hero-nav a .num { color: var(--accent2); margin-right: 6px; }
+
+/* ─── PHASE HEADER ─── */
+.phase {
+  max-width: 960px; margin: 0 auto; padding: 0 24px;
+}
+.phase-header {
+  padding: 80px 0 40px; border-top: 1px solid var(--border);
+}
+.phase-header .phase-num {
+  font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--accent1); margin-bottom: 8px;
+}
+.phase-header h2 { font-size: 2.4rem; font-weight: 800; }
+.phase-header h2 .serif { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+.phase-meta { display: flex; gap: 24px; margin-top: 12px; flex-wrap: wrap; }
+.phase-meta .tag {
+  font-size: 0.78rem; font-family: var(--font-mono); padding: 4px 12px; border-radius: 6px;
+  background: var(--surface2); border: 1px solid var(--border); color: var(--text-dim);
+}
+
+/* ─── MODULE CARD ─── */
+.module {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 24px; overflow: hidden;
+}
+.module-head {
+  display: flex; align-items: center; padding: 20px 24px; cursor: pointer;
+  transition: background 0.2s; gap: 14px;
+}
+.module-head:hover { background: var(--surface2); }
+.module-head .icon { font-size: 1.5rem; flex-shrink: 0; }
+.module-head .title { flex: 1; }
+.module-head .title h3 { font-size: 1.1rem; font-weight: 600; }
+.module-head .title .sub { font-size: 0.8rem; color: var(--text-dim); }
+.module-head .chevron { font-size: 1.2rem; color: var(--text-dim); transition: transform 0.3s; }
+.module.open .module-head .chevron { transform: rotate(180deg); }
+.module-body { display: none; padding: 0 24px 24px; }
+.module.open .module-body { display: block; }
+
+/* ─── CONTENT BLOCKS ─── */
+.section-label {
+  font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--accent2); margin: 28px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border);
+}
+.section-label:first-child { margin-top: 0; }
+.content p { margin-bottom: 12px; font-weight: 300; font-size: 0.95rem; }
+.content strong { font-weight: 600; color: #fff; }
+.explainer { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0; }
+.explainer-box {
+  padding: 16px; border-radius: 10px; border: 1px solid var(--border);
+}
+.explainer-box.layman { background: rgba(99,102,241,0.06); border-color: rgba(99,102,241,0.2); }
+.explainer-box.el5 { background: rgba(245,158,11,0.06); border-color: rgba(245,158,11,0.2); }
+.explainer-box .label { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+.explainer-box.layman .label { color: var(--accent1); }
+.explainer-box.el5 .label { color: var(--accent3); }
+.explainer-box p { font-size: 0.88rem; margin-bottom: 0; }
+
+/* ─── RESOURCE VAULT ─── */
+.vault { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 12px; margin: 12px 0; }
+.vault a {
+  display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 10px;
+  background: var(--surface2); border: 1px solid var(--border); text-decoration: none; color: var(--text);
+  transition: all 0.2s;
+}
+.vault a:hover { border-color: var(--accent1); transform: translateY(-2px); }
+.vault a .v-icon { font-size: 1.5rem; flex-shrink: 0; }
+.vault a .v-label { font-size: 0.78rem; font-family: var(--font-mono); color: var(--text-dim); }
+.vault a .v-title { font-size: 0.88rem; font-weight: 500; }
+
+/* ─── SIMULATOR ─── */
+.sim-container {
+  margin: 16px 0; border-radius: var(--radius); overflow: hidden;
+  border: 1px solid var(--border); background: var(--surface2);
+}
+.sim-bar {
+  display: flex; align-items: center; gap: 8px; padding: 10px 16px;
+  background: rgba(0,0,0,0.3); font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-dim);
+}
+.sim-bar .dot { width: 10px; height: 10px; border-radius: 50%; }
+.sim-bar .dot.r { background: #ff5f57; }
+.sim-bar .dot.y { background: #ffbd2e; }
+.sim-bar .dot.g { background: #28c840; }
+.sim-canvas { padding: 24px; min-height: 320px; }
+
+/* ─── SIMULATOR SPECIFIC ─── */
+.slider-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; font-size: 0.85rem; }
+.slider-row label { min-width: 140px; font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); }
+.slider-row input[type="range"] { flex: 1; accent-color: var(--accent1); }
+.slider-row .val { min-width: 50px; text-align: right; font-family: var(--font-mono); color: var(--accent2); }
+.sim-output { margin-top: 16px; padding: 16px; border-radius: 8px; background: rgba(0,0,0,0.3); font-family: var(--font-mono); font-size: 0.82rem; white-space: pre-wrap; line-height: 1.6; min-height: 80px; }
+.sim-btn {
+  padding: 8px 18px; border: 1px solid var(--accent1); background: rgba(99,102,241,0.1);
+  color: var(--accent1); font-family: var(--font-mono); font-size: 0.78rem; border-radius: 6px;
+  cursor: pointer; transition: all 0.2s; margin: 4px;
+}
+.sim-btn:hover { background: rgba(99,102,241,0.25); }
+.sim-btn.active { background: var(--accent1); color: #fff; }
+
+/* Token vis */
+.token-display { display: flex; flex-wrap: wrap; gap: 4px; margin: 12px 0; }
+.token {
+  padding: 4px 10px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.78rem;
+  border: 1px solid rgba(99,102,241,0.3); cursor: default; transition: all 0.3s;
+}
+
+/* Embedding vis */
+.embed-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin: 12px 0; }
+.embed-word {
+  padding: 10px; border-radius: 8px; text-align: center; font-family: var(--font-mono); font-size: 0.78rem;
+  border: 1px solid var(--border); transition: all 0.3s; cursor: pointer;
+}
+.embed-word:hover { transform: scale(1.05); }
+.embed-word .word { font-weight: 600; margin-bottom: 4px; }
+.embed-word .vec { font-size: 0.65rem; color: var(--text-dim); }
+.similarity-result { margin-top: 16px; padding: 16px; background: rgba(0,0,0,0.3); border-radius: 8px; font-size: 0.85rem; }
+
+/* RAG vis */
+.rag-pipeline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.rag-step {
+  padding: 10px 16px; border-radius: 8px; font-family: var(--font-mono); font-size: 0.75rem;
+  border: 1px solid var(--border); text-align: center; transition: all 0.4s; min-width: 100px;
+}
+.rag-step.active { transform: scale(1.08); box-shadow: 0 0 20px var(--accent1-glow); }
+.rag-arrow { color: var(--text-dim); font-size: 1.2rem; }
+.chunk-vis { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin: 12px 0; }
+.chunk-card {
+  padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2);
+  font-size: 0.82rem; transition: all 0.3s; cursor: pointer;
+}
+.chunk-card:hover { border-color: var(--accent1); }
+.chunk-card.selected { border-color: var(--accent4); background: rgba(16,185,129,0.08); }
+.chunk-card .score { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent4); margin-top: 6px; }
+
+@media (max-width: 700px) {
+  .explainer { grid-template-columns: 1fr; }
+  .vault { grid-template-columns: 1fr; }
+  .rag-pipeline { flex-direction: column; }
+  .rag-arrow { transform: rotate(90deg); }
+}
+
+.footer {
+  text-align: center; padding: 60px 24px; color: var(--text-dim); font-size: 0.85rem;
+  border-top: 1px solid var(--border); margin-top: 80px;
+}
+.footer .continue-btn {
+  display: inline-block; margin-top: 16px; padding: 14px 32px; border-radius: 10px;
+  background: var(--gradient1); color: #fff; font-weight: 700; font-size: 1rem; text-decoration: none;
+  transition: opacity 0.2s;
+}
+.footer .continue-btn:hover { opacity: 0.85; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="hero">
+  <div class="hero-badge">Generative AI Engineering Curriculum · 2026 Edition</div>
+  <h1>Deep-Dive into <span>GenAI Engineering</span></h1>
+  <p>A complete, interactive curriculum from Python fundamentals to production-grade AI systems. Batch 1 covers Phases 1–3.</p>
+  <nav class="hero-nav">
+    <a href="#phase1"><span class="num">01</span> Foundations</a>
+    <a href="#phase2"><span class="num">02</span> LLM Basics</a>
+    <a href="#phase3"><span class="num">03</span> RAG</a>
+  </nav>
+</section>
+
+<!-- ═══════════════════ PHASE 1: FOUNDATIONS ═══════════════════ -->
+<section class="phase" id="phase1">
+  <div class="phase-header">
+    <div class="phase-num">Phase 01</div>
+    <h2>The <span class="serif">Foundations</span></h2>
+    <div class="phase-meta">
+      <span class="tag">Python</span><span class="tag">APIs</span><span class="tag">JSON</span>
+      <span class="tag">Git</span><span class="tag">Linux</span><span class="tag">SQL</span>
+      <span class="tag">HTTP</span><span class="tag">Async</span>
+    </div>
+  </div>
+
+  <!-- Module: Python -->
+  <div class="module open" id="mod-python">
+    <div class="module-head" onclick="toggleModule(this)">
+      <div class="icon">🐍</div>
+      <div class="title">
+        <h3>Python for AI Engineering</h3>
+        <div class="sub">The lingua franca of GenAI — from scripts to production services</div>
+      </div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="module-body content">
+      <div class="section-label">🏛 History & Origin</div>
+      <p><strong>Guido van Rossum</strong> created Python in 1991 at CWI in the Netherlands. The "aha" moment was designing a language that prioritized readability — code should read like English pseudocode. Named after Monty Python (not the snake), it became the de facto language of data science around 2015 when libraries like NumPy, Pandas, and scikit-learn matured. When deep learning exploded with TensorFlow (2015) and PyTorch (2016), Python's ecosystem became unassailable.</p>
+
+      <div class="section-label">🔧 The "Why" & "What"</div>
+      <p><strong>Problem it solved:</strong> Before Python dominated AI, researchers juggled C++, MATLAB, and R. Python unified everything under one language with a massive package ecosystem, gentle learning curve, and first-class support from every major ML framework.</p>
+      <p><strong>How it works for GenAI:</strong> Python is the glue layer — you write orchestration logic, API calls, data pipelines, and agent workflows. Libraries like <strong>httpx</strong> (async HTTP), <strong>FastAPI</strong> (web services), and <strong>pydantic</strong> (data validation) are the building blocks of every GenAI application in 2026.</p>
+
+      <div class="section-label">💥 Impact & Counterfactual</div>
+      <p><strong>Real-world uses:</strong> Every major LLM API (OpenAI, Anthropic, Google) ships Python SDKs first. Agent frameworks (LangChain, LlamaIndex, OpenAI Agents SDK) are Python-native. Data pipelines for RAG systems are written in Python.</p>
+      <p><strong>What if Python didn't exist?</strong> AI development would be fragmented — researchers in R, production in Java, glue code in Bash. The speed of GenAI innovation would be cut in half because prototyping would take weeks, not hours.</p>
+
+      <div class="section-label">⚔️ Alternatives</div>
+      <p><strong>JavaScript/TypeScript:</strong> Growing in AI (Vercel AI SDK), but ecosystem is thinner. <strong>Rust:</strong> For performance-critical inference (llama.cpp), but too low-level for app development. <strong>Julia:</strong> Excellent for numerical computing, but tiny ecosystem.</p>
+
+      <div class="section-label">🧠 Multi-Level Explainer</div>
+      <div class="explainer">
+        <div class="explainer-box layman">
+          <div class="label">Layman's Terms</div>
+          <p>Python is like English for computers — it's the easiest major programming language to read and write. For AI work, it's the only language where every tool you need already exists, so you spend time building products instead of reinventing wheels.</p>
+        </div>
+        <div class="explainer-box el5">
+          <div class="label">Explain Like I'm 10</div>
+          <p>Imagine you're building with LEGO. Python is like having every LEGO set ever made in one giant box. Other languages are like having just one small set — you can still build stuff, but you'd have to make your own pieces first. Python lets you snap things together fast!</p>
+        </div>
+      </div>
+
+      <div class="section-label">📚 Resource Vault</div>
+      <div class="vault">
+        <a href="https://www.youtube.com/watch?v=eWRfhZUzrAc" target="_blank">
+          <div class="v-icon">🎬</div>
+          <div><div class="v-label">YouTube · freeCodeCamp</div><div class="v-title">Python for AI & Autonomous Agents — Full 6hr Course (2026)</div></div>
+        </a>
+        <a href="https://realpython.com/popular-python-tutorials-2025/" target="_blank">
+          <div class="v-icon">📖</div>
+          <div><div class="v-label">Article · Real Python</div><div class="v-title">Best Python Tutorials & Courses for 2026</div></div>
+        </a>
+        <a href="https://docs.python.org/3/tutorial/" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · Python.org</div><div class="v-title">The Official Python Tutorial</div></div>
+        </a>
+      </div>
+
+      <div class="section-label">🎮 Interactive Simulator — API Request Builder</div>
+      <div class="sim-container">
+        <div class="sim-bar">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span>api_request_simulator.py</span>
+        </div>
+        <div class="sim-canvas" id="sim-api">
+          <div class="slider-row">
+            <label>HTTP Method</label>
+            <div>
+              <button class="sim-btn active" onclick="setMethod(this,'GET')">GET</button>
+              <button class="sim-btn" onclick="setMethod(this,'POST')">POST</button>
+              <button class="sim-btn" onclick="setMethod(this,'PUT')">PUT</button>
+              <button class="sim-btn" onclick="setMethod(this,'DELETE')">DELETE</button>
+            </div>
+          </div>
+          <div class="slider-row">
+            <label>Endpoint</label>
+            <select id="api-endpoint" onchange="buildRequest()" style="flex:1;padding:6px 10px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;font-family:var(--font-mono);font-size:0.8rem;">
+              <option value="/v1/chat/completions">/v1/chat/completions</option>
+              <option value="/v1/embeddings">/v1/embeddings</option>
+              <option value="/v1/models">/v1/models</option>
+            </select>
+          </div>
+          <div class="slider-row">
+            <label>Auth Header</label>
+            <input type="text" id="api-key" value="sk-your-api-key" style="flex:1;padding:6px 10px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;font-family:var(--font-mono);font-size:0.8rem;" oninput="buildRequest()">
+          </div>
+          <div class="slider-row">
+            <label>Temperature</label>
+            <input type="range" min="0" max="200" value="70" id="api-temp" oninput="buildRequest()">
+            <span class="val" id="api-temp-val">0.7</span>
+          </div>
+          <div class="sim-output" id="api-output"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Module: APIs, JSON, HTTP -->
+  <div class="module" id="mod-apis">
+    <div class="module-head" onclick="toggleModule(this)">
+      <div class="icon">🌐</div>
+      <div class="title">
+        <h3>APIs, JSON & HTTP</h3>
+        <div class="sub">The communication backbone of every GenAI application</div>
+      </div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="module-body content">
+      <div class="section-label">🏛 History & Origin</div>
+      <p><strong>REST APIs</strong> emerged from Roy Fielding's 2000 doctoral dissertation. <strong>JSON</strong> was formalized by Douglas Crockford around 2001 as a lightweight alternative to XML. <strong>HTTP</strong> dates back to Tim Berners-Lee's work in 1991. Together, these three standards form the backbone of how every LLM service communicates — when you call the OpenAI API or Anthropic API, you're sending JSON over HTTP to a REST endpoint.</p>
+
+      <div class="section-label">🔧 The "Why" & "What"</div>
+      <p><strong>Problem solved:</strong> Applications need a universal way to send structured data between services. JSON became the standard because it's human-readable and maps perfectly to Python dictionaries. Every LLM response is a JSON object with fields like <code>choices</code>, <code>content</code>, and <code>usage</code>.</p>
+      <p><strong>For GenAI specifically:</strong> Understanding HTTP status codes (200 OK, 429 rate-limited, 500 server error), headers (Authorization, Content-Type), and request/response bodies is non-negotiable. Async HTTP (via <code>httpx</code> or <code>aiohttp</code>) lets you make parallel LLM calls — critical when your agent needs to query multiple tools simultaneously.</p>
+
+      <div class="section-label">💥 Impact & Counterfactual</div>
+      <p>Without REST/JSON, every AI provider would use a different protocol. Integrating OpenAI, Anthropic, and Google would require learning three different communication standards instead of one.</p>
+
+      <div class="section-label">🧠 Multi-Level Explainer</div>
+      <div class="explainer">
+        <div class="explainer-box layman">
+          <div class="label">Layman's Terms</div>
+          <p>An API is like a restaurant menu: you pick what you want (the request), the kitchen makes it (the server), and the waiter brings it back (the response). JSON is the tray the food comes on — it's a structured, organized format both you and the kitchen understand.</p>
+        </div>
+        <div class="explainer-box el5">
+          <div class="label">Explain Like I'm 10</div>
+          <p>Imagine passing notes in class. You write "What's 5+3?" on a piece of paper (that's HTTP). You fold it a special way so your friend knows how to read it (that's JSON). Your friend writes "8" and passes it back. An API is the rules for how to fold and pass notes!</p>
+        </div>
+      </div>
+
+      <div class="section-label">📚 Resource Vault</div>
+      <div class="vault">
+        <a href="https://www.youtube.com/watch?v=WXsD0ZgxjRw" target="_blank">
+          <div class="v-icon">🎬</div>
+          <div><div class="v-label">YouTube · IBM Technology</div><div class="v-title">What is a REST API?</div></div>
+        </a>
+        <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/JSON" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · MDN</div><div class="v-title">Working with JSON — Complete Guide</div></div>
+        </a>
+        <a href="https://fastapi.tiangolo.com/tutorial/" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · FastAPI</div><div class="v-title">FastAPI Tutorial — Build AI Service Endpoints</div></div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Module: Git, Linux, SQL -->
+  <div class="module" id="mod-devtools">
+    <div class="module-head" onclick="toggleModule(this)">
+      <div class="icon">🛠</div>
+      <div class="title">
+        <h3>Git, Linux & SQL</h3>
+        <div class="sub">The development trifecta — version control, environments, and data</div>
+      </div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="module-body content">
+      <div class="section-label">🏛 History & Origin</div>
+      <p><strong>Git</strong> was created by Linus Torvalds in 2005 when the Linux kernel's previous version control system (BitKeeper) revoked its free license. Torvalds built Git in about two weeks. <strong>Linux</strong> itself dates to 1991, also by Torvalds. <strong>SQL</strong> was developed at IBM by Donald Chamberlin and Raymond Boyce in the 1970s, based on Edgar Codd's relational model.</p>
+
+      <div class="section-label">🔧 The "Why" & "What"</div>
+      <p><strong>Git:</strong> Every GenAI project needs version control — prompt templates, agent code, configuration files. Git branches let you experiment with different agent architectures without breaking production.</p>
+      <p><strong>Linux:</strong> Almost all AI services run on Linux servers. Docker containers (which wrap your GenAI apps) are Linux under the hood. Knowing bash commands, file permissions, and process management is essential.</p>
+      <p><strong>SQL:</strong> RAG systems often pull data from databases. Tool-calling agents need to write and execute SQL queries. Understanding joins, filters, and aggregations is critical for building knowledge assistants over structured data.</p>
+
+      <div class="section-label">🧠 Multi-Level Explainer</div>
+      <div class="explainer">
+        <div class="explainer-box layman">
+          <div class="label">Layman's Terms</div>
+          <p>Git is Google Docs "Version History" for code — it tracks every change and lets you undo anything. Linux is the operating system that runs most of the internet's servers. SQL is the language you use to ask questions of databases ("Show me all customers who bought last week").</p>
+        </div>
+        <div class="explainer-box el5">
+          <div class="label">Explain Like I'm 10</div>
+          <p>Git is like a time machine for your homework — you can go back to any version you saved. Linux is like the engine in a car: you don't see it, but everything runs because of it. SQL is like asking the school librarian a very specific question: "Find all books by this author published after 2020."</p>
+        </div>
+      </div>
+
+      <div class="section-label">📚 Resource Vault</div>
+      <div class="vault">
+        <a href="https://www.youtube.com/watch?v=RGOj5yH7evk" target="_blank">
+          <div class="v-icon">🎬</div>
+          <div><div class="v-label">YouTube · freeCodeCamp</div><div class="v-title">Git & GitHub for Beginners — Crash Course</div></div>
+        </a>
+        <a href="https://www.youtube.com/watch?v=HXV3zeQKqGY" target="_blank">
+          <div class="v-icon">🎬</div>
+          <div><div class="v-label">YouTube · freeCodeCamp</div><div class="v-title">SQL Full Course — 4 Hours</div></div>
+        </a>
+        <a href="https://git-scm.com/doc" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · Git</div><div class="v-title">Official Git Documentation</div></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PHASE 2: LLM BASICS ═══════════════════ -->
+<section class="phase" id="phase2">
+  <div class="phase-header">
+    <div class="phase-num">Phase 02</div>
+    <h2>LLM <span class="serif">Basics</span></h2>
+    <div class="phase-meta">
+      <span class="tag">Tokens</span><span class="tag">Context Windows</span><span class="tag">Prompting</span>
+      <span class="tag">System Prompts</span><span class="tag">Structured Output</span><span class="tag">Function Calling</span>
+    </div>
+  </div>
+
+  <!-- Module: Tokens & Context Windows -->
+  <div class="module open" id="mod-tokens">
+    <div class="module-head" onclick="toggleModule(this)">
+      <div class="icon">🪙</div>
+      <div class="title">
+        <h3>Tokens & Context Windows</h3>
+        <div class="sub">The atomic units of LLM communication and the model's working memory</div>
+      </div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="module-body content">
+      <div class="section-label">🏛 History & Origin</div>
+      <p>Tokenization traces back to <strong>Byte Pair Encoding (BPE)</strong>, originally a data compression algorithm from 1994 by Philip Gage. The breakthrough was applying it to NLP — the 2016 paper by Sennrich, Haddow, and Birch introduced BPE for machine translation. OpenAI adopted it for GPT-2 (2019) with their <code>tiktoken</code> tokenizer, and it became the industry standard. Context windows started at 512 tokens (BERT, 2018), grew to 2048 (GPT-2), 4096 (GPT-3), 8K–32K (GPT-4), and have now reached <strong>1 million+ tokens</strong> in 2026 models.</p>
+
+      <div class="section-label">🔧 The "Why" & "What"</div>
+      <p><strong>Problem solved:</strong> Neural networks can't process raw text — they need numbers. Tokenizers break text into subword units (tokens), each mapped to an integer ID. Common words like "the" are single tokens, while rare words like "tokenization" might be split into "token" + "ization".</p>
+      <p><strong>How it works:</strong> A context window is the model's total working memory for one request. Everything must fit inside it: your system prompt, conversation history, documents, tool outputs, AND the model's response. In English, 1 token ≈ 0.75 words. A 200K-token window holds roughly 150,000 words (about 500 pages). Critically, the context window resets with every API call — the model has no persistent memory.</p>
+
+      <div class="section-label">💥 Impact & Counterfactual</div>
+      <p><strong>Real-world impact:</strong> Context window size determines what's possible. A 4K window can handle a short chat. A 200K window can analyze an entire codebase. A 1M window can process a full legal contract or research paper collection in one pass.</p>
+      <p><strong>What if tokens didn't exist?</strong> Models would have to process individual characters (catastrophically slow) or full words (vocabulary of millions, impossibly expensive). Subword tokenization is the Goldilocks solution.</p>
+
+      <div class="section-label">🧠 Multi-Level Explainer</div>
+      <div class="explainer">
+        <div class="explainer-box layman">
+          <div class="label">Layman's Terms</div>
+          <p>Tokens are like syllables for AI. The model breaks your message into chunks — "Hello" is 1 token, "artificial" might be 2 tokens ("artific" + "ial"). The context window is how many tokens the AI can see at once — think of it as the size of its desk. Everything (your question + its answer) has to fit on that desk.</p>
+        </div>
+        <div class="explainer-box el5">
+          <div class="label">Explain Like I'm 10</div>
+          <p>Imagine you can only remember 20 words at a time. If someone tells you a story that's 25 words long, you'd forget the first 5 words! That's what a context window is — the AI's short-term memory limit. Tokens are like the individual LEGO bricks that make up each word.</p>
+        </div>
+      </div>
+
+      <div class="section-label">📚 Resource Vault</div>
+      <div class="vault">
+        <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g" target="_blank">
+          <div class="v-icon">🎬</div>
+          <div><div class="v-label">YouTube · Andrej Karpathy</div><div class="v-title">Intro to Large Language Models (1hr deep-dive)</div></div>
+        </a>
+        <a href="https://www.youtube.com/watch?v=LPZh9BOjkQs" target="_blank">
+          <div class="v-icon">🎬</div>
+          <div><div class="v-label">YouTube · Andrej Karpathy</div><div class="v-title">Deep Dive into LLMs like ChatGPT (3.5hr)</div></div>
+        </a>
+        <a href="https://www.morphllm.com/llm-context-window" target="_blank">
+          <div class="v-icon">📖</div>
+          <div><div class="v-label">Guide · Morph (2026)</div><div class="v-title">What Is an LLM Context Window? Developer's Guide</div></div>
+        </a>
+      </div>
+
+      <div class="section-label">🎮 Interactive Simulator — Tokenizer Explorer</div>
+      <div class="sim-container">
+        <div class="sim-bar">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span>tokenizer_explorer.py</span>
+        </div>
+        <div class="sim-canvas" id="sim-tokenizer">
+          <p style="font-size:0.85rem;color:var(--text-dim);margin-bottom:12px;">Type text below to see how an LLM tokenizer breaks it into tokens. Each color = one token.</p>
+          <textarea id="token-input" placeholder="Type something... e.g. 'The quick brown fox jumps over the lazy dog'" style="width:100%;padding:12px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:8px;font-family:var(--font-mono);font-size:0.85rem;resize:vertical;min-height:60px;" oninput="tokenize()">Generative AI is transforming how we build software applications in 2026.</textarea>
+          <div class="token-display" id="token-display"></div>
+          <div style="display:flex;gap:24px;margin-top:12px;">
+            <div style="font-family:var(--font-mono);font-size:0.82rem;">Token count: <span id="token-count" style="color:var(--accent2);">0</span></div>
+            <div style="font-family:var(--font-mono);font-size:0.82rem;">≈ Words: <span id="word-count" style="color:var(--accent3);">0</span></div>
+            <div style="font-family:var(--font-mono);font-size:0.82rem;">Context used: <span id="ctx-pct" style="color:var(--accent4);">0%</span> <span style="color:var(--text-dim)">of 200K</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Module: Prompting & System Prompts -->
+  <div class="module" id="mod-prompting">
+    <div class="module-head" onclick="toggleModule(this)">
+      <div class="icon">✍️</div>
+      <div class="title">
+        <h3>Prompting & System Prompts</h3>
+        <div class="sub">The art and science of steering LLM behavior</div>
+      </div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="module-body content">
+      <div class="section-label">🏛 History & Origin</div>
+      <p>Prompt engineering became a recognized discipline with GPT-3 (2020), when researchers at OpenAI demonstrated that the same model could perform wildly different tasks based solely on how you phrased the input. The landmark paper "Language Models are Few-Shot Learners" (Brown et al., 2020) showed that providing examples in the prompt (few-shot prompting) could rival fine-tuned models. Chain-of-thought prompting was formalized by Wei et al. (2022) at Google, showing that adding "Let's think step by step" dramatically improved reasoning.</p>
+
+      <div class="section-label">🔧 The "Why" & "What"</div>
+      <p><strong>System prompts</strong> are persistent instructions injected at the start of every conversation. They define the model's persona, constraints, and output format. <strong>User prompts</strong> are the actual queries. The interaction between them determines output quality.</p>
+      <p><strong>Key techniques:</strong> Zero-shot (just ask), few-shot (provide examples), chain-of-thought (ask to reason step by step), structured output (request JSON or XML), and role-based prompting (assign a persona).</p>
+
+      <div class="section-label">💥 Impact & Counterfactual</div>
+      <p>Without prompt engineering, LLMs would be like having a genius employee who never received a job description. The difference between a bad prompt and a good one can be the difference between a useless response and a production-ready output.</p>
+
+      <div class="section-label">🧠 Multi-Level Explainer</div>
+      <div class="explainer">
+        <div class="explainer-box layman">
+          <div class="label">Layman's Terms</div>
+          <p>A prompt is your instruction to the AI. A system prompt is like a standing memo ("You are a legal assistant who always cites sources") that stays active for the entire conversation. The better your instructions, the better the output. It's the difference between telling someone "write something about dogs" vs. "write a 200-word product description for a premium dog food brand targeting health-conscious pet owners."</p>
+        </div>
+        <div class="explainer-box el5">
+          <div class="label">Explain Like I'm 10</div>
+          <p>Imagine you have a super-smart robot friend. If you say "draw something," it might draw anything random. But if you say "draw a red dragon flying over a castle at sunset, in cartoon style," you'll get exactly what you want. A system prompt is like telling the robot at the start of the day: "Today you're an art teacher who always explains your drawings."</p>
+        </div>
+      </div>
+
+      <div class="section-label">📚 Resource Vault</div>
+      <div class="vault">
+        <a href="https://www.youtube.com/watch?v=jC4v5AS4RIM" target="_blank">
+          <div class="v-icon">🎬</div>
+          <div><div class="v-label">YouTube · IBM Technology</div><div class="v-title">What is Prompt Engineering?</div></div>
+        </a>
+        <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · Anthropic</div><div class="v-title">Prompt Engineering Guide for Claude</div></div>
+        </a>
+        <a href="https://platform.openai.com/docs/guides/prompt-engineering" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · OpenAI</div><div class="v-title">Prompt Engineering Best Practices</div></div>
+        </a>
+      </div>
+
+      <div class="section-label">🎮 Interactive Simulator — Prompt Workshop</div>
+      <div class="sim-container">
+        <div class="sim-bar">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span>prompt_workshop.py</span>
+        </div>
+        <div class="sim-canvas" id="sim-prompt">
+          <p style="font-size:0.85rem;color:var(--text-dim);margin-bottom:12px;">Build a prompt step-by-step. Watch how each technique changes the effective prompt.</p>
+          <div class="slider-row">
+            <label>Technique</label>
+            <div>
+              <button class="sim-btn active" onclick="setTechnique(this,'zero')">Zero-shot</button>
+              <button class="sim-btn" onclick="setTechnique(this,'few')">Few-shot</button>
+              <button class="sim-btn" onclick="setTechnique(this,'cot')">Chain-of-Thought</button>
+            </div>
+          </div>
+          <div class="slider-row">
+            <label>System Prompt</label>
+            <select id="sys-prompt" onchange="buildPrompt()" style="flex:1;padding:6px 10px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;font-family:var(--font-mono);font-size:0.8rem;">
+              <option value="none">None</option>
+              <option value="assistant">You are a helpful assistant.</option>
+              <option value="expert">You are a senior data scientist with 15 years of experience.</option>
+              <option value="structured">You are an API that only responds in valid JSON.</option>
+            </select>
+          </div>
+          <div class="slider-row">
+            <label>Output Format</label>
+            <div>
+              <button class="sim-btn active" onclick="setFormat(this,'freeform')">Freeform</button>
+              <button class="sim-btn" onclick="setFormat(this,'json')">JSON</button>
+              <button class="sim-btn" onclick="setFormat(this,'markdown')">Markdown</button>
+            </div>
+          </div>
+          <div class="slider-row">
+            <label>User Query</label>
+            <input type="text" id="user-query" value="What causes rain?" style="flex:1;padding:6px 10px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;font-family:var(--font-mono);font-size:0.8rem;" oninput="buildPrompt()">
+          </div>
+          <div class="sim-output" id="prompt-output" style="max-height:300px;overflow-y:auto;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Module: Function Calling & Structured Output -->
+  <div class="module" id="mod-functions">
+    <div class="module-head" onclick="toggleModule(this)">
+      <div class="icon">⚡</div>
+      <div class="title">
+        <h3>Function Calling & Structured Output</h3>
+        <div class="sub">Making LLMs reliable, predictable, and actionable</div>
+      </div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="module-body content">
+      <div class="section-label">🏛 History & Origin</div>
+      <p>OpenAI introduced function calling in June 2023, allowing GPT models to output structured JSON matching predefined function schemas instead of free text. This was the "aha" moment that turned chatbots into software components. Anthropic followed with tool use in Claude, and it's now standard across all major providers. Structured outputs (guaranteed JSON schema conformance) arrived in 2024, using constrained decoding to ensure the model's output is always valid.</p>
+
+      <div class="section-label">🔧 The "Why" & "What"</div>
+      <p><strong>Problem solved:</strong> Before function calling, extracting structured data from LLMs was unreliable — you'd parse free text with regex and hope it worked. Function calling gives the model a formal schema and it returns structured JSON that maps directly to code functions.</p>
+      <p><strong>Structured output</strong> goes further: the model is constrained at the token level to only produce valid JSON matching your schema. This means zero parsing failures in production.</p>
+
+      <div class="section-label">🧠 Multi-Level Explainer</div>
+      <div class="explainer">
+        <div class="explainer-box layman">
+          <div class="label">Layman's Terms</div>
+          <p>Function calling is like giving the AI a menu of actions it can take: "search the web," "query the database," "send an email." Instead of just talking, the AI can now DO things by outputting a structured request that your code executes.</p>
+        </div>
+        <div class="explainer-box el5">
+          <div class="label">Explain Like I'm 10</div>
+          <p>Imagine you have a robot butler. Before function calling, you'd say "I'm hungry" and it would just say "You should eat something." Now, with function calling, it says "I'll order a pizza for you" and actually presses the buttons to order it!</p>
+        </div>
+      </div>
+
+      <div class="section-label">📚 Resource Vault</div>
+      <div class="vault">
+        <a href="https://www.youtube.com/watch?v=aqdWSYWC_LI" target="_blank">
+          <div class="v-icon">🎬</div>
+          <div><div class="v-label">YouTube · IBM Technology</div><div class="v-title">What is Function Calling in LLMs?</div></div>
+        </a>
+        <a href="https://platform.openai.com/docs/guides/function-calling" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · OpenAI</div><div class="v-title">Function Calling Guide</div></div>
+        </a>
+        <a href="https://docs.anthropic.com/en/docs/build-with-claude/tool-use/overview" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · Anthropic</div><div class="v-title">Tool Use with Claude</div></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PHASE 3: RAG ═══════════════════ -->
+<section class="phase" id="phase3">
+  <div class="phase-header">
+    <div class="phase-num">Phase 03</div>
+    <h2>Retrieval-Augmented <span class="serif">Generation</span></h2>
+    <div class="phase-meta">
+      <span class="tag">Chunking</span><span class="tag">Embeddings</span><span class="tag">Retrieval</span>
+      <span class="tag">Reranking</span><span class="tag">Citations</span><span class="tag">Hybrid Search</span>
+    </div>
+  </div>
+
+  <!-- Module: Embeddings -->
+  <div class="module open" id="mod-embeddings">
+    <div class="module-head" onclick="toggleModule(this)">
+      <div class="icon">🧬</div>
+      <div class="title">
+        <h3>Embeddings & Vector Representations</h3>
+        <div class="sub">Turning text into numbers that capture meaning</div>
+      </div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="module-body content">
+      <div class="section-label">🏛 History & Origin</div>
+      <p>The concept of representing words as vectors traces to <strong>Word2Vec</strong> by Tomas Mikolov et al. at Google (2013). The famous result: "King − Man + Woman = Queen" showed that vector arithmetic could capture semantic relationships. This evolved through GloVe (Stanford, 2014), ELMo (AllenNLP, 2018), and finally modern sentence/document embeddings powered by transformers. Today's embedding models (OpenAI's text-embedding-3, Cohere Embed, BGE) produce 1536+ dimensional vectors that capture the semantic meaning of entire passages.</p>
+
+      <div class="section-label">🔧 The "Why" & "What"</div>
+      <p><strong>Problem solved:</strong> Computers can't understand text natively. Embeddings convert text into dense numerical vectors where <strong>semantically similar texts have similar vectors</strong>. "How do I fix a bug?" and "debugging my code" would be close in vector space, even though they share few words.</p>
+      <p><strong>How it works:</strong> You send text to an embedding model, which returns a vector (array of floating-point numbers). To find similar content, you compute the <strong>cosine similarity</strong> between vectors — a value between -1 and 1 where 1 means identical meaning.</p>
+
+      <div class="section-label">💥 Impact & Counterfactual</div>
+      <p><strong>Real-world uses:</strong> Semantic search, recommendation systems, clustering documents, anomaly detection, and — most importantly — RAG (the "R" in RAG). Without embeddings, search would be limited to exact keyword matching. You'd miss documents that discuss the same concept using different words.</p>
+
+      <div class="section-label">🧠 Multi-Level Explainer</div>
+      <div class="explainer">
+        <div class="explainer-box layman">
+          <div class="label">Layman's Terms</div>
+          <p>Embeddings turn text into coordinates on a map. Similar ideas end up near each other. "Happy" and "joyful" would be neighbors; "happy" and "carburetor" would be on opposite sides of the map. This lets computers find related content even when different words are used.</p>
+        </div>
+        <div class="explainer-box el5">
+          <div class="label">Explain Like I'm 10</div>
+          <p>Imagine every word is a kid in a schoolyard. Kids who like the same things stand close together. "Dog," "puppy," and "canine" are all in the pet-lovers corner. "Airplane" is across the yard with "jet" and "flight." Embeddings are the GPS coordinates of where each word stands!</p>
+        </div>
+      </div>
+
+      <div class="section-label">📚 Resource Vault</div>
+      <div class="vault">
+        <a href="https://www.youtube.com/watch?v=wjZofJX0v4M" target="_blank">
+          <div class="v-icon">🎬</div>
+          <div><div class="v-label">YouTube · StatQuest</div><div class="v-title">Word Embedding and Word2Vec, Clearly Explained</div></div>
+        </a>
+        <a href="https://www.youtube.com/watch?v=viZrOnJclY0" target="_blank">
+          <div class="v-icon">🎬</div>
+          <div><div class="v-label">YouTube · 3Blue1Brown</div><div class="v-title">Visualizing Embeddings in Transformers</div></div>
+        </a>
+        <a href="https://huggingface.co/blog/getting-started-with-embeddings" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Blog · Hugging Face</div><div class="v-title">Getting Started with Embeddings</div></div>
+        </a>
+      </div>
+
+      <div class="section-label">🎮 Interactive Simulator — Embedding Space Explorer</div>
+      <div class="sim-container">
+        <div class="sim-bar">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span>embedding_explorer.py</span>
+        </div>
+        <div class="sim-canvas" id="sim-embed">
+          <p style="font-size:0.85rem;color:var(--text-dim);margin-bottom:12px;">Click any two words to compute their similarity. Nearby words have high similarity scores.</p>
+          <div class="embed-grid" id="embed-grid"></div>
+          <div class="similarity-result" id="sim-result">Click two words to see their similarity score…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Module: Chunking & Retrieval -->
+  <div class="module" id="mod-chunking">
+    <div class="module-head" onclick="toggleModule(this)">
+      <div class="icon">🔪</div>
+      <div class="title">
+        <h3>Chunking, Retrieval & Hybrid Search</h3>
+        <div class="sub">Breaking documents apart and finding the needle in the haystack</div>
+      </div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="module-body content">
+      <div class="section-label">🏛 History & Origin</div>
+      <p>The concept of retrieval-augmented generation was formalized by <strong>Patrick Lewis et al. at Meta (Facebook AI Research)</strong> in their 2020 paper "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks." The insight was simple but revolutionary: instead of cramming all knowledge into model weights, <strong>retrieve relevant documents at inference time</strong> and provide them as context. This dramatically reduces hallucination and keeps the model's knowledge current.</p>
+
+      <div class="section-label">🔧 The "Why" & "What"</div>
+      <p><strong>Chunking</strong> is the first step: splitting documents into smaller pieces (typically 200–1000 tokens) that can be individually embedded and retrieved. Strategies include fixed-size, sentence-based, semantic, and recursive character splitting.</p>
+      <p><strong>Retrieval</strong> uses vector similarity search (semantic) and/or keyword search (BM25) to find the most relevant chunks for a given query. <strong>Hybrid search</strong> combines both: vector search finds semantically similar content, keyword search catches exact terms (product names, IDs, codes).</p>
+      <p><strong>Reranking</strong> is a second pass using a cross-encoder model (like Cohere Rerank or BGE-reranker) that scores each retrieved chunk's relevance to the query more precisely than vector similarity alone.</p>
+
+      <div class="section-label">💥 Impact & Counterfactual</div>
+      <p><strong>Without RAG:</strong> LLMs can only use knowledge frozen in their training data. They can't answer questions about your company's internal docs, last week's meeting notes, or your product catalog. RAG is what transforms a general chatbot into a <strong>knowledge assistant over your data</strong>.</p>
+
+      <div class="section-label">🧠 Multi-Level Explainer</div>
+      <div class="explainer">
+        <div class="explainer-box layman">
+          <div class="label">Layman's Terms</div>
+          <p>RAG is like giving the AI an open-book exam instead of a closed-book one. When you ask a question, it first searches through your documents (the "retrieval" part), finds the most relevant pages, then reads them and writes an answer (the "generation" part). The result: accurate answers grounded in your actual data, with sources you can verify.</p>
+        </div>
+        <div class="explainer-box el5">
+          <div class="label">Explain Like I'm 10</div>
+          <p>Imagine you're on a quiz show but you're allowed to bring one book. RAG is like having a super-fast librarian: you whisper a question, the librarian zooms through the book, grabs the best 3 pages, and hands them to you. Then you read those pages and answer the question confidently — because you can SEE the answer right there!</p>
+        </div>
+      </div>
+
+      <div class="section-label">📚 Resource Vault</div>
+      <div class="vault">
+        <a href="https://www.youtube.com/watch?v=T-D1OfcDW1M" target="_blank">
+          <div class="v-icon">🎬</div>
+          <div><div class="v-label">YouTube · IBM Technology</div><div class="v-title">What is Retrieval-Augmented Generation (RAG)?</div></div>
+        </a>
+        <a href="https://python.langchain.com/docs/concepts/rag/" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · LangChain</div><div class="v-title">RAG Concepts & Implementation Guide</div></div>
+        </a>
+        <a href="https://docs.llamaindex.ai/en/stable/" target="_blank">
+          <div class="v-icon">📘</div>
+          <div><div class="v-label">Docs · LlamaIndex</div><div class="v-title">Build RAG Pipelines with LlamaIndex</div></div>
+        </a>
+      </div>
+
+      <div class="section-label">🎮 Interactive Simulator — RAG Pipeline Visualizer</div>
+      <div class="sim-container">
+        <div class="sim-bar">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span>rag_pipeline_simulator.py</span>
+        </div>
+        <div class="sim-canvas" id="sim-rag">
+          <p style="font-size:0.85rem;color:var(--text-dim);margin-bottom:12px;">Type a query and watch the RAG pipeline in action — from chunking to retrieval to generation.</p>
+          <div class="slider-row">
+            <label>Your Query</label>
+            <input type="text" id="rag-query" value="What is our refund policy?" style="flex:1;padding:6px 10px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;font-family:var(--font-mono);font-size:0.8rem;">
+            <button class="sim-btn" onclick="runRAG()" style="margin-left:8px;">🔍 Search</button>
+          </div>
+          <div class="slider-row">
+            <label>Chunk Size</label>
+            <input type="range" min="50" max="500" value="200" id="chunk-size" oninput="document.getElementById('chunk-val').textContent=this.value+' tokens'">
+            <span class="val" id="chunk-val">200 tokens</span>
+          </div>
+          <div class="slider-row">
+            <label>Top-K Results</label>
+            <input type="range" min="1" max="5" value="3" id="top-k" oninput="document.getElementById('topk-val').textContent=this.value">
+            <span class="val" id="topk-val">3</span>
+          </div>
+
+          <div style="margin-top:16px;">
+            <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--accent2);margin-bottom:8px;letter-spacing:2px;">RAG PIPELINE</div>
+            <div class="rag-pipeline" id="rag-steps">
+              <div class="rag-step" id="rag-s1" style="border-color:var(--accent1);">📄 Document<br><small>Source docs</small></div>
+              <div class="rag-arrow">→</div>
+              <div class="rag-step" id="rag-s2" style="border-color:var(--accent3);">🔪 Chunk<br><small>Split text</small></div>
+              <div class="rag-arrow">→</div>
+              <div class="rag-step" id="rag-s3" style="border-color:var(--accent2);">🧬 Embed<br><small>Vectorize</small></div>
+              <div class="rag-arrow">→</div>
+              <div class="rag-step" id="rag-s4" style="border-color:var(--accent5);">🔍 Retrieve<br><small>Find relevant</small></div>
+              <div class="rag-arrow">→</div>
+              <div class="rag-step" id="rag-s5" style="border-color:var(--accent4);">🤖 Generate<br><small>LLM answer</small></div>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;">
+            <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--accent3);margin-bottom:8px;letter-spacing:2px;">RETRIEVED CHUNKS</div>
+            <div class="chunk-vis" id="chunk-results"></div>
+          </div>
+          <div class="sim-output" id="rag-output">Click "Search" to run the RAG pipeline…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<div class="footer">
+  <p>GenAI Engineering Curriculum · Batch 1 of 3 · Phases 1–3 Complete</p>
+  <p style="margin-top:8px;">Say <strong>"Continue"</strong> for Batch 2: Phases 4–6 (Tool Use, MCP, SDKs)</p>
+</div>
+
+<script>
+// ═══════════════════ MODULE TOGGLE ═══════════════════
+function toggleModule(head) {
+  head.closest('.module').classList.toggle('open');
+}
+
+// ═══════════════════ API REQUEST BUILDER ═══════════════════
+let apiMethod = 'GET';
+function setMethod(btn, method) {
+  apiMethod = method;
+  btn.parentElement.querySelectorAll('.sim-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildRequest();
+}
+
+function buildRequest() {
+  const endpoint = document.getElementById('api-endpoint').value;
+  const key = document.getElementById('api-key').value;
+  const temp = document.getElementById('api-temp').value / 100;
+  document.getElementById('api-temp-val').textContent = temp.toFixed(1);
+
+  let body = '';
+  if (apiMethod === 'POST' && endpoint.includes('chat')) {
+    body = `\n\n# Request Body (JSON)\n{\n  "model": "claude-sonnet-4-20250514",\n  "max_tokens": 1024,\n  "temperature": ${temp.toFixed(1)},\n  "messages": [\n    {"role": "user", "content": "Hello!"}\n  ]\n}`;
+  } else if (apiMethod === 'POST' && endpoint.includes('embeddings')) {
+    body = `\n\n# Request Body (JSON)\n{\n  "model": "text-embedding-3-small",\n  "input": "Your text here"\n}`;
+  }
+
+  const output = `# Python Request (httpx)
+import httpx
+
+response = httpx.${apiMethod.toLowerCase()}(
+    "https://api.example.com${endpoint}",
+    headers={
+        "Authorization": "Bearer ${key}",
+        "Content-Type": "application/json"
+    }${apiMethod !== 'GET' ? ',\n    json=payload' : ''}
+)
+print(response.status_code)  # 200 = OK
+print(response.json())${body}`;
+
+  document.getElementById('api-output').textContent = output;
+}
+buildRequest();
+
+// ═══════════════════ TOKENIZER ═══════════════════
+const tokenColors = ['#6366f1','#06b6d4','#f59e0b','#10b981','#ec4899','#8b5cf6','#14b8a6','#f97316','#3b82f6','#ef4444','#84cc16','#a855f7'];
+
+function tokenize() {
+  const text = document.getElementById('token-input').value;
+  if (!text) { document.getElementById('token-display').innerHTML = ''; return; }
+
+  // Simplified BPE-like tokenization
+  const tokens = [];
+  const words = text.split(/(\s+)/);
+  words.forEach(w => {
+    if (/^\s+$/.test(w)) { tokens.push(w); return; }
+    if (w.length <= 4) { tokens.push(w); }
+    else if (w.length <= 8) {
+      tokens.push(w.slice(0, Math.ceil(w.length/2)));
+      tokens.push(w.slice(Math.ceil(w.length/2)));
+    } else {
+      let i = 0;
+      while (i < w.length) {
+        const chunk = Math.min(3 + Math.floor(Math.random()*3), w.length - i);
+        tokens.push(w.slice(i, i + chunk));
+        i += chunk;
+      }
+    }
+  });
+
+  const nonSpace = tokens.filter(t => !/^\s+$/.test(t));
+  const display = document.getElementById('token-display');
+  display.innerHTML = nonSpace.map((t, i) => {
+    const c = tokenColors[i % tokenColors.length];
+    return `<span class="token" style="background:${c}22;border-color:${c}66;color:${c}">${t}</span>`;
+  }).join('');
+
+  document.getElementById('token-count').textContent = nonSpace.length;
+  document.getElementById('word-count').textContent = text.split(/\s+/).filter(Boolean).length;
+  document.getElementById('ctx-pct').textContent = (nonSpace.length / 200000 * 100).toFixed(4) + '%';
+}
+tokenize();
+
+// ═══════════════════ PROMPT WORKSHOP ═══════════════════
+let technique = 'zero', format = 'freeform';
+function setTechnique(btn, t) {
+  technique = t;
+  btn.parentElement.querySelectorAll('.sim-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildPrompt();
+}
+function setFormat(btn, f) {
+  format = f;
+  btn.parentElement.querySelectorAll('.sim-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildPrompt();
+}
+
+function buildPrompt() {
+  const sysVal = document.getElementById('sys-prompt').value;
+  const query = document.getElementById('user-query').value || 'What causes rain?';
+
+  let parts = [];
+  // System prompt
+  if (sysVal !== 'none') {
+    parts.push(`📋 SYSTEM PROMPT:\n"${sysVal}"\n`);
+  }
+
+  // Technique-specific additions
+  if (technique === 'few') {
+    parts.push(`📝 FEW-SHOT EXAMPLES:\nQ: What causes wind?\nA: Wind is caused by differences in atmospheric pressure. Air moves from high-pressure to low-pressure areas.\n\nQ: What causes earthquakes?\nA: Earthquakes are caused by the sudden release of energy when tectonic plates shift along fault lines.\n`);
+  }
+  if (technique === 'cot') {
+    parts.push(`💭 CHAIN-OF-THOUGHT INSTRUCTION:\n"Think through this step-by-step before giving your final answer."\n`);
+  }
+
+  // Format instruction
+  if (format === 'json') {
+    parts.push(`📦 OUTPUT FORMAT:\n"Respond ONLY with valid JSON matching this schema:\n{\n  \\"answer\\": \\"string\\",\n  \\"confidence\\": \\"high|medium|low\\",\n  \\"sources\\": [\\"string\\"]\n}"\n`);
+  } else if (format === 'markdown') {
+    parts.push(`📦 OUTPUT FORMAT:\n"Use Markdown headers (##) and bullet points for structure."\n`);
+  }
+
+  // User query
+  parts.push(`👤 USER QUERY:\n"${query}"`);
+
+  // Token estimate
+  const fullText = parts.join('\n');
+  const est = Math.round(fullText.length / 4);
+  parts.push(`\n─────────────────────\n📊 Estimated tokens: ~${est} | Technique: ${technique}-shot | Format: ${format}`);
+
+  document.getElementById('prompt-output').textContent = parts.join('\n');
+}
+buildPrompt();
+
+// ═══════════════════ EMBEDDING EXPLORER ═══════════════════
+const embedWords = [
+  { word: 'king', vec: [0.9, 0.1, 0.8, 0.2], color: '#6366f1' },
+  { word: 'queen', vec: [0.85, 0.15, 0.75, 0.9], color: '#ec4899' },
+  { word: 'man', vec: [0.7, 0.2, 0.9, 0.1], color: '#06b6d4' },
+  { word: 'woman', vec: [0.65, 0.25, 0.85, 0.85], color: '#f59e0b' },
+  { word: 'dog', vec: [0.1, 0.9, 0.3, 0.4], color: '#10b981' },
+  { word: 'puppy', vec: [0.15, 0.85, 0.25, 0.45], color: '#14b8a6' },
+  { word: 'cat', vec: [0.12, 0.88, 0.35, 0.5], color: '#8b5cf6' },
+  { word: 'happy', vec: [0.5, 0.3, 0.1, 0.7], color: '#f97316' },
+  { word: 'joyful', vec: [0.48, 0.32, 0.12, 0.72], color: '#ef4444' },
+  { word: 'sad', vec: [0.5, 0.3, 0.1, 0.05], color: '#3b82f6' },
+  { word: 'car', vec: [0.3, 0.4, 0.7, 0.3], color: '#84cc16' },
+  { word: 'airplane', vec: [0.35, 0.45, 0.6, 0.35], color: '#a855f7' },
+];
+
+let selectedWords = [];
+function renderEmbeddings() {
+  const grid = document.getElementById('embed-grid');
+  grid.innerHTML = embedWords.map((w, i) => `
+    <div class="embed-word" onclick="selectWord(${i})" style="background:${w.color}11;border-color:${w.color}44;" id="ew-${i}">
+      <div class="word" style="color:${w.color}">${w.word}</div>
+      <div class="vec">[${w.vec.map(v=>v.toFixed(2)).join(', ')}]</div>
+    </div>
+  `).join('');
+}
+function selectWord(i) {
+  const el = document.getElementById('ew-' + i);
+  if (selectedWords.includes(i)) {
+    selectedWords = selectedWords.filter(x => x !== i);
+    el.style.boxShadow = 'none';
+  } else {
+    if (selectedWords.length >= 2) {
+      document.getElementById('ew-' + selectedWords[0]).style.boxShadow = 'none';
+      selectedWords.shift();
+    }
+    selectedWords.push(i);
+    el.style.boxShadow = `0 0 16px ${embedWords[i].color}66`;
+  }
+  if (selectedWords.length === 2) computeSimilarity();
+  else document.getElementById('sim-result').textContent = 'Select two words to compare…';
+}
+function computeSimilarity() {
+  const a = embedWords[selectedWords[0]], b = embedWords[selectedWords[1]];
+  let dot = 0, magA = 0, magB = 0;
+  for (let i = 0; i < a.vec.length; i++) {
+    dot += a.vec[i] * b.vec[i];
+    magA += a.vec[i] ** 2;
+    magB += b.vec[i] ** 2;
+  }
+  const cos = dot / (Math.sqrt(magA) * Math.sqrt(magB));
+  const pct = (cos * 100).toFixed(1);
+  let interpretation = cos > 0.95 ? '🟢 Nearly identical meaning' : cos > 0.85 ? '🟡 Very similar concepts' : cos > 0.7 ? '🟠 Related concepts' : cos > 0.5 ? '🔵 Loosely related' : '🔴 Different concepts';
+
+  document.getElementById('sim-result').innerHTML = `
+    <strong style="color:${a.color}">${a.word}</strong> ↔ <strong style="color:${b.color}">${b.word}</strong><br>
+    Cosine Similarity: <strong style="color:var(--accent2)">${cos.toFixed(4)}</strong> (${pct}%)<br>
+    ${interpretation}<br><br>
+    <span style="color:var(--text-dim);font-size:0.78rem;">Formula: cos(θ) = (A·B) / (‖A‖ × ‖B‖) = ${dot.toFixed(3)} / (${Math.sqrt(magA).toFixed(3)} × ${Math.sqrt(magB).toFixed(3)})</span>
+  `;
+}
+renderEmbeddings();
+
+// ═══════════════════ RAG PIPELINE SIMULATOR ═══════════════════
+const ragDocs = [
+  { title: "Refund Policy", text: "Customers may request a full refund within 30 days of purchase. After 30 days, a 15% restocking fee applies. Digital products are non-refundable once downloaded.", topic: "refund" },
+  { title: "Shipping Info", text: "We offer free shipping on orders over $50. Standard delivery takes 5-7 business days. Express shipping (2-day) is available for $12.99.", topic: "shipping" },
+  { title: "Account Setup", text: "To create an account, click 'Sign Up' and enter your email. You'll receive a verification link. Two-factor authentication is recommended for security.", topic: "account" },
+  { title: "Return Process", text: "To initiate a return, log into your account and select the order. Print the prepaid shipping label. Pack items in original packaging. Refunds are processed within 5-7 business days.", topic: "refund" },
+  { title: "Product Warranty", text: "All electronics come with a 2-year manufacturer warranty. Coverage includes defects in materials and workmanship. Accidental damage is not covered.", topic: "warranty" },
+  { title: "Payment Methods", text: "We accept Visa, Mastercard, American Express, and PayPal. Apple Pay and Google Pay are available at checkout. Installment plans via Klarna for orders over $100.", topic: "payment" },
+  { title: "Privacy Policy", text: "We collect minimal personal data required for order fulfillment. Data is encrypted with AES-256. We never sell customer information to third parties.", topic: "privacy" },
+  { title: "Contact Support", text: "Reach our support team via live chat (24/7), email (support@example.com), or phone (1-800-555-0123). Average response time is under 2 hours.", topic: "support" },
+];
+
+function runRAG() {
+  const query = document.getElementById('rag-query').value.toLowerCase();
+  const topK = parseInt(document.getElementById('top-k').value);
+
+  // Animate pipeline steps
+  const steps = ['rag-s1','rag-s2','rag-s3','rag-s4','rag-s5'];
+  steps.forEach(s => document.getElementById(s).classList.remove('active'));
+
+  let delay = 0;
+  steps.forEach((s, i) => {
+    setTimeout(() => {
+      document.getElementById(s).classList.add('active');
+      if (i > 0) document.getElementById(steps[i-1]).classList.remove('active');
+    }, delay);
+    delay += 500;
+  });
+
+  // Score chunks by relevance (simplified)
+  const scored = ragDocs.map(doc => {
+    const words = query.split(/\s+/);
+    let score = 0;
+    words.forEach(w => {
+      if (doc.text.toLowerCase().includes(w)) score += 0.2;
+      if (doc.title.toLowerCase().includes(w)) score += 0.3;
+      if (doc.topic && query.includes(doc.topic)) score += 0.4;
+    });
+    score = Math.min(score + Math.random() * 0.1, 1.0);
+    return { ...doc, score };
+  });
+
+  scored.sort((a, b) => b.score - a.score);
+  const topResults = scored.slice(0, topK);
+
+  // Render chunks
+  setTimeout(() => {
+    const chunkVis = document.getElementById('chunk-results');
+    chunkVis.innerHTML = topResults.map((r, i) => `
+      <div class="chunk-card selected">
+        <strong>${r.title}</strong>
+        <p style="font-size:0.82rem;margin:6px 0;color:var(--text-dim);">${r.text}</p>
+        <div class="score">Relevance: ${(r.score * 100).toFixed(1)}% · Rank #${i + 1}</div>
+      </div>
+    `).join('') + scored.slice(topK, topK + 2).map(r => `
+      <div class="chunk-card">
+        <strong>${r.title}</strong>
+        <p style="font-size:0.82rem;margin:6px 0;color:var(--text-dim);">${r.text.slice(0, 60)}…</p>
+        <div class="score" style="color:var(--text-dim);">Relevance: ${(r.score * 100).toFixed(1)}% · Below threshold</div>
+      </div>
+    `).join('');
+
+    // Generate simulated response
+    const context = topResults.map(r => r.text).join(' ');
+    document.getElementById('rag-output').innerHTML = `<span style="color:var(--accent4);">🤖 Generated Answer (grounded in ${topK} retrieved chunks):</span>\n\nBased on our documentation:\n\n${topResults.map((r,i) => `[${i+1}] ${r.title}: ${r.text.split('.')[0]}.`).join('\n')}\n\n<span style="color:var(--text-dim);">─── Pipeline Stats ───\nChunks searched: ${ragDocs.length}\nChunks retrieved: ${topK}\nReranking: enabled\nCitations: ${topK} sources attached</span>`;
+  }, delay);
+}
+
+// Run initial states
+setTimeout(() => tokenize(), 100);
+</script>
+</body>
+</html>

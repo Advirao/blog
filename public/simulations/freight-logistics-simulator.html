@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freight & Logistics — Oil Trading Simulator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+  :root{
+    --bg:#0a0e14;--surface:#111820;--surface2:#1a2332;--border:#1e3a52;
+    --accent:#00c896;--gold:#f5a623;--danger:#ff4d6d;--blue:#378ADD;
+    --purple:#8b5cf6;--teal:#14b8a6;
+    --text:#c8d8e8;--text2:#6a8aaa;--white:#e8f4ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,200,150,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,150,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  .wrap{position:relative;z-index:1;max-width:1060px;margin:0 auto;padding:30px 20px;}
+
+  header{text-align:center;padding:40px 20px 32px;border-bottom:1px solid var(--border);margin-bottom:32px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:10px;}
+  h1{font-family:'Bebas Neue',cursive;font-size:clamp(32px,5vw,58px);color:var(--white);letter-spacing:2px;line-height:1;}
+  h1 span{color:var(--accent);}
+  .subtitle{font-size:13px;color:var(--text2);margin-top:8px;}
+
+  /* REPORT NAV */
+  .report-nav{display:grid;grid-template-columns:repeat(5,1fr);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:28px;}
+  .rnav{padding:15px 6px;text-align:center;cursor:pointer;font-size:12px;font-weight:500;background:var(--surface);color:var(--text2);border-right:1px solid var(--border);transition:all 0.2s;line-height:1.4;user-select:none;}
+  .rnav:last-child{border-right:none;}
+  .rnav .rnum{display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);margin-bottom:4px;letter-spacing:1px;}
+  .rnav:hover{background:var(--surface2);color:var(--text);}
+  .rnav.on{background:var(--surface2);color:var(--white);border-bottom:3px solid var(--accent);}
+  .rnav.on .rnum{color:var(--accent);}
+  @media(max-width:640px){.report-nav{grid-template-columns:repeat(3,1fr);}}
+
+  /* SUB TABS */
+  .tab-nav{display:flex;gap:4px;margin-bottom:22px;flex-wrap:wrap;}
+  .tnav{padding:8px 16px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;font-family:'IBM Plex Mono',monospace;}
+  .tnav:hover{background:var(--surface2);color:var(--text);}
+  .tnav.on{background:var(--accent);color:#000;border-color:var(--accent);}
+
+  .panel{display:none;animation:fadeIn 0.25s ease;}
+  .panel.on{display:block;}
+  .report-panel{display:none;}
+  .report-panel.on{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  /* CARDS */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:18px;}
+  .card2{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:14px;}
+
+  /* CALLOUT */
+  .callout{border-left:3px solid;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:18px;font-size:14px;line-height:1.7;}
+  .c-blue{border-color:var(--blue);background:rgba(55,138,221,0.08);color:var(--text);}
+  .c-amber{border-color:var(--gold);background:rgba(245,166,35,0.08);color:var(--text);}
+  .c-red{border-color:var(--danger);background:rgba(255,77,109,0.08);color:var(--text);}
+  .c-green{border-color:var(--accent);background:rgba(0,200,150,0.08);color:var(--text);}
+  .c-purple{border-color:var(--purple);background:rgba(139,92,246,0.08);color:var(--text);}
+  .c-teal{border-color:var(--teal);background:rgba(20,184,166,0.08);color:var(--text);}
+  .c-blue strong{color:#7ab8f0;} .c-amber strong{color:var(--gold);} .c-red strong{color:var(--danger);}
+  .c-green strong{color:var(--accent);} .c-purple strong{color:var(--purple);} .c-teal strong{color:var(--teal);}
+
+  /* MATH BOX */
+  .mathbox{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin:14px 0;font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:2;}
+  .mline{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .mop{color:var(--text2);width:18px;text-align:center;flex-shrink:0;}
+  .mlabel{color:var(--text2);font-size:12px;}
+  .mval{color:var(--white);font-weight:600;}
+  .mresult{font-size:15px;font-weight:600;border-top:1px solid var(--border);padding-top:10px;margin-top:8px;}
+  .msub{color:var(--text2);font-size:11px;margin-top:4px;}
+
+  /* METRICS */
+  .metrow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}
+  .met3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+  .met2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px;}
+  @media(max-width:600px){.metrow{grid-template-columns:repeat(2,1fr);}.met3{grid-template-columns:repeat(2,1fr);}}
+  .met{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;}
+  .ml{font-size:10px;color:var(--text2);font-family:'IBM Plex Mono',monospace;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;}
+  .mv{font-size:19px;font-weight:500;}
+  .ms{font-size:11px;color:var(--text2);margin-top:4px;line-height:1.5;}
+
+  /* BARS */
+  .barrow{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .barlabel{font-size:12px;color:var(--text2);width:180px;flex-shrink:0;}
+  .bartrack{flex:1;height:9px;background:var(--surface2);border-radius:4px;overflow:hidden;}
+  .barfill{height:100%;border-radius:4px;transition:width 0.5s ease;}
+  .barval{font-size:12px;font-weight:600;width:120px;text-align:right;font-family:'IBM Plex Mono',monospace;}
+
+  /* SLIDERS */
+  .srow{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .slabel{font-size:13px;color:var(--text2);width:210px;flex-shrink:0;}
+  .srow input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer;}
+  .sval{font-size:13px;font-weight:600;width:130px;text-align:right;color:var(--accent);font-family:'IBM Plex Mono',monospace;}
+
+  /* SECTION HEAD */
+  .sh{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--text2);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .sh::before{content:'';width:3px;height:11px;background:var(--accent);border-radius:2px;display:inline-block;}
+
+  /* TABLE */
+  .tbl{width:100%;border-collapse:collapse;}
+  .tbl th{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);letter-spacing:1px;text-transform:uppercase;}
+  .tbl td{font-size:13px;padding:11px 10px;border-bottom:1px solid rgba(30,58,82,0.4);font-family:'IBM Plex Mono',monospace;vertical-align:middle;}
+  .tbl tr:last-child td{border-bottom:none;}
+  .tbl tbody tr:hover{background:var(--surface2);}
+
+  /* PILLS */
+  .pill{display:inline-block;padding:3px 9px;border-radius:100px;font-size:10px;font-weight:600;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:1px;}
+  .p-ok{background:rgba(0,200,150,0.15);color:var(--accent);}
+  .p-warn{background:rgba(245,166,35,0.15);color:var(--gold);}
+  .p-bad{background:rgba(255,77,109,0.15);color:var(--danger);}
+  .p-blue{background:rgba(55,138,221,0.15);color:var(--blue);}
+  .p-purple{background:rgba(139,92,246,0.15);color:var(--purple);}
+
+  .div{border:none;border-top:1px solid var(--border);margin:16px 0;}
+
+  /* SHIP ANIMATION */
+  .ship-track{position:relative;height:60px;background:rgba(55,138,221,0.05);border:1px solid rgba(55,138,221,0.2);border-radius:10px;overflow:hidden;margin:16px 0;}
+  .ship-icon{position:absolute;top:50%;transform:translateY(-50%);font-size:24px;transition:left 2s ease;left:5%;}
+  .ship-port{position:absolute;top:50%;transform:translateY(-50%);font-size:18px;}
+  .ship-port.left{left:8px;}
+  .ship-port.right{right:8px;}
+  .ship-label{position:absolute;bottom:4px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);}
+  .ship-label.left{left:12px;}
+  .ship-label.right{right:12px;}
+  .ship-route{position:absolute;top:50%;width:100%;height:1px;background:rgba(55,138,221,0.3);border-top:1px dashed rgba(55,138,221,0.4);}
+
+  /* TANK / STORAGE VIZ */
+  .tank-wrap{display:flex;gap:16px;margin:16px 0;flex-wrap:wrap;}
+  .tank{flex:1;min-width:120px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+  .tank-bar-wrap{height:80px;background:var(--bg);border-radius:6px;overflow:hidden;display:flex;align-items:flex-end;margin:10px 0;}
+  .tank-bar{width:100%;border-radius:6px;transition:height 0.6s ease;}
+  .tank-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2);}
+  .tank-val{font-size:16px;font-weight:600;margin-top:4px;}
+
+  /* PIPELINE VIZ */
+  .pipe-viz{display:flex;align-items:center;gap:0;margin:16px 0;flex-wrap:wrap;}
+  .pipe-node{text-align:center;padding:12px 16px;border-radius:10px;min-width:100px;}
+  .pipe-seg{flex:1;height:8px;border-radius:4px;min-width:30px;}
+  .pipe-flow{animation:flow 2s linear infinite;}
+  @keyframes flow{0%{opacity:0.4;}50%{opacity:1;}100%{opacity:0.4;}}
+
+  /* DECISION MATRIX */
+  .decision-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0;}
+  .decision-card{border:1px solid var(--border);border-radius:10px;padding:16px;background:var(--surface);cursor:pointer;transition:all 0.2s;border-top-width:3px;}
+  .decision-card:hover{background:var(--surface2);}
+  .decision-card.selected{border-color:var(--accent);background:rgba(0,200,150,0.07);}
+  .dc-icon{font-size:28px;margin-bottom:8px;}
+  .dc-title{font-size:14px;font-weight:600;color:var(--white);margin-bottom:6px;}
+  .dc-desc{font-size:12px;color:var(--text2);line-height:1.5;}
+  .dc-cost{font-family:'IBM Plex Mono',monospace;font-size:13px;margin-top:8px;}
+
+  /* WATERFALL */
+  .waterfall{display:flex;flex-direction:column;gap:2px;margin:14px 0;}
+  .wf-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:6px;}
+  .wf-label{font-size:13px;width:200px;flex-shrink:0;}
+  .wf-bar-area{flex:1;position:relative;height:24px;}
+  .wf-bar{position:absolute;height:100%;border-radius:4px;display:flex;align-items:center;padding:0 8px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;transition:all 0.5s;white-space:nowrap;}
+  .wf-val{font-family:'IBM Plex Mono',monospace;font-size:12px;width:90px;text-align:right;font-weight:600;}
+
+  .pos{color:var(--accent);}
+  .neg{color:var(--danger);}
+  .gold{color:var(--gold);}
+  .blu{color:var(--blue);}
+  .neu{color:var(--text2);}
+  .pur{color:var(--purple);}
+  .tel{color:var(--teal);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">🛢️ Oil Trading — Freight & Logistics</div>
+    <h1>FREIGHT, PIPELINES <span>&</span> STORAGE</h1>
+    <div class="subtitle">How logistics costs affect your trade decision and commercial margin — every number derived from scratch</div>
+  </header>
+
+  <!-- REPORT NAV -->
+  <div class="report-nav">
+    <div class="rnav on"  onclick="goR(0,this)"><span class="rnum">L-01</span>Overview</div>
+    <div class="rnav"     onclick="goR(1,this)"><span class="rnum">L-02</span>Tanker Freight</div>
+    <div class="rnav"     onclick="goR(2,this)"><span class="rnum">L-03</span>Pipeline</div>
+    <div class="rnav"     onclick="goR(3,this)"><span class="rnum">L-04</span>Storage Economics</div>
+    <div class="rnav"     onclick="goR(4,this)"><span class="rnum">L-05</span>Trade Decision</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- L-01  OVERVIEW                                -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="report-panel on" id="r0">
+    <div class="callout c-blue">
+      <strong>Logistics is the hidden cost that kills trades.</strong><br>
+      A trader can buy crude at the right diff, hedge perfectly, and still lose money — because moving that barrel from point A to point B costs more than expected. Freight, pipeline tariffs, and storage fees eat directly into your commercial margin.
+    </div>
+
+    <div class="sh">The three logistics components — and how each affects your margin</div>
+    <div class="met3">
+      <div class="met" style="border-top:3px solid var(--blue);">
+        <div class="ml">Tanker Freight</div>
+        <div class="mv blu">Move by sea</div>
+        <div class="ms">Charter a vessel to carry crude from loading port to discharge port. Cost quoted in Worldscale (WS) rates. Highly volatile — moves with global tanker supply/demand.</div>
+        <div style="margin-top:10px;"><span class="pill p-blue">Typical: $1–$5/bbl</span></div>
+      </div>
+      <div class="met" style="border-top:3px solid var(--accent);">
+        <div class="ml">Pipeline</div>
+        <div class="mv pos">Move by pipe</div>
+        <div class="ms">Fixed tariff per barrel to move crude through a pipeline. Cheaper and more predictable than tankers. But you must nominate (book space) in advance — missing deadline = no space.</div>
+        <div style="margin-top:10px;"><span class="pill p-ok">Typical: $0.30–$2/bbl</span></div>
+      </div>
+      <div class="met" style="border-top:3px solid var(--gold);">
+        <div class="ml">Storage</div>
+        <div class="mv gold">Park barrels</div>
+        <div class="ms">Rent a tank to hold crude temporarily. Costs money every day. Only profitable if the forward curve is in contango — future price higher than spot. Otherwise you're bleeding capital.</div>
+        <div style="margin-top:10px;"><span class="pill p-warn">Typical: $0.20–$0.60/bbl/month</span></div>
+      </div>
+    </div>
+
+    <div class="sh">How logistics fits into your commercial margin</div>
+    <div class="card">
+      <div class="waterfall" id="overview-waterfall"></div>
+    </div>
+
+    <div class="callout c-amber">
+      <strong>The golden rule:</strong> always calculate your full logistics cost BEFORE agreeing a trade. The minimum differential you must sell at = buy diff + all logistics costs per barrel. If you can't find a buyer above that level — don't do the trade.
+    </div>
+
+    <div class="sh">The decision every trader makes — for every cargo</div>
+    <div class="card">
+      <table class="tbl">
+        <thead><tr><th>Question</th><th>Answer</th><th>Decision</th></tr></thead>
+        <tbody>
+          <tr><td class="gold">Where is the barrel now?</td><td class="neu">Cushing, Oklahoma</td><td class="neu">Pipeline or truck to Gulf Coast</td></tr>
+          <tr><td class="gold">Where does buyer want it?</td><td class="neu">Rotterdam, Netherlands</td><td class="neu">Pipeline to Houston + VLCC tanker</td></tr>
+          <tr><td class="gold">What is freight cost?</td><td class="neu">$2.10/bbl all-in</td><td class="neu">Deduct from margin calculation</td></tr>
+          <tr><td class="gold">Can I store instead?</td><td class="neu">Contango = $1.20/month</td><td class="neu">Cost $0.40/month → profit $0.80/month</td></tr>
+          <tr><td class="gold">What's my break-even sell diff?</td><td class="neu">Buy diff + all costs</td><td class="neu">Won't trade below this level</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- L-02  TANKER FREIGHT                          -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="report-panel" id="r1">
+    <div class="tab-nav">
+      <button class="tnav on" onclick="goT('r1',0,this)">What is freight?</button>
+      <button class="tnav"    onclick="goT('r1',1,this)">Worldscale explained</button>
+      <button class="tnav"    onclick="goT('r1',2,this)">Freight simulator</button>
+    </div>
+
+    <div class="panel on" id="r1-p0">
+      <div class="callout c-blue">
+        <strong>Tanker freight is the cost of chartering a ship to physically move crude oil across the ocean.</strong><br>
+        When you buy crude in the Middle East and sell it to a refinery in Rotterdam, you need a Very Large Crude Carrier (VLCC). The cost of that ship for that voyage is your freight cost — and it comes directly off your margin.
+      </div>
+
+      <div class="sh">How a tanker trade works — step by step</div>
+      <div class="ship-track" id="ship-anim">
+        <div class="ship-route"></div>
+        <div class="ship-port left">🏭</div>
+        <div class="ship-label left">Ras Tanura, Saudi</div>
+        <div class="ship-port right">🏭</div>
+        <div class="ship-label right">Rotterdam, NL</div>
+        <div class="ship-icon" id="ship-emoji">🚢</div>
+      </div>
+
+      <div class="card">
+        <table class="tbl">
+          <thead><tr><th>Tanker type</th><th>Size (barrels)</th><th>Route example</th><th>Typical cost</th><th>$/bbl approx</th></tr></thead>
+          <tbody>
+            <tr><td class="blu">VLCC</td><td>2,000,000 bbls</td><td>Middle East → Europe/Asia</td><td class="gold">$3–6M per voyage</td><td class="gold">$1.50–$3.00</td></tr>
+            <tr><td class="blu">Suezmax</td><td>1,000,000 bbls</td><td>West Africa → Europe</td><td class="gold">$1.5–3M per voyage</td><td class="gold">$1.50–$3.00</td></tr>
+            <tr><td class="blu">Aframax</td><td>600,000 bbls</td><td>North Sea → Med</td><td class="gold">$0.8–1.5M per voyage</td><td class="gold">$1.30–$2.50</td></tr>
+            <tr><td class="blu">Panamax</td><td>400,000 bbls</td><td>Americas → Europe</td><td class="gold">$0.5–1M per voyage</td><td class="gold">$1.25–$2.50</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="met3">
+        <div class="met">
+          <div class="ml">Voyage time matters</div>
+          <div class="mv blu">25–45 days</div>
+          <div class="ms">Middle East to Europe takes ~25 days. During this time you own the oil but can't sell it — capital tied up, plus daily capital charge running.</div>
+        </div>
+        <div class="met">
+          <div class="ml">Demurrage risk</div>
+          <div class="mv" style="color:var(--danger);">$50k–$150k/day</div>
+          <div class="ms">If the ship has to wait at port because the terminal isn't ready, you pay demurrage (waiting penalty). This can wipe out margin on a bad day.</div>
+        </div>
+        <div class="met">
+          <div class="ml">Bunker fuel cost</div>
+          <div class="mv gold">$0.20–$0.50/bbl</div>
+          <div class="ms">Ship burns fuel (bunkers). High oil prices = expensive bunkers = higher freight costs. This creates a self-reinforcing effect when oil prices spike.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="r1-p1">
+      <div class="callout c-blue">
+        <strong>Worldscale (WS) is the global freight rate system.</strong><br>
+        WS 100 = the "flat rate" — a theoretical standard cost for each route published annually by the Worldscale Association. Actual market rates are quoted as a percentage of WS 100. WS 80 = 80% of the flat rate. WS 150 = 150% (expensive market).
+      </div>
+
+      <div class="sh">How WS converts to dollars per barrel</div>
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">Route flat rate (WS 100)</span><span class="mval">$18.50 / metric tonne</span><span class="mlabel">(published by Worldscale Association for this route)</span></div>
+        <div class="mline"><span class="mop">×</span><span class="mlabel">Market rate (WS points)</span><span class="mval">WS 85</span><span class="mlabel">(current market = 85% of flat rate)</span></div>
+        <div class="mline"><span class="mop">=</span><span class="mlabel">Actual rate</span><span class="mval">$18.50 × 0.85 = $15.73 / mt</span></div>
+        <div class="mline"><span class="mop">÷</span><span class="mlabel">Barrel conversion (1 mt = 7.3 bbls)</span><span class="mval">÷ 7.3</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult pos">Freight cost = $15.73 ÷ 7.3 = $2.15 / bbl</div>
+      </div>
+
+      <div class="callout c-amber">
+        <strong>Why WS rates are so volatile:</strong> tanker rates move with the balance of tanker supply vs cargo demand. When OPEC cuts production, fewer cargoes need ships — rates collapse to WS 40–50. When demand surges or geopolitical events divert ships, rates spike to WS 200+. A trader who locked in a voyage at WS 100 when market is now WS 60 just paid 67% more than the market.
+      </div>
+
+      <div class="sh">WS rate market conditions</div>
+      <div class="card">
+        <div class="barrow"><div class="barlabel">WS 40–60 (weak market)</div><div class="bartrack"><div class="barfill" style="width:25%;background:var(--accent);"></div></div><div class="barval pos">~$1.10/bbl</div></div>
+        <div class="barrow"><div class="barlabel">WS 80–100 (normal)</div><div class="bartrack"><div class="barfill" style="width:50%;background:var(--gold);"></div></div><div class="barval gold">~$2.15/bbl</div></div>
+        <div class="barrow"><div class="barlabel">WS 120–150 (tight)</div><div class="bartrack"><div class="barfill" style="width:75%;background:var(--gold);"></div></div><div class="barval gold">~$3.20/bbl</div></div>
+        <div class="barrow"><div class="barlabel">WS 200+ (very tight)</div><div class="bartrack"><div class="barfill" style="width:100%;background:var(--danger);"></div></div><div class="barval neg">~$5.00+/bbl</div></div>
+      </div>
+    </div>
+
+    <div class="panel" id="r1-p2">
+      <div class="callout c-blue"><strong>Build your own tanker voyage economics.</strong> Every number derives from your inputs — no assumptions.</div>
+      <div class="card">
+        <div class="srow"><div class="slabel">Cargo size (kbbls)</div><input type="range" min="400" max="2000" step="100" value="1000" id="t-cargo" oninput="calcTanker()"><div class="sval" id="t-cargo-v">1,000 kbbls</div></div>
+        <div class="srow"><div class="slabel">WS flat rate ($/mt)</div><input type="range" min="10" max="30" step="0.50" value="18.50" id="t-flat" oninput="calcTanker()"><div class="sval" id="t-flat-v">$18.50/mt</div></div>
+        <div class="srow"><div class="slabel">Market WS rate (points)</div><input type="range" min="30" max="250" step="5" value="85" id="t-ws" oninput="calcTanker()"><div class="sval" id="t-ws-v">WS 85</div></div>
+        <div class="srow"><div class="slabel">Voyage days</div><input type="range" min="5" max="50" step="1" value="25" id="t-days" oninput="calcTanker()"><div class="sval" id="t-days-v">25 days</div></div>
+        <div class="srow"><div class="slabel">Demurrage risk (days)</div><input type="range" min="0" max="5" step="0.5" value="1" id="t-dem" oninput="calcTanker()"><div class="sval" id="t-dem-v">1.0 days</div></div>
+        <div class="srow"><div class="slabel">Demurrage rate ($/day)</div><input type="range" min="20000" max="150000" step="5000" value="75000" id="t-demrate" oninput="calcTanker()"><div class="sval" id="t-demrate-v">$75,000/day</div></div>
+      </div>
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">Actual freight rate</span><span class="mval" id="tm-rate">$18.50 × 85% = $15.73/mt</span></div>
+        <div class="mline"><span class="mop">÷</span><span class="mlabel">Convert to per barrel</span><span class="mval" id="tm-bbl">$15.73 ÷ 7.3 = $2.15/bbl</span></div>
+        <div class="mline"><span class="mlabel">Total freight cost</span><span class="mval" id="tm-total">1,000,000 × $2.15 = $2,150,000</span></div>
+        <div class="mline"><span class="mop">+</span><span class="mlabel">Demurrage risk</span><span class="mval" id="tm-dem">1.0 days × $75,000 = $75,000</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult" id="tm-result">All-in freight cost = $2,225,000 → $2.23/bbl</div>
+        <div class="msub" id="tm-capital">Capital cost during voyage (25 days): add to your cost calculation</div>
+      </div>
+      <div class="metrow">
+        <div class="met"><div class="ml">Freight $/bbl</div><div class="mv neg" id="tr1">$2.15/bbl</div><div class="ms">Base voyage cost</div></div>
+        <div class="met"><div class="ml">Demurrage $/bbl</div><div class="mv neg" id="tr2">$0.08/bbl</div><div class="ms">Waiting risk cost</div></div>
+        <div class="met"><div class="ml">Total freight $/bbl</div><div class="mv neg" id="tr3">$2.23/bbl</div><div class="ms">All-in per barrel</div></div>
+        <div class="met"><div class="ml">Total voyage cost</div><div class="mv neg" id="tr4">$2,225,000</div><div class="ms">Full cargo cost</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- L-03  PIPELINE                                -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="report-panel" id="r2">
+    <div class="tab-nav">
+      <button class="tnav on" onclick="goT('r2',0,this)">What is pipeline?</button>
+      <button class="tnav"    onclick="goT('r2',1,this)">Nominations explained</button>
+      <button class="tnav"    onclick="goT('r2',2,this)">Pipeline simulator</button>
+    </div>
+
+    <div class="panel on" id="r2-p0">
+      <div class="callout c-blue">
+        <strong>A pipeline moves crude oil overland through a fixed physical pipe — much cheaper and faster than a tanker, but you must book space in advance.</strong><br>
+        In the US, crude moves from the Permian Basin in Texas to Cushing, Oklahoma (the WTI hub) and then to Gulf Coast refineries, all by pipeline.
+      </div>
+
+      <div class="sh">Pipeline vs tanker — side by side</div>
+      <div class="met2">
+        <div class="met" style="border-top:3px solid var(--accent);">
+          <div class="ml">Pipeline advantages</div>
+          <div class="mv pos">Cheaper + Predictable</div>
+          <div class="ms" style="margin-top:8px;line-height:1.7;">
+            ✓ Fixed tariff — no market volatility<br>
+            ✓ Fast — days, not weeks<br>
+            ✓ No weather/demurrage risk<br>
+            ✓ Can move continuously (batch scheduling)
+          </div>
+        </div>
+        <div class="met" style="border-top:3px solid var(--danger);">
+          <div class="ml">Pipeline constraints</div>
+          <div class="mv neg">Capacity + Nominations</div>
+          <div class="ms" style="margin-top:8px;line-height:1.7;">
+            ✗ Must nominate by deadline (25th of prior month)<br>
+            ✗ If you miss nomination — no space for 30 days<br>
+            ✗ Fixed routes — can't redirect like a tanker<br>
+            ✗ Quality restrictions — can't mix grades freely
+          </div>
+        </div>
+      </div>
+
+      <div class="sh">A typical pipeline flow — Permian to Gulf Coast</div>
+      <div class="pipe-viz">
+        <div class="pipe-node" style="background:rgba(55,138,221,0.12);border:1px solid var(--blue);">
+          <div style="font-size:20px;">⛽</div>
+          <div style="font-size:11px;color:var(--blue);font-family:'IBM Plex Mono',monospace;margin-top:4px;">PERMIAN</div>
+          <div style="font-size:10px;color:var(--text2);">Midland, TX</div>
+        </div>
+        <div class="pipe-seg pipe-flow" style="background:linear-gradient(90deg,var(--blue),var(--accent));"></div>
+        <div class="pipe-node" style="background:rgba(0,200,150,0.12);border:1px solid var(--accent);">
+          <div style="font-size:20px;">🔄</div>
+          <div style="font-size:11px;color:var(--accent);font-family:'IBM Plex Mono',monospace;margin-top:4px;">CUSHING</div>
+          <div style="font-size:10px;color:var(--text2);">WTI Hub, OK</div>
+        </div>
+        <div class="pipe-seg pipe-flow" style="background:linear-gradient(90deg,var(--accent),var(--gold));"></div>
+        <div class="pipe-node" style="background:rgba(245,166,35,0.12);border:1px solid var(--gold);">
+          <div style="font-size:20px;">🏭</div>
+          <div style="font-size:11px;color:var(--gold);font-family:'IBM Plex Mono',monospace;margin-top:4px;">HOUSTON</div>
+          <div style="font-size:10px;color:var(--text2);">Gulf Coast, TX</div>
+        </div>
+        <div class="pipe-seg pipe-flow" style="background:linear-gradient(90deg,var(--gold),var(--purple));"></div>
+        <div class="pipe-node" style="background:rgba(139,92,246,0.12);border:1px solid var(--purple);">
+          <div style="font-size:20px;">🚢</div>
+          <div style="font-size:11px;color:var(--purple);font-family:'IBM Plex Mono',monospace;margin-top:4px;">EXPORT</div>
+          <div style="font-size:10px;color:var(--text2);">Freeport/Corpus</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <table class="tbl">
+          <thead><tr><th>Segment</th><th>Distance</th><th>Tariff ($/bbl)</th><th>Transit time</th><th>Key risk</th></tr></thead>
+          <tbody>
+            <tr><td class="blu">Permian → Cushing</td><td class="neu">600 miles</td><td class="pos">$0.50–$0.80</td><td class="neu">3–5 days</td><td class="gold">Nomination deadline</td></tr>
+            <tr><td class="blu">Cushing → Gulf Coast</td><td class="neu">500 miles</td><td class="pos">$0.40–$0.70</td><td class="neu">2–4 days</td><td class="gold">Pipeline apportionment</td></tr>
+            <tr><td class="blu">Gulf Coast export terminal</td><td class="neu">—</td><td class="pos">$0.20–$0.40</td><td class="neu">1–2 days</td><td class="gold">Berth scheduling</td></tr>
+            <tr style="background:rgba(0,200,150,0.05);"><td><strong>Total pipeline</strong></td><td></td><td class="pos"><strong>$1.10–$1.90/bbl</strong></td><td class="neu"><strong>6–11 days</strong></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel" id="r2-p1">
+      <div class="callout c-blue">
+        <strong>Nominations = booking your space in the pipeline for next month.</strong><br>
+        Pipeline operators publish a nomination deadline — typically the 25th of each month for the following month's flows. Miss it and you have no space. This is one of the most operationally critical deadlines in physical trading.
+      </div>
+
+      <div class="sh">The nomination cycle — what happens each month</div>
+      <div class="card">
+        <div style="display:flex;flex-direction:column;gap:0;">
+          <div style="display:flex;gap:14px;padding:12px 0;border-bottom:1px solid rgba(30,58,82,0.4);">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);width:80px;flex-shrink:0;padding-top:2px;">25th Mar</div>
+            <div style="width:10px;height:10px;border-radius:50%;background:var(--gold);margin-top:4px;flex-shrink:0;"></div>
+            <div><div style="font-size:13px;color:var(--white);font-weight:500;margin-bottom:3px;">Nomination deadline for April flows</div><div style="font-size:12px;color:var(--text2);">You tell the pipeline operator: "I want to move 500,000 bbls from Cushing to Gulf Coast in April." If you miss this — no space in April.</div></div>
+          </div>
+          <div style="display:flex;gap:14px;padding:12px 0;border-bottom:1px solid rgba(30,58,82,0.4);">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--blue);width:80px;flex-shrink:0;padding-top:2px;">1st Apr</div>
+            <div style="width:10px;height:10px;border-radius:50%;background:var(--blue);margin-top:4px;flex-shrink:0;"></div>
+            <div><div style="font-size:13px;color:var(--white);font-weight:500;margin-bottom:3px;">Operator confirms (or apportions)</div><div style="font-size:12px;color:var(--text2);">If pipeline is oversubscribed, operator apportions space equally. You might only get 80% of what you nominated. This is called apportionment and it can strand barrels.</div></div>
+          </div>
+          <div style="display:flex;gap:14px;padding:12px 0;border-bottom:1px solid rgba(30,58,82,0.4);">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);width:80px;flex-shrink:0;padding-top:2px;">Apr 1–30</div>
+            <div style="width:10px;height:10px;border-radius:50%;background:var(--accent);margin-top:4px;flex-shrink:0;"></div>
+            <div><div style="font-size:13px;color:var(--white);font-weight:500;margin-bottom:3px;">Barrels flow through pipeline</div><div style="font-size:12px;color:var(--text2);">Your crude moves through the pipe in scheduled batches. You track it by injection volume vs. confirmed delivery.</div></div>
+          </div>
+          <div style="display:flex;gap:14px;padding:12px 0;">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2);width:80px;flex-shrink:0;padding-top:2px;">30th Apr</div>
+            <div style="width:10px;height:10px;border-radius:50%;background:var(--text2);margin-top:4px;flex-shrink:0;"></div>
+            <div><div style="font-size:13px;color:var(--white);font-weight:500;margin-bottom:3px;">Delivery confirmed — title transfers to buyer</div><div style="font-size:12px;color:var(--text2);">Measurement at delivery point confirms volume. Any shortfall (line loss) is the pipeline's liability. Payment clock starts.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout c-red">
+        <strong>Apportionment is the nightmare scenario.</strong> You bought 1,000,000 barrels expecting full pipeline access. The operator apportions at 70% — you can only move 700,000 barrels. The other 300,000 sit in storage costing you $18k/day in capital charges while you scramble to find alternative transport.
+      </div>
+    </div>
+
+    <div class="panel" id="r2-p2">
+      <div class="callout c-blue"><strong>Pipeline cost simulator — derive every dollar from your inputs.</strong></div>
+      <div class="card">
+        <div class="srow"><div class="slabel">Volume nominated (kbbls)</div><input type="range" min="100" max="2000" step="100" value="1000" id="p-vol" oninput="calcPipe()"><div class="sval" id="p-vol-v">1,000 kbbls</div></div>
+        <div class="srow"><div class="slabel">Tariff segment 1 ($/bbl)</div><input type="range" min="0.10" max="1.50" step="0.05" value="0.65" id="p-t1" oninput="calcPipe()"><div class="sval" id="p-t1-v">$0.65/bbl</div></div>
+        <div class="srow"><div class="slabel">Tariff segment 2 ($/bbl)</div><input type="range" min="0.10" max="1.50" step="0.05" value="0.55" id="p-t2" oninput="calcPipe()"><div class="sval" id="p-t2-v">$0.55/bbl</div></div>
+        <div class="srow"><div class="slabel">Terminal/export fee ($/bbl)</div><input type="range" min="0.10" max="0.80" step="0.05" value="0.30" id="p-term" oninput="calcPipe()"><div class="sval" id="p-term-v">$0.30/bbl</div></div>
+        <div class="srow"><div class="slabel">Apportionment % received</div><input type="range" min="50" max="100" step="5" value="100" id="p-appor" oninput="calcPipe()"><div class="sval" id="p-appor-v">100%</div></div>
+      </div>
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">Total tariff</span><span class="mval" id="pm-tariff">$0.65 + $0.55 + $0.30 = $1.50/bbl</span></div>
+        <div class="mline"><span class="mlabel">Volume confirmed</span><span class="mval" id="pm-volconf">1,000,000 × 100% = 1,000,000 bbls</span></div>
+        <div class="mline"><span class="mlabel">Stranded volume</span><span class="mval" id="pm-strand" style="color:var(--text2);">0 bbls (no apportionment)</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult" id="pm-result">Pipeline cost = 1,000,000 × $1.50 = $1,500,000</div>
+        <div class="msub" id="pm-strand-cost"></div>
+      </div>
+      <div class="metrow">
+        <div class="met"><div class="ml">Total tariff/bbl</div><div class="mv neg" id="pr1">$1.50/bbl</div></div>
+        <div class="met"><div class="ml">Volume confirmed</div><div class="mv pos" id="pr2">1,000,000 bbls</div></div>
+        <div class="met"><div class="ml">Stranded barrels</div><div class="mv" id="pr3" style="color:var(--accent);">0 bbls</div></div>
+        <div class="met"><div class="ml">Total pipeline cost</div><div class="mv neg" id="pr4">$1,500,000</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- L-04  STORAGE ECONOMICS                       -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="report-panel" id="r3">
+    <div class="tab-nav">
+      <button class="tnav on" onclick="goT('r3',0,this)">What is storage?</button>
+      <button class="tnav"    onclick="goT('r3',1,this)">Contango trade</button>
+      <button class="tnav"    onclick="goT('r3',2,this)">Storage simulator</button>
+    </div>
+
+    <div class="panel on" id="r3-p0">
+      <div class="callout c-blue">
+        <strong>Storage means renting a tank to hold crude oil when you don't want to sell it immediately.</strong><br>
+        You store oil when: (1) you can't find a buyer today, (2) the forward curve is in contango so future prices are higher, or (3) you are waiting for a better market. Every day in storage costs money.
+      </div>
+
+      <div class="sh">Storage cost components — where the money goes</div>
+      <div class="card">
+        <table class="tbl">
+          <thead><tr><th>Cost component</th><th>Typical rate</th><th>On 1M bbls/month</th><th>Why it exists</th></tr></thead>
+          <tbody>
+            <tr><td class="gold">Tank rental fee</td><td class="gold">$0.20–$0.40/bbl/month</td><td class="neg">$200k–$400k/month</td><td class="neu">Tank operator's margin for providing facility</td></tr>
+            <tr><td class="gold">Insurance</td><td class="gold">$0.02–$0.05/bbl/month</td><td class="neg">$20k–$50k/month</td><td class="neu">Coverage for fire, spill, contamination risk</td></tr>
+            <tr><td class="gold">Heating (heavy crude)</td><td class="gold">$0.03–$0.08/bbl/month</td><td class="neg">$30k–$80k/month</td><td class="neu">Heavy crude solidifies — must keep heated</td></tr>
+            <tr><td class="gold">Loss allowance</td><td class="gold">0.05–0.15% per month</td><td class="neg">~$40k/month</td><td class="neu">Evaporation, metering loss, tank bottom loss</td></tr>
+            <tr><td class="gold">Capital charge</td><td class="gold">$18,230/day (8% rate)</td><td class="neg">$546k/month</td><td class="neu">Cost of company money tied up in inventory</td></tr>
+            <tr style="background:rgba(255,77,109,0.05);"><td><strong>Total storage cost</strong></td><td class="neg"><strong>~$0.80–$1.10/bbl/month</strong></td><td class="neg"><strong>~$836k–$1.1M/month</strong></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sh">Tank fill level — visual</div>
+      <div class="tank-wrap">
+        <div class="tank">
+          <div class="tank-label">Empty tank</div>
+          <div class="tank-bar-wrap"><div class="tank-bar" style="height:5%;background:var(--border);"></div></div>
+          <div class="tank-val neu">5% full</div>
+          <div class="tank-label" style="margin-top:4px;">Losing money on fixed costs</div>
+        </div>
+        <div class="tank">
+          <div class="tank-label">Half full</div>
+          <div class="tank-bar-wrap"><div class="tank-bar" style="height:50%;background:var(--gold);"></div></div>
+          <div class="tank-val gold">50% full</div>
+          <div class="tank-label" style="margin-top:4px;">Moderate cost efficiency</div>
+        </div>
+        <div class="tank">
+          <div class="tank-label">Full tank</div>
+          <div class="tank-bar-wrap"><div class="tank-bar" style="height:95%;background:var(--accent);"></div></div>
+          <div class="tank-val pos">95% full</div>
+          <div class="tank-label" style="margin-top:4px;">Best cost per barrel</div>
+        </div>
+        <div class="tank">
+          <div class="tank-label">Overfill risk</div>
+          <div class="tank-bar-wrap"><div class="tank-bar" style="height:100%;background:var(--danger);"></div></div>
+          <div class="tank-val neg">100%</div>
+          <div class="tank-label" style="margin-top:4px;">Safety risk — must sell fast</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="r3-p1">
+      <div class="callout c-blue">
+        <strong>The contango storage trade: buy spot, store, sell forward.</strong><br>
+        When the market is in contango (future prices higher than spot), you can lock in a profit by buying cheap oil today, storing it, and simultaneously selling it forward at the higher future price. If the contango is wide enough to cover storage costs — it's a guaranteed profit.
+      </div>
+
+      <div class="sh">The full calculation — does the contango cover costs?</div>
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">Spot price today</span><span class="mval">$80.00 / bbl</span></div>
+        <div class="mline"><span class="mlabel">3-month forward price</span><span class="mval">$83.50 / bbl</span></div>
+        <div class="mline"><span class="mop">=</span><span class="mlabel">Contango gain</span><span class="mval pos">+$3.50 / bbl over 3 months</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mline"><span class="mlabel">Tank rental (3 months)</span><span class="mval neg">−$0.90 / bbl</span></div>
+        <div class="mline"><span class="mlabel">Insurance + losses</span><span class="mval neg">−$0.20 / bbl</span></div>
+        <div class="mline"><span class="mlabel">Capital charge (90 days)</span><span class="mval neg">−$1.64 / bbl</span><span class="mlabel">($80 × 8% × 90/365)</span></div>
+        <div class="mline"><span class="mlabel">Financing cost</span><span class="mval neg">−$0.27 / bbl</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult pos">Net storage profit = $3.50 − $3.01 = +$0.49 / bbl</div>
+        <div class="msub">On 1,000,000 barrels: +$490,000 locked-in profit for 3 months work</div>
+      </div>
+
+      <div class="callout c-green">
+        <strong>This is the famous "cash and carry" trade.</strong> When contango is steep (like during COVID-2020 when WTI went negative), traders filled every available tank and tanker with crude and locked in enormous profits. The trade is fully hedged — you buy physical AND simultaneously sell the forward swap — so flat price risk is zero. Pure logistics arbitrage.
+      </div>
+
+      <div class="callout c-red">
+        <strong>When NOT to store:</strong> if the market is in backwardation (spot > forward), every day you store is a loss. You paid $83 for spot oil but can only sell forward at $81. Storage costs are on top. This is why in a backwardated market, physical traders move barrels as fast as possible — storing is suicide.
+      </div>
+    </div>
+
+    <div class="panel" id="r3-p2">
+      <div class="callout c-blue"><strong>Storage economics simulator — does your contango trade make money?</strong></div>
+      <div class="card">
+        <div class="srow"><div class="slabel">Volume stored (kbbls)</div><input type="range" min="100" max="3000" step="100" value="1000" id="s-vol" oninput="calcStorage()"><div class="sval" id="s-vol-v">1,000 kbbls</div></div>
+        <div class="srow"><div class="slabel">Spot price ($/bbl)</div><input type="range" min="60" max="110" step="0.50" value="80.00" id="s-spot" oninput="calcStorage()"><div class="sval" id="s-spot-v">$80.00</div></div>
+        <div class="srow"><div class="slabel">Forward price ($/bbl)</div><input type="range" min="60" max="115" step="0.50" value="83.50" id="s-fwd" oninput="calcStorage()"><div class="sval" id="s-fwd-v">$83.50</div></div>
+        <div class="srow"><div class="slabel">Storage period (months)</div><input type="range" min="1" max="12" step="1" value="3" id="s-months" oninput="calcStorage()"><div class="sval" id="s-months-v">3 months</div></div>
+        <div class="srow"><div class="slabel">Tank rental ($/bbl/month)</div><input type="range" min="0.10" max="0.80" step="0.05" value="0.30" id="s-rent" oninput="calcStorage()"><div class="sval" id="s-rent-v">$0.30/bbl/mo</div></div>
+        <div class="srow"><div class="slabel">Capital hurdle rate (% p.a.)</div><input type="range" min="4" max="15" step="0.5" value="8" id="s-rate" oninput="calcStorage()"><div class="sval" id="s-rate-v">8%</div></div>
+      </div>
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">Contango gain</span><span class="mval" id="sm-contango">$83.50 − $80.00 = +$3.50/bbl</span></div>
+        <div class="mline"><span class="mop">−</span><span class="mlabel">Tank rental</span><span class="mval" id="sm-rent">$0.30 × 3 months = $0.90/bbl</span></div>
+        <div class="mline"><span class="mop">−</span><span class="mlabel">Capital charge</span><span class="mval" id="sm-capital">$80.00 × 8% × 90/365 = $1.58/bbl</span></div>
+        <div class="mline"><span class="mop">−</span><span class="mlabel">Insurance + loss</span><span class="mval">$0.07/bbl × 3 months = $0.21/bbl</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult" id="sm-result">Net storage P&L = +$3.50 − $2.69 = +$0.81/bbl</div>
+        <div class="msub" id="sm-total">On 1,000,000 bbls: +$810,000 total</div>
+        <div class="msub" id="sm-verdict"></div>
+      </div>
+      <div class="metrow">
+        <div class="met"><div class="ml">Contango gain</div><div class="mv" id="sr1" style="color:var(--accent);">+$3.50/bbl</div></div>
+        <div class="met"><div class="ml">Total storage cost</div><div class="mv neg" id="sr2">$2.69/bbl</div></div>
+        <div class="met"><div class="ml">Net profit/bbl</div><div class="mv" id="sr3" style="color:var(--accent);">+$0.81/bbl</div></div>
+        <div class="met"><div class="ml">Total P&L</div><div class="mv" id="sr4" style="color:var(--accent);">+$810,000</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- L-05  TRADE DECISION                          -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="report-panel" id="r4">
+    <div class="tab-nav">
+      <button class="tnav on" onclick="goT('r4',0,this)">The decision</button>
+      <button class="tnav"    onclick="goT('r4',1,this)">Route comparison</button>
+      <button class="tnav"    onclick="goT('r4',2,this)">Full margin build</button>
+    </div>
+
+    <div class="panel on" id="r4-p0">
+      <div class="callout c-blue">
+        <strong>Every physical trade comes down to one decision: can I move this barrel profitably?</strong><br>
+        Before you buy crude, you must calculate the full cost chain — from purchase point to delivery point. Only if the margin exceeds all costs should you do the trade.
+      </div>
+
+      <div class="sh">Choose your route — click to select</div>
+      <div class="decision-grid" id="decision-grid">
+        <div class="decision-card selected" style="border-top-color:var(--accent);" onclick="selectRoute(0,this)">
+          <div class="dc-icon">🚰</div>
+          <div class="dc-title">Pipeline only</div>
+          <div class="dc-desc">Permian → Cushing → Gulf Coast. Fastest, cheapest. Requires 25th month nomination.</div>
+          <div class="dc-cost pos">$1.50/bbl total tariff</div>
+        </div>
+        <div class="decision-card" style="border-top-color:var(--blue);" onclick="selectRoute(1,this)">
+          <div class="dc-icon">🚢</div>
+          <div class="dc-title">Pipeline + Tanker</div>
+          <div class="dc-desc">Pipeline to Gulf Coast, then VLCC to Rotterdam. International delivery. 30+ day journey.</div>
+          <div class="dc-cost neg">$3.65/bbl total</div>
+        </div>
+        <div class="decision-card" style="border-top-color:var(--gold);" onclick="selectRoute(2,this)">
+          <div class="dc-icon">🏦</div>
+          <div class="dc-title">Store + Sell later</div>
+          <div class="dc-desc">Tank in Cushing. Wait for better price or contango trade. Capital charge ticking daily.</div>
+          <div class="dc-cost gold">$0.80/bbl/month</div>
+        </div>
+      </div>
+      <div class="callout c-amber" id="route-callout">
+        <strong>Pipeline only selected.</strong> Best for domestic US refinery delivery. Cheapest at $1.50/bbl. You need a US refinery buyer at Diff +$2.70 or above to make money (buy diff $1.20 + pipeline $1.50).
+      </div>
+    </div>
+
+    <div class="panel" id="r4-p1">
+      <div class="sh">Route comparison — same cargo, three options</div>
+      <div class="card">
+        <table class="tbl">
+          <thead><tr><th>Route</th><th>Freight cost</th><th>Transit time</th><th>Min sell diff needed</th><th>Best when</th></tr></thead>
+          <tbody>
+            <tr><td class="pos">🚰 Pipeline (domestic)</td><td class="neg">$1.50/bbl</td><td class="neu">6–11 days</td><td class="gold">+$2.70/bbl</td><td class="neu">US refinery has demand</td></tr>
+            <tr><td class="blu">🚢 Pipeline + Tanker (export)</td><td class="neg">$3.65/bbl</td><td class="neu">30–40 days</td><td class="gold">+$4.85/bbl</td><td class="neu">Overseas diff premium high</td></tr>
+            <tr><td class="gold">🏦 Store 1 month</td><td class="neg">$0.80/bbl</td><td class="neu">30 days wait</td><td class="gold">Contango > $0.80/bbl</td><td class="neu">Market in steep contango</td></tr>
+            <tr><td class="gold">🏦 Store 3 months</td><td class="neg">$2.40/bbl</td><td class="neu">90 days wait</td><td class="gold">Contango > $2.40/bbl</td><td class="neu">Deep contango market</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout c-green">
+        <strong>How a trader chooses:</strong> check where the refinery diff premiums are globally. If Houston refineries are paying +$2.80 — pipeline is profitable ($2.80 − $2.70 = $0.10/bbl margin). If Rotterdam refineries are paying +$5.50 — the export route is better ($5.50 − $4.85 = $0.65/bbl margin). Always go where the margin is highest.
+      </div>
+    </div>
+
+    <div class="panel" id="r4-p2">
+      <div class="callout c-blue"><strong>Full commercial margin build — logistics included.</strong> Set every input, see the complete P&L waterfall with no hidden numbers.</div>
+      <div class="card">
+        <div class="srow"><div class="slabel">Volume (kbbls)</div><input type="range" min="100" max="2000" step="100" value="1000" id="fm-vol" oninput="calcFull()"><div class="sval" id="fm-vol-v">1,000 kbbls</div></div>
+        <div class="srow"><div class="slabel">Buy differential ($/bbl)</div><input type="range" min="0.50" max="4.00" step="0.05" value="1.20" id="fm-buyd" oninput="calcFull()"><div class="sval" id="fm-buyd-v">+$1.20/bbl</div></div>
+        <div class="srow"><div class="slabel">Sell differential ($/bbl)</div><input type="range" min="0.50" max="6.00" step="0.05" value="4.85" id="fm-selld" oninput="calcFull()"><div class="sval" id="fm-selld-v">+$4.85/bbl</div></div>
+        <div class="srow"><div class="slabel">Pipeline cost ($/bbl)</div><input type="range" min="0" max="2.00" step="0.05" value="1.50" id="fm-pipe" oninput="calcFull()"><div class="sval" id="fm-pipe-v">$1.50/bbl</div></div>
+        <div class="srow"><div class="slabel">Freight cost ($/bbl)</div><input type="range" min="0" max="5.00" step="0.10" value="2.15" id="fm-freight" oninput="calcFull()"><div class="sval" id="fm-freight-v">$2.15/bbl</div></div>
+        <div class="srow"><div class="slabel">Storage cost ($/bbl)</div><input type="range" min="0" max="2.00" step="0.05" value="0.00" id="fm-storage" oninput="calcFull()"><div class="sval" id="fm-storage-v">$0.00/bbl</div></div>
+        <div class="srow"><div class="slabel">Other costs ($/bbl)</div><input type="range" min="0" max="1.00" step="0.05" value="0.20" id="fm-other" oninput="calcFull()"><div class="sval" id="fm-other-v">$0.20/bbl</div></div>
+      </div>
+
+      <div class="sh">Full margin waterfall</div>
+      <div class="card" id="waterfall-card"></div>
+
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">Gross diff margin</span><span class="mval" id="fw-gross">sell $4.85 − buy $1.20 = +$3.65/bbl</span></div>
+        <div class="mline"><span class="mop">−</span><span class="mlabel">Total logistics</span><span class="mval" id="fw-logistics">$1.50 + $2.15 + $0.00 + $0.20 = $3.85/bbl</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult" id="fw-net">Net margin = +$3.65 − $3.85 = −$0.20/bbl</div>
+        <div class="msub" id="fw-total">On 1,000,000 bbls → Total net = −$200,000</div>
+        <div class="msub" id="fw-breakeven">Break-even sell diff needed = +$5.05/bbl</div>
+      </div>
+      <div class="metrow">
+        <div class="met"><div class="ml">Gross diff margin</div><div class="mv" id="fw-r1" style="color:var(--gold);">+$3.65/bbl</div></div>
+        <div class="met"><div class="ml">Total logistics</div><div class="mv neg" id="fw-r2">$3.85/bbl</div></div>
+        <div class="met"><div class="ml">Net $/bbl</div><div class="mv" id="fw-r3" style="color:var(--danger);">−$0.20/bbl</div></div>
+        <div class="met"><div class="ml">Total P&L</div><div class="mv" id="fw-r4" style="color:var(--danger);">−$200,000</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+// ── NAVIGATION ─────────────────────────
+function goR(idx,el){
+  document.querySelectorAll('.rnav').forEach(r=>r.classList.remove('on'));
+  document.querySelectorAll('.report-panel').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('r'+idx).classList.add('on');
+}
+function goT(rid,idx,el){
+  const rp=document.getElementById(rid);
+  rp.querySelectorAll('.tnav').forEach(t=>t.classList.remove('on'));
+  rp.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById(rid+'-p'+idx).classList.add('on');
+}
+
+// ── HELPERS ────────────────────────────
+function fmtM(v){return (v>=0?'+$':'-$')+Math.abs(Math.round(v)).toLocaleString();}
+function fmtD(v,d=2){return (v>=0?'+$':'-$')+Math.abs(v).toFixed(d);}
+
+// ── OVERVIEW WATERFALL ─────────────────
+function renderOverviewWaterfall(){
+  const items=[
+    {label:'Sell differential',val:4.85,col:'#00c896'},
+    {label:'Buy differential',val:-1.20,col:'#ff4d6d'},
+    {label:'= Gross margin',val:3.65,col:'#f5a623',bold:true},
+    {label:'Pipeline cost',val:-1.50,col:'#ff4d6d'},
+    {label:'Tanker freight',val:-2.15,col:'#ff4d6d'},
+    {label:'Financing',val:-0.09,col:'#ff4d6d'},
+    {label:'Quality/inspection',val:-0.11,col:'#ff4d6d'},
+    {label:'= Net margin',val:-0.20,col:'#ff4d6d',bold:true},
+  ];
+  const max=5;
+  document.getElementById('overview-waterfall').innerHTML=items.map(i=>{
+    const pct=Math.min(100,Math.abs(i.val)/max*100);
+    const col=i.col;
+    return `<div class="wf-row" style="${i.bold?'background:rgba(255,255,255,0.03);border-radius:6px;':''}">`+
+      `<div class="wf-label" style="font-size:13px;${i.bold?'font-weight:600;color:var(--white);':'color:var(--text2);'}">${i.label}</div>`+
+      `<div class="wf-bar-area">`+
+        `<div class="wf-bar" style="width:${pct}%;background:${col}20;border:1px solid ${col}40;left:0;color:${col};">`+
+          (pct>15?`${fmtD(i.val,2)}/bbl`:'')+'</div>'+
+      `</div>`+
+      `<div class="wf-val" style="color:${col};font-weight:${i.bold?'600':'400'};">${fmtD(i.val,2)}/bbl</div>`+
+    `</div>`;
+  }).join('');
+}
+
+// ── SHIP ANIMATION ─────────────────────
+let shipPos=5;
+let shipDir=1;
+setInterval(()=>{
+  const ship=document.getElementById('ship-emoji');
+  if(!ship)return;
+  shipPos+=shipDir*0.3;
+  if(shipPos>88){shipDir=-1;}
+  if(shipPos<5){shipDir=1;}
+  ship.style.left=shipPos+'%';
+},100);
+
+// ── TANKER CALCULATOR ──────────────────
+function calcTanker(){
+  const cargo   =parseInt(document.getElementById('t-cargo').value)*1000;
+  const flat    =parseFloat(document.getElementById('t-flat').value);
+  const ws      =parseInt(document.getElementById('t-ws').value);
+  const days    =parseInt(document.getElementById('t-days').value);
+  const demDays =parseFloat(document.getElementById('t-dem').value);
+  const demRate =parseInt(document.getElementById('t-demrate').value);
+  document.getElementById('t-cargo-v').textContent =cargo/1000+' kbbls';
+  document.getElementById('t-flat-v').textContent  ='$'+flat.toFixed(2)+'/mt';
+  document.getElementById('t-ws-v').textContent    ='WS '+ws;
+  document.getElementById('t-days-v').textContent  =days+' days';
+  document.getElementById('t-dem-v').textContent   =demDays.toFixed(1)+' days';
+  document.getElementById('t-demrate-v').textContent='$'+demRate.toLocaleString()+'/day';
+  const actualPerMt =flat*(ws/100);
+  const perBbl      =actualPerMt/7.3;
+  const totalFreight=perBbl*cargo;
+  const totalDem    =demDays*demRate;
+  const demPerBbl   =totalDem/cargo;
+  const allIn       =totalFreight+totalDem;
+  const allInBbl    =(allIn/cargo);
+  const capCost     =cargo*80*0.08/365*days;
+  document.getElementById('tm-rate').textContent   ='$'+flat.toFixed(2)+' × '+ws+'% = $'+actualPerMt.toFixed(2)+'/mt';
+  document.getElementById('tm-bbl').textContent    ='$'+actualPerMt.toFixed(2)+' ÷ 7.3 = $'+perBbl.toFixed(2)+'/bbl';
+  document.getElementById('tm-total').textContent  =cargo.toLocaleString()+' × $'+perBbl.toFixed(2)+' = $'+Math.round(totalFreight).toLocaleString();
+  document.getElementById('tm-dem').textContent    =demDays.toFixed(1)+' days × $'+demRate.toLocaleString()+' = $'+Math.round(totalDem).toLocaleString();
+  document.getElementById('tm-result').textContent ='All-in freight = $'+Math.round(allIn).toLocaleString()+' → $'+allInBbl.toFixed(2)+'/bbl';
+  document.getElementById('tm-capital').textContent='Capital cost during voyage ('+days+' days): ~$'+Math.round(capCost).toLocaleString()+' additional';
+  document.getElementById('tr1').textContent='$'+perBbl.toFixed(2)+'/bbl';
+  document.getElementById('tr2').textContent='$'+demPerBbl.toFixed(2)+'/bbl';
+  document.getElementById('tr3').textContent='$'+allInBbl.toFixed(2)+'/bbl';
+  document.getElementById('tr4').textContent='$'+Math.round(allIn).toLocaleString();
+}
+
+// ── PIPELINE CALCULATOR ────────────────
+function calcPipe(){
+  const vol   =parseInt(document.getElementById('p-vol').value)*1000;
+  const t1    =parseFloat(document.getElementById('p-t1').value);
+  const t2    =parseFloat(document.getElementById('p-t2').value);
+  const term  =parseFloat(document.getElementById('p-term').value);
+  const appor =parseInt(document.getElementById('p-appor').value);
+  document.getElementById('p-vol-v').textContent =(vol/1000)+' kbbls';
+  document.getElementById('p-t1-v').textContent  ='$'+t1.toFixed(2)+'/bbl';
+  document.getElementById('p-t2-v').textContent  ='$'+t2.toFixed(2)+'/bbl';
+  document.getElementById('p-term-v').textContent='$'+term.toFixed(2)+'/bbl';
+  document.getElementById('p-appor-v').textContent=appor+'%';
+  const total   =t1+t2+term;
+  const confirmed=Math.round(vol*(appor/100));
+  const stranded =vol-confirmed;
+  const totalCost=confirmed*total;
+  const strandCost=stranded*0.018*30;
+  document.getElementById('pm-tariff').textContent    ='$'+t1.toFixed(2)+' + $'+t2.toFixed(2)+' + $'+term.toFixed(2)+' = $'+total.toFixed(2)+'/bbl';
+  document.getElementById('pm-volconf').textContent   =(vol/1000)+'k × '+appor+'% = '+confirmed.toLocaleString()+' bbls';
+  document.getElementById('pm-strand').textContent    =stranded>0?stranded.toLocaleString()+' bbls stranded — need alternative route':'0 bbls (no apportionment)';
+  document.getElementById('pm-strand').style.color    =stranded>0?'#ff4d6d':'#6a8aaa';
+  document.getElementById('pm-result').textContent    ='Pipeline cost = '+confirmed.toLocaleString()+' × $'+total.toFixed(2)+' = $'+Math.round(totalCost).toLocaleString();
+  document.getElementById('pm-strand-cost').textContent=stranded>0?'Stranded barrels daily capital cost: ~$'+Math.round(strandCost).toLocaleString()+'/month':'';
+  document.getElementById('pr1').textContent='$'+total.toFixed(2)+'/bbl';
+  document.getElementById('pr2').textContent=confirmed.toLocaleString()+' bbls';
+  document.getElementById('pr3').textContent=stranded.toLocaleString()+' bbls';
+  document.getElementById('pr3').style.color=stranded>0?'#ff4d6d':'#00c896';
+  document.getElementById('pr4').textContent='$'+Math.round(totalCost).toLocaleString();
+}
+
+// ── STORAGE CALCULATOR ─────────────────
+function calcStorage(){
+  const vol    =parseInt(document.getElementById('s-vol').value)*1000;
+  const spot   =parseFloat(document.getElementById('s-spot').value);
+  const fwd    =parseFloat(document.getElementById('s-fwd').value);
+  const months =parseInt(document.getElementById('s-months').value);
+  const rent   =parseFloat(document.getElementById('s-rent').value);
+  const rate   =parseFloat(document.getElementById('s-rate').value)/100;
+  document.getElementById('s-vol-v').textContent   =(vol/1000)+' kbbls';
+  document.getElementById('s-spot-v').textContent  ='$'+spot.toFixed(2);
+  document.getElementById('s-fwd-v').textContent   ='$'+fwd.toFixed(2);
+  document.getElementById('s-months-v').textContent=months+' months';
+  document.getElementById('s-rent-v').textContent  ='$'+rent.toFixed(2)+'/bbl/mo';
+  document.getElementById('s-rate-v').textContent  =parseFloat(document.getElementById('s-rate').value).toFixed(1)+'%';
+  const days        =months*30;
+  const contango    =fwd-spot;
+  const rentTotal   =rent*months;
+  const capCharge   =spot*rate*(days/365);
+  const insLoss     =0.07*months;
+  const totalCost   =rentTotal+capCharge+insLoss;
+  const netProfit   =contango-totalCost;
+  const totalNet    =netProfit*vol;
+  document.getElementById('sm-contango').textContent='$'+fwd.toFixed(2)+' − $'+spot.toFixed(2)+' = '+fmtD(contango,2)+'/bbl';
+  document.getElementById('sm-rent').textContent    ='$'+rent.toFixed(2)+' × '+months+' months = $'+rentTotal.toFixed(2)+'/bbl';
+  document.getElementById('sm-capital').textContent ='$'+spot.toFixed(2)+' × '+parseFloat(document.getElementById('s-rate').value).toFixed(1)+'% × '+days+'/365 = $'+capCharge.toFixed(2)+'/bbl';
+  document.getElementById('sm-result').textContent  ='Net storage P&L = '+fmtD(contango,2)+' − $'+totalCost.toFixed(2)+' = '+fmtD(netProfit,2)+'/bbl';
+  document.getElementById('sm-result').className    ='mresult'+(netProfit<0?' neg':'');
+  document.getElementById('sm-total').textContent   ='On '+vol.toLocaleString()+' bbls: '+fmtM(totalNet)+' total';
+  document.getElementById('sm-verdict').textContent =netProfit>0?'✓ PROFITABLE — contango covers storage costs':'✗ NOT PROFITABLE — storage costs exceed contango gain';
+  document.getElementById('sm-verdict').style.color =netProfit>0?'#00c896':'#ff4d6d';
+  document.getElementById('sr1').textContent=fmtD(contango,2)+'/bbl';
+  document.getElementById('sr1').style.color=contango>=0?'#00c896':'#ff4d6d';
+  document.getElementById('sr2').textContent='$'+totalCost.toFixed(2)+'/bbl';
+  document.getElementById('sr3').textContent=fmtD(netProfit,2)+'/bbl';
+  document.getElementById('sr3').style.color=netProfit>=0?'#00c896':'#ff4d6d';
+  document.getElementById('sr4').textContent=fmtM(totalNet);
+  document.getElementById('sr4').style.color=totalNet>=0?'#00c896':'#ff4d6d';
+}
+
+// ── ROUTE DECISION ─────────────────────
+const routeTexts=[
+  '<strong>Pipeline only selected.</strong> Best for domestic US refinery delivery. Cheapest at $1.50/bbl. You need a US refinery buyer at Diff +$2.70 or above to break even (buy diff $1.20 + pipeline $1.50).',
+  '<strong>Pipeline + Tanker selected.</strong> International export route. Total $3.65/bbl logistics. You need Rotterdam or Asian buyer at Diff +$4.85 or above. Voyage takes 30–40 days — capital charge runs for the whole period.',
+  '<strong>Store selected.</strong> Parking barrels costs $0.80/bbl/month. Only do this if contango exceeds $0.80/bbl per month. At $0 contango (flat curve) this is pure loss — you are paying to delay selling.'
+];
+function selectRoute(idx,el){
+  document.querySelectorAll('.decision-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('route-callout').innerHTML=routeTexts[idx];
+}
+
+// ── FULL MARGIN BUILD ──────────────────
+function calcFull(){
+  const vol    =parseInt(document.getElementById('fm-vol').value)*1000;
+  const buyD   =parseFloat(document.getElementById('fm-buyd').value);
+  const sellD  =parseFloat(document.getElementById('fm-selld').value);
+  const pipe   =parseFloat(document.getElementById('fm-pipe').value);
+  const freight=parseFloat(document.getElementById('fm-freight').value);
+  const storage=parseFloat(document.getElementById('fm-storage').value);
+  const other  =parseFloat(document.getElementById('fm-other').value);
+  document.getElementById('fm-vol-v').textContent    =(vol/1000)+' kbbls';
+  document.getElementById('fm-buyd-v').textContent   ='+$'+buyD.toFixed(2)+'/bbl';
+  document.getElementById('fm-selld-v').textContent  ='+$'+sellD.toFixed(2)+'/bbl';
+  document.getElementById('fm-pipe-v').textContent   ='$'+pipe.toFixed(2)+'/bbl';
+  document.getElementById('fm-freight-v').textContent='$'+freight.toFixed(2)+'/bbl';
+  document.getElementById('fm-storage-v').textContent='$'+storage.toFixed(2)+'/bbl';
+  document.getElementById('fm-other-v').textContent  ='$'+other.toFixed(2)+'/bbl';
+  const gross      =sellD-buyD;
+  const totalLog   =pipe+freight+storage+other;
+  const net        =gross-totalLog;
+  const totalNet   =net*vol;
+  const breakeven  =buyD+totalLog;
+  const items=[
+    {label:'Sell diff revenue',val:sellD,col:'#00c896'},
+    {label:'Buy diff cost',val:-buyD,col:'#ff4d6d'},
+    {label:'Gross diff margin',val:gross,col:'#f5a623',bold:true},
+    {label:'Pipeline tariff',val:-pipe,col:'#ff4d6d'},
+    {label:'Tanker freight',val:-freight,col:'#ff4d6d'},
+    {label:'Storage cost',val:-storage,col:'#ff4d6d'},
+    {label:'Other costs',val:-other,col:'#ff4d6d'},
+    {label:'Net commercial margin',val:net,col:net>=0?'#00c896':'#ff4d6d',bold:true},
+  ];
+  const maxVal=Math.max(...items.map(i=>Math.abs(i.val)));
+  document.getElementById('waterfall-card').innerHTML=
+    '<div class="waterfall">'+
+    items.map(i=>{
+      const pct=Math.min(100,Math.abs(i.val)/maxVal*100);
+      return `<div class="wf-row" style="${i.bold?'background:rgba(255,255,255,0.03);border-radius:6px;':''}">`+
+        `<div class="wf-label" style="${i.bold?'font-weight:600;color:var(--white);':'color:var(--text2);'}">${i.label}</div>`+
+        `<div class="wf-bar-area">`+
+          `<div class="wf-bar" style="width:${pct}%;background:${i.col}20;border:1px solid ${i.col}40;color:${i.col};">`+
+            (pct>20?fmtD(i.val,2)+'/bbl':'')+'</div>'+
+        `</div>`+
+        `<div class="wf-val" style="color:${i.col};font-weight:${i.bold?'600':'400'};">${fmtD(i.val,2)}/bbl</div>`+
+      `</div>`;
+    }).join('')+
+    '</div>';
+  document.getElementById('fw-gross').textContent    ='sell $'+sellD.toFixed(2)+' − buy $'+buyD.toFixed(2)+' = '+fmtD(gross,2)+'/bbl';
+  document.getElementById('fw-logistics').textContent='$'+pipe.toFixed(2)+' + $'+freight.toFixed(2)+' + $'+storage.toFixed(2)+' + $'+other.toFixed(2)+' = $'+totalLog.toFixed(2)+'/bbl';
+  document.getElementById('fw-net').textContent      ='Net margin = '+fmtD(gross,2)+' − $'+totalLog.toFixed(2)+' = '+fmtD(net,2)+'/bbl';
+  document.getElementById('fw-net').className        ='mresult'+(net<0?' neg':'');
+  document.getElementById('fw-total').textContent    ='On '+vol.toLocaleString()+' bbls → Total net = '+fmtM(totalNet);
+  document.getElementById('fw-breakeven').textContent='Break-even sell diff = +$'+breakeven.toFixed(2)+'/bbl';
+  document.getElementById('fw-r1').textContent=fmtD(gross,2)+'/bbl';
+  document.getElementById('fw-r1').style.color=gross>=0?'#f5a623':'#ff4d6d';
+  document.getElementById('fw-r2').textContent='$'+totalLog.toFixed(2)+'/bbl';
+  document.getElementById('fw-r3').textContent=fmtD(net,2)+'/bbl';
+  document.getElementById('fw-r3').style.color=net>=0?'#00c896':'#ff4d6d';
+  document.getElementById('fw-r4').textContent=fmtM(totalNet);
+  document.getElementById('fw-r4').style.color=totalNet>=0?'#00c896':'#ff4d6d';
+}
+
+// ── INIT ────────────────────────────────
+renderOverviewWaterfall();
+calcTanker();
+calcPipe();
+calcStorage();
+calcFull();
+</script>
+</body>
+</html>

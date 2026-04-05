@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oil Trading Reports — All Reports Explained</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg:#0a0e14; --surface:#111820; --surface2:#1a2332; --border:#1e3a52;
+    --accent:#00c896; --gold:#f5a623; --danger:#ff4d6d; --blue:#378ADD;
+    --text:#c8d8e8; --text2:#6a8aaa; --white:#e8f4ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,200,150,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,150,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  .wrap{position:relative;z-index:1;max-width:1050px;margin:0 auto;padding:30px 20px;}
+
+  header{text-align:center;padding:40px 20px 32px;border-bottom:1px solid var(--border);margin-bottom:32px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:10px;}
+  h1{font-family:'Bebas Neue',cursive;font-size:clamp(32px,5vw,56px);color:var(--white);letter-spacing:2px;line-height:1;}
+  h1 span{color:var(--accent);}
+  .subtitle{font-size:13px;color:var(--text2);margin-top:8px;}
+
+  /* REPORT NAV */
+  .report-nav{display:grid;grid-template-columns:repeat(6,1fr);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:28px;}
+  .rnav{padding:14px 6px;text-align:center;cursor:pointer;font-size:12px;font-weight:500;background:var(--surface);color:var(--text2);border-right:1px solid var(--border);transition:all 0.2s;line-height:1.4;user-select:none;}
+  .rnav:last-child{border-right:none;}
+  .rnav .rnum{display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);margin-bottom:4px;letter-spacing:1px;}
+  .rnav:hover{background:var(--surface2);color:var(--text);}
+  .rnav.on{background:var(--surface2);color:var(--white);border-bottom:3px solid var(--accent);}
+  .rnav.on .rnum{color:var(--accent);}
+  @media(max-width:650px){.report-nav{grid-template-columns:repeat(3,1fr);}}
+
+  /* SUB TABS inside each report */
+  .tab-nav{display:flex;gap:4px;margin-bottom:22px;flex-wrap:wrap;}
+  .tnav{padding:8px 16px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;font-family:'IBM Plex Mono',monospace;letter-spacing:0.5px;}
+  .tnav:hover{background:var(--surface2);color:var(--text);}
+  .tnav.on{background:var(--accent);color:#000;border-color:var(--accent);}
+
+  .panel{display:none;animation:fadeIn 0.25s ease;}
+  .panel.on{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  /* CARDS */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:18px;}
+  .card2{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:14px;}
+
+  /* CALLOUT */
+  .callout{border-left:3px solid;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:18px;font-size:14px;line-height:1.7;}
+  .c-blue{border-color:var(--blue);background:rgba(55,138,221,0.08);color:var(--text);}
+  .c-amber{border-color:var(--gold);background:rgba(245,166,35,0.08);color:var(--text);}
+  .c-red{border-color:var(--danger);background:rgba(255,77,109,0.08);color:var(--text);}
+  .c-green{border-color:var(--accent);background:rgba(0,200,150,0.08);color:var(--text);}
+  .c-blue strong{color:#7ab8f0;} .c-amber strong{color:var(--gold);} .c-red strong{color:var(--danger);} .c-green strong{color:var(--accent);}
+
+  /* MATH BOX */
+  .mathbox{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin:14px 0;font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:2;}
+  .mline{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .mop{color:var(--text2);width:18px;text-align:center;flex-shrink:0;}
+  .mlabel{color:var(--text2);font-size:12px;}
+  .mval{color:var(--white);font-weight:600;}
+  .mresult{color:var(--accent);font-size:16px;font-weight:600;border-top:1px solid var(--border);padding-top:10px;margin-top:8px;}
+  .mresult.neg{color:var(--danger);}
+  .mresult.gold{color:var(--gold);}
+  .msub{color:var(--text2);font-size:11px;margin-top:2px;}
+
+  /* METRICS */
+  .metrow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}
+  .met2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px;}
+  @media(max-width:600px){.metrow{grid-template-columns:repeat(2,1fr);}}
+  .met{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;}
+  .ml{font-size:10px;color:var(--text2);font-family:'IBM Plex Mono',monospace;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;}
+  .mv{font-size:19px;font-weight:500;}
+  .ms{font-size:11px;color:var(--text2);margin-top:4px;}
+
+  /* BARS */
+  .barrow{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .barlabel{font-size:12px;color:var(--text2);width:170px;flex-shrink:0;}
+  .bartrack{flex:1;height:9px;background:var(--surface2);border-radius:4px;overflow:hidden;}
+  .barfill{height:100%;border-radius:4px;transition:width 0.5s ease;}
+  .barval{font-size:12px;font-weight:600;width:120px;text-align:right;font-family:'IBM Plex Mono',monospace;}
+
+  /* SLIDERS */
+  .srow{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .slabel{font-size:13px;color:var(--text2);width:200px;flex-shrink:0;}
+  .srow input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer;}
+  .sval{font-size:13px;font-weight:600;width:130px;text-align:right;color:var(--accent);font-family:'IBM Plex Mono',monospace;}
+
+  /* SECTION HEAD */
+  .sh{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--text2);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .sh::before{content:'';width:3px;height:11px;background:var(--accent);border-radius:2px;display:inline-block;}
+
+  /* TABLE */
+  .tbl{width:100%;border-collapse:collapse;}
+  .tbl th{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);letter-spacing:1px;text-transform:uppercase;}
+  .tbl td{font-size:13px;padding:11px 10px;border-bottom:1px solid rgba(30,58,82,0.4);font-family:'IBM Plex Mono',monospace;vertical-align:middle;}
+  .tbl tr:last-child td{border-bottom:none;}
+  .tbl tbody tr:hover{background:var(--surface2);}
+
+  /* PILLS */
+  .pill{display:inline-block;padding:3px 9px;border-radius:100px;font-size:10px;font-weight:600;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:1px;}
+  .p-ok{background:rgba(0,200,150,0.15);color:var(--accent);}
+  .p-warn{background:rgba(245,166,35,0.15);color:var(--gold);}
+  .p-bad{background:rgba(255,77,109,0.15);color:var(--danger);}
+  .p-blue{background:rgba(55,138,221,0.15);color:var(--blue);}
+
+  /* DIVIDER */
+  .div{border:none;border-top:1px solid var(--border);margin:16px 0;}
+
+  /* BADGE ROW */
+  .badge-row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;}
+
+  /* TIMELINE */
+  .timeline{display:flex;flex-direction:column;gap:0;}
+  .tl-item{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid rgba(30,58,82,0.4);}
+  .tl-item:last-child{border-bottom:none;}
+  .tl-time{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);width:55px;flex-shrink:0;padding-top:2px;}
+  .tl-dot{width:10px;height:10px;border-radius:50%;margin-top:4px;flex-shrink:0;}
+  .tl-content{flex:1;}
+  .tl-title{font-size:13px;color:var(--white);font-weight:500;margin-bottom:3px;}
+  .tl-desc{font-size:12px;color:var(--text2);line-height:1.5;}
+
+  .pos{color:var(--accent);}
+  .neg{color:var(--danger);}
+  .gold{color:var(--gold);}
+  .blu{color:var(--blue);}
+  .neu{color:var(--text2);}
+
+  /* REPORT PANEL */
+  .report-panel{display:none;}
+  .report-panel.on{display:block;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">🛢️ Oil Trading — Complete Report Suite</div>
+    <h1>ALL TRADING <span>REPORTS</span> EXPLAINED</h1>
+    <div class="subtitle">Every number derived from scratch — no hidden assumptions — use sliders to simulate your own position</div>
+  </header>
+
+  <!-- REPORT NAV -->
+  <div class="report-nav">
+    <div class="rnav on"  onclick="goReport(0,this)"><span class="rnum">R-01</span>Position Report</div>
+    <div class="rnav"     onclick="goReport(1,this)"><span class="rnum">R-02</span>Mark-to-Market</div>
+    <div class="rnav"     onclick="goReport(2,this)"><span class="rnum">R-03</span>Commercial Margin</div>
+    <div class="rnav"     onclick="goReport(3,this)"><span class="rnum">R-04</span>Capital Charges</div>
+    <div class="rnav"     onclick="goReport(4,this)"><span class="rnum">R-05</span>Exposure / Risk</div>
+    <div class="rnav"     onclick="goReport(5,this)"><span class="rnum">R-06</span>End of Day</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- R-01  POSITION REPORT                              -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="report-panel on" id="r0">
+    <div class="tab-nav">
+      <button class="tnav on" onclick="goTab('r0',0,this)">What is it?</button>
+      <button class="tnav"    onclick="goTab('r0',1,this)">How to read it</button>
+      <button class="tnav"    onclick="goTab('r0',2,this)">Live simulator</button>
+    </div>
+
+    <div class="panel on" id="r0-p0">
+      <div class="callout c-blue">
+        <strong>The Position Report is the very first thing you open every morning.</strong><br>
+        It answers one question: <em>"Where am I right now?"</em> — what physical oil do I own, what paper hedges do I have, and do they match up so that I am not accidentally exposed to price risk?
+      </div>
+      <div class="callout c-amber">
+        <strong>Simple analogy:</strong> imagine your bank statement. On one side you have money coming in (physical oil you bought = assets). On the other side you have obligations (swaps you sold = liabilities). The position report checks that both sides balance. If they don't — you have open risk you need to act on immediately.
+      </div>
+      <div class="sh">Three things every position report shows</div>
+      <div class="metrow">
+        <div class="met"><div class="ml">Physical positions</div><div class="mv blu">What you OWN</div><div class="ms">Real barrels bought or sold</div></div>
+        <div class="met"><div class="ml">Paper / hedges</div><div class="mv gold">What you OWED</div><div class="ms">Swaps & futures offsetting price risk</div></div>
+        <div class="met"><div class="ml">Net position</div><div class="mv pos">The BALANCE</div><div class="ms">Physical + Paper combined</div></div>
+        <div class="met"><div class="ml">Open diff exposure</div><div class="mv" style="color:var(--danger);">The RISK LEFT</div><div class="ms">What is still unpriced/unsold</div></div>
+      </div>
+      <div class="callout c-green">
+        <strong>SAP BW analogy:</strong> the position report is like your <strong>balance sheet query</strong> in BW — assets on one side, liabilities on the other, net at the bottom. A flat (zero) net means fully hedged. Any non-zero net means open risk that needs attention.
+      </div>
+    </div>
+
+    <div class="panel" id="r0-p1">
+      <div class="sh">How to read a position report — line by line</div>
+      <div class="card">
+        <table class="tbl">
+          <thead><tr><th>Grade</th><th>Period</th><th>Physical (kbbls)</th><th>Paper/Hedge (kbbls)</th><th>NET</th><th>What it means</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td class="pos">WTI</td><td>May-26</td><td class="pos">+1,000</td><td class="neg">−1,000</td><td class="pos">0</td><td class="neu">Bought 1M bbls, hedged 1M bbls</td><td><span class="pill p-ok">No action</span></td></tr>
+            <tr><td class="pos">WTI</td><td>Jun-26</td><td class="pos">+500</td><td class="neg">−500</td><td class="pos">0</td><td class="neu">Bought 500k bbls, fully hedged</td><td><span class="pill p-ok">No action</span></td></tr>
+            <tr><td class="gold">WCS</td><td>Jun-26</td><td class="pos">+300</td><td class="neu">0</td><td class="gold">+300</td><td class="neu">Bought 300k WCS, NOT hedged yet</td><td><span class="pill p-bad">Hedge now!</span></td></tr>
+            <tr><td class="neg">Brent</td><td>May-26</td><td class="neg">−400</td><td class="pos">+400</td><td class="pos">0</td><td class="neu">Sold 400k Brent, hedged long</td><td><span class="pill p-ok">No action</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout c-amber">
+        <strong>The WCS row is the critical one.</strong> You bought 300,000 barrels of Western Canadian Select but you have not sold a swap to hedge it. That means if WCS prices fall, you lose real money with no offset. The position report catches this every single morning before you trade.
+      </div>
+      <div class="sh">What each column tells you</div>
+      <div class="card">
+        <div class="tl-item"><div class="tl-time">GRADE</div><div class="tl-dot" style="background:var(--blue);"></div><div class="tl-content"><div class="tl-title">Which crude oil type</div><div class="tl-desc">WTI (West Texas), Brent (North Sea), WCS (Canadian heavy), Dubai (Middle East). Each has its own price and differential.</div></div></div>
+        <div class="tl-item"><div class="tl-time">PERIOD</div><div class="tl-dot" style="background:var(--gold);"></div><div class="tl-content"><div class="tl-title">Which delivery month</div><div class="tl-desc">May-26 means barrels that physically move in May 2026. Hedges must match the same month — otherwise you have timing risk.</div></div></div>
+        <div class="tl-item"><div class="tl-time">PHYSICAL</div><div class="tl-dot" style="background:var(--accent);"></div><div class="tl-content"><div class="tl-title">Real barrels — positive = you own them, negative = you owe them</div><div class="tl-desc">+1,000 means you bought 1,000,000 barrels. −400 means you sold 400,000 barrels (you must deliver them to a buyer).</div></div></div>
+        <div class="tl-item"><div class="tl-time">PAPER</div><div class="tl-dot" style="background:var(--gold);"></div><div class="tl-content"><div class="tl-title">Financial hedges — swaps and futures</div><div class="tl-desc">−1,000 means you sold a swap for 1,000,000 barrels. This is what offsets your physical long position.</div></div></div>
+        <div class="tl-item"><div class="tl-time">NET</div><div class="tl-dot" style="background:var(--danger);"></div><div class="tl-content"><div class="tl-title">Physical + Paper combined — should be zero</div><div class="tl-desc">Zero means you are fully hedged. Any non-zero number means you have open price exposure. Positive net = long (exposed if price falls). Negative net = short (exposed if price rises).</div></div></div>
+      </div>
+    </div>
+
+    <div class="panel" id="r0-p2">
+      <div class="callout c-blue">
+        <strong>Build your own position — set what you bought and what you hedged.</strong><br>
+        Watch how the net position and risk status change in real time.
+      </div>
+      <div class="card">
+        <div class="srow"><div class="slabel">WTI May — barrels bought (kbbls)</div><input type="range" min="0" max="2000" step="100" value="1000" id="pos-buy" oninput="calcPos()"><div class="sval" id="pos-buy-v">1,000 kbbls</div></div>
+        <div class="srow"><div class="slabel">WTI May — swap hedged (kbbls)</div><input type="range" min="0" max="2000" step="100" value="1000" id="pos-hed" oninput="calcPos()"><div class="sval" id="pos-hed-v">1,000 kbbls</div></div>
+        <div class="srow"><div class="slabel">WTI May — sold forward (kbbls)</div><input type="range" min="0" max="2000" step="100" value="800" id="pos-sold" oninput="calcPos()"><div class="sval" id="pos-sold-v">800 kbbls</div></div>
+      </div>
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">Physical net</span><span class="mval" id="pm-phys">+200 kbbls (bought 1,000 − sold 800)</span></div>
+        <div class="mline"><span class="mlabel">Paper (swap)</span><span class="mval" id="pm-paper">−1,000 kbbls</span></div>
+        <div class="mline"><span class="mop">=</span><span class="mlabel">Combined net</span><span class="mval" id="pm-net" style="color:var(--gold);">−800 kbbls NET SHORT</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult" id="pm-status">⚠️ Over-hedged — swap is larger than physical net</div>
+      </div>
+      <div class="metrow">
+        <div class="met"><div class="ml">Physical bought</div><div class="mv blu" id="pm-c1">1,000 kbbls</div></div>
+        <div class="met"><div class="ml">Sold forward</div><div class="mv neg" id="pm-c2">800 kbbls</div></div>
+        <div class="met"><div class="ml">Physical net</div><div class="mv gold" id="pm-c3">+200 kbbls</div></div>
+        <div class="met"><div class="ml">Position status</div><div class="mv" id="pm-c4" style="color:var(--danger);">OVER-HEDGED</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- R-02  MARK TO MARKET                               -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="report-panel" id="r1">
+    <div class="tab-nav">
+      <button class="tnav on" onclick="goTab('r1',0,this)">What is it?</button>
+      <button class="tnav"    onclick="goTab('r1',1,this)">How it's calculated</button>
+      <button class="tnav"    onclick="goTab('r1',2,this)">Live simulator</button>
+    </div>
+
+    <div class="panel on" id="r1-p0">
+      <div class="callout c-blue">
+        <strong>Mark-to-Market (MtM) asks: what is my book worth RIGHT NOW at today's prices?</strong><br>
+        Not what you paid. Not what you hope to get. What could you close everything out for <em>this second</em> if you had to?
+      </div>
+      <div class="callout c-amber">
+        <strong>Simple analogy:</strong> you bought a house for $400,000. Today the market says it's worth $430,000. Your mark-to-market gain is +$30,000 — even though you haven't sold it. In oil trading, this happens every single day on every single barrel you own.
+      </div>
+      <div class="sh">The two components of MtM — and why one should always be near zero</div>
+      <div class="met2">
+        <div class="met">
+          <div class="ml">Flat price MtM</div>
+          <div class="mv pos">Should be ~Zero</div>
+          <div class="ms" style="margin-top:8px; line-height:1.6;">Physical gained $X as price rose → Swap lost $X as price rose → Net = zero. This is your hedge working perfectly.</div>
+        </div>
+        <div class="met">
+          <div class="ml">Differential MtM</div>
+          <div class="mv gold">This is your real P&L</div>
+          <div class="ms" style="margin-top:8px; line-height:1.6;">You bought diff at +$1.20. Market now quotes +$1.45. Your diff MtM = +$0.25 × volume. This is where trading skill is measured.</div>
+        </div>
+      </div>
+      <div class="callout c-green">
+        <strong>SAP BW analogy:</strong> MtM is like a <strong>delta load revaluation</strong> — you are recalculating the current value of all open positions using today's market prices instead of the original transaction prices. The difference between original cost and current market value is your unrealized P&L.
+      </div>
+    </div>
+
+    <div class="panel" id="r1-p1">
+      <div class="sh">Flat price MtM — why it cancels out</div>
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">You bought physical at</span><span class="mval">$82.50 / bbl</span></div>
+        <div class="mline"><span class="mlabel">Market price today</span><span class="mval">$83.20 / bbl</span></div>
+        <div class="mline"><span class="mop">=</span><span class="mlabel">Flat price move</span><span class="mval pos">+$0.70 / bbl</span></div>
+        <div class="mline"><span class="mlabel">Your physical volume</span><span class="mval">1,000,000 bbls</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult">Physical MtM = 1,000,000 × +$0.70 = +$700,000</div>
+        <div class="msub">BUT — your short swap also moved: 1,000,000 × −$0.70 = −$700,000</div>
+        <div class="mresult" style="margin-top:8px;">Net flat price MtM = +$700,000 − $700,000 = ~$0 ✓</div>
+      </div>
+
+      <div class="sh">Differential MtM — your actual trading profit signal</div>
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">You bought diff at</span><span class="mval">+$1.20 / bbl</span></div>
+        <div class="mline"><span class="mlabel">Market diff today</span><span class="mval">+$1.45 / bbl</span></div>
+        <div class="mline"><span class="mop">=</span><span class="mlabel">Diff MtM gain</span><span class="mval pos">+$0.25 / bbl</span></div>
+        <div class="mline"><span class="mlabel">Open volume</span><span class="mval">1,000,000 bbls</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult">Diff MtM = 1,000,000 × +$0.25 = +$250,000</div>
+        <div class="msub">This is unrealized — you haven't sold yet. But the market is telling you your diff purchase was a good trade.</div>
+      </div>
+
+      <div class="metrow">
+        <div class="met"><div class="ml">Physical MtM</div><div class="mv pos">+$700,000</div><div class="ms">Price rose $0.70 × 1M bbls</div></div>
+        <div class="met"><div class="ml">Swap MtM</div><div class="mv neg">−$700,000</div><div class="ms">Short swap lost as price rose</div></div>
+        <div class="met"><div class="ml">Net flat MtM</div><div class="mv pos">~$0</div><div class="ms">Hedge working perfectly ✓</div></div>
+        <div class="met"><div class="ml">Diff MtM</div><div class="mv gold">+$250,000</div><div class="ms">Your real trading gain</div></div>
+      </div>
+    </div>
+
+    <div class="panel" id="r1-p2">
+      <div class="callout c-blue"><strong>Adjust prices below</strong> — watch how flat price MtM always cancels (hedge works) but diff MtM shows your real trading gain or loss.</div>
+      <div class="card">
+        <div class="srow"><div class="slabel">Your purchase price ($/bbl)</div><input type="range" min="70" max="95" step="0.25" value="82.50" id="mtm-buy" oninput="calcMtM()"><div class="sval" id="mtm-buy-v">$82.50</div></div>
+        <div class="srow"><div class="slabel">Market price today ($/bbl)</div><input type="range" min="70" max="95" step="0.25" value="83.20" id="mtm-mkt" oninput="calcMtM()"><div class="sval" id="mtm-mkt-v">$83.20</div></div>
+        <div class="srow"><div class="slabel">Diff you paid ($/bbl)</div><input type="range" min="0" max="3" step="0.05" value="1.20" id="mtm-diffbuy" oninput="calcMtM()"><div class="sval" id="mtm-diffbuy-v">+$1.20</div></div>
+        <div class="srow"><div class="slabel">Diff market today ($/bbl)</div><input type="range" min="0" max="3" step="0.05" value="1.45" id="mtm-diffmkt" oninput="calcMtM()"><div class="sval" id="mtm-diffmkt-v">+$1.45</div></div>
+        <div class="srow"><div class="slabel">Volume (kbbls)</div><input type="range" min="100" max="3000" step="100" value="1000" id="mtm-vol" oninput="calcMtM()"><div class="sval" id="mtm-vol-v">1,000 kbbls</div></div>
+      </div>
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">Physical MtM</span><span class="mval" id="mtm-phys-calc">1,000,000 × +$0.70 = +$700,000</span></div>
+        <div class="mline"><span class="mlabel">Swap MtM (offset)</span><span class="mval" id="mtm-swap-calc">1,000,000 × −$0.70 = −$700,000</span></div>
+        <div class="mline"><span class="mop">=</span><span class="mlabel">Net flat MtM</span><span class="mval pos">~$0 (hedged)</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mline"><span class="mlabel">Diff MtM</span><span class="mval" id="mtm-diff-calc">1,000,000 × +$0.25 = +$250,000</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult" id="mtm-total">Total Book MtM = +$250,000</div>
+      </div>
+      <div class="metrow">
+        <div class="met"><div class="ml">Flat price MtM</div><div class="mv" id="mtm-r1">~$0</div><div class="ms">Hedge cancels it</div></div>
+        <div class="met"><div class="ml">Diff MtM</div><div class="mv" id="mtm-r2" style="color:var(--gold);">+$250,000</div><div class="ms">Your trading P&L</div></div>
+        <div class="met"><div class="ml">Total book MtM</div><div class="mv" id="mtm-r3" style="color:var(--accent);">+$250,000</div><div class="ms">Unrealized today</div></div>
+        <div class="met"><div class="ml">Signal</div><div class="mv" id="mtm-r4" style="color:var(--accent);">GOOD TRADE ✓</div><div class="ms">Diff moved in your favour</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- R-03  COMMERCIAL MARGIN                            -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="report-panel" id="r2">
+    <div class="tab-nav">
+      <button class="tnav on" onclick="goTab('r2',0,this)">What is it?</button>
+      <button class="tnav"    onclick="goTab('r2',1,this)">How it's calculated</button>
+      <button class="tnav"    onclick="goTab('r2',2,this)">Live simulator</button>
+    </div>
+
+    <div class="panel on" id="r2-p0">
+      <div class="callout c-blue">
+        <strong>The Commercial Margin Report answers: after ALL costs, how much money did I actually make?</strong><br>
+        MtM shows you market value. Commercial margin shows you <em>real profit</em> — after pipeline fees, quality adjustments, financing, freight, and every other cost of physically moving that barrel.
+      </div>
+      <div class="callout c-red">
+        <strong>The #1 mistake junior traders make:</strong> they focus on the diff gain and forget the costs. A trade that shows +$0.25/bbl diff gain can easily become a loss of −$0.24/bbl after a $0.35 pipeline tariff. The commercial margin report is where reality hits.
+      </div>
+      <div class="sh">The full chain — from gross to net</div>
+      <div class="barrow"><div class="barlabel">Sale revenue</div><div class="bartrack"><div class="barfill" style="width:100%;background:var(--accent);"></div></div><div class="barval pos">+$83.95/bbl</div></div>
+      <div class="barrow"><div class="barlabel">Purchase cost</div><div class="bartrack"><div class="barfill" style="width:99%;background:var(--danger);"></div></div><div class="barval neg">−$83.70/bbl</div></div>
+      <div class="barrow"><div class="barlabel">= Gross margin</div><div class="bartrack"><div class="barfill" style="width:5%;background:var(--gold);"></div></div><div class="barval gold">+$0.25/bbl</div></div>
+      <div class="barrow"><div class="barlabel">Pipeline tariff</div><div class="bartrack"><div class="barfill" style="width:8%;background:var(--danger);"></div></div><div class="barval neg">−$0.35/bbl</div></div>
+      <div class="barrow"><div class="barlabel">Quality adj</div><div class="bartrack"><div class="barfill" style="width:2%;background:var(--danger);"></div></div><div class="barval neg">−$0.05/bbl</div></div>
+      <div class="barrow"><div class="barlabel">Financing</div><div class="bartrack"><div class="barfill" style="width:2%;background:var(--danger);"></div></div><div class="barval neg">−$0.09/bbl</div></div>
+      <div class="barrow"><div class="barlabel">= NET margin</div><div class="bartrack"><div class="barfill" style="width:3%;background:var(--danger);"></div></div><div class="barval neg">−$0.24/bbl ⚠️</div></div>
+      <div class="callout c-amber" style="margin-top:16px;">
+        <strong>Gross margin was +$0.25/bbl but total costs were −$0.49/bbl.</strong> Net result = −$0.24/bbl loss. This is why you must know your logistics costs BEFORE you agree the trade — not after.
+      </div>
+    </div>
+
+    <div class="panel" id="r2-p1">
+      <div class="sh">Every line item — where it comes from</div>
+      <div class="card">
+        <table class="tbl">
+          <thead><tr><th>Line item</th><th>$/bbl</th><th>On 800k bbls</th><th>How it's derived</th></tr></thead>
+          <tbody>
+            <tr><td class="pos">Sale price (revenue)</td><td class="pos">+$83.95</td><td class="pos">+$67,160,000</td><td class="neu">Agreed sale diff +$1.45 × WTI avg $82.50</td></tr>
+            <tr><td class="neg">Purchase price (cost)</td><td class="neg">−$83.70</td><td class="neg">−$66,960,000</td><td class="neu">Your buy diff +$1.20 × WTI avg $82.50</td></tr>
+            <tr><td class="gold" style="padding-left:20px;">Gross trading margin</td><td class="gold">+$0.25</td><td class="gold">+$200,000</td><td class="neu">Sale diff − buy diff = $1.45 − $1.20</td></tr>
+            <tr><td class="neg">Pipeline tariff</td><td class="neg">−$0.35</td><td class="neg">−$280,000</td><td class="neu">Fixed fee per bbl to move oil in pipe</td></tr>
+            <tr><td class="neg">Quality adjustment</td><td class="neg">−$0.05</td><td class="neg">−$40,000</td><td class="neu">Buyer deducts for slight quality diff</td></tr>
+            <tr><td class="neg">Financing cost</td><td class="neg">−$0.09</td><td class="neg">−$72,000</td><td class="neu">Cost of borrowing to fund inventory</td></tr>
+            <tr><td class="neg">Inspection/demurrage</td><td class="neg">−$0.00</td><td class="neg">−$15,000</td><td class="neu">Ship waiting fees + inspection charges</td></tr>
+            <tr style="background:rgba(255,77,109,0.07);"><td><strong>NET COMMERCIAL MARGIN</strong></td><td class="neg"><strong>−$0.24</strong></td><td class="neg"><strong>−$207,000</strong></td><td class="neg">LOSING trade after costs</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout c-red">
+        <strong>Gross margin = +$0.25/bbl.</strong> But pipeline alone cost $0.35/bbl — more than the entire gross margin. This deal lost money. The trader needed to either sell at a higher diff (+$1.60 minimum) or find a cheaper logistics route.
+      </div>
+    </div>
+
+    <div class="panel" id="r2-p2">
+      <div class="callout c-blue"><strong>Adjust your deal parameters</strong> — watch the margin waterfall build from gross to net. The break-even diff sale price updates automatically.</div>
+      <div class="card">
+        <div class="srow"><div class="slabel">Diff you bought at ($/bbl)</div><input type="range" min="0.50" max="3.00" step="0.05" value="1.20" id="cm-buy" oninput="calcMargin()"><div class="sval" id="cm-buy-v">+$1.20</div></div>
+        <div class="srow"><div class="slabel">Diff you sold at ($/bbl)</div><input type="range" min="0.50" max="3.00" step="0.05" value="1.45" id="cm-sell" oninput="calcMargin()"><div class="sval" id="cm-sell-v">+$1.45</div></div>
+        <div class="srow"><div class="slabel">Volume sold (kbbls)</div><input type="range" min="100" max="2000" step="100" value="800" id="cm-vol" oninput="calcMargin()"><div class="sval" id="cm-vol-v">800 kbbls</div></div>
+        <div class="srow"><div class="slabel">Pipeline tariff ($/bbl)</div><input type="range" min="0" max="1.50" step="0.05" value="0.35" id="cm-pipe" oninput="calcMargin()"><div class="sval" id="cm-pipe-v">$0.35</div></div>
+        <div class="srow"><div class="slabel">Financing cost ($/bbl)</div><input type="range" min="0" max="0.50" step="0.01" value="0.09" id="cm-fin" oninput="calcMargin()"><div class="sval" id="cm-fin-v">$0.09</div></div>
+        <div class="srow"><div class="slabel">Other costs ($/bbl)</div><input type="range" min="0" max="0.50" step="0.01" value="0.05" id="cm-oth" oninput="calcMargin()"><div class="sval" id="cm-oth-v">$0.05</div></div>
+      </div>
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">Gross margin</span><span class="mval" id="cm-gross-calc">sell $1.45 − buy $1.20 = +$0.25/bbl</span></div>
+        <div class="mline"><span class="mlabel">Total costs</span><span class="mval" id="cm-cost-calc">pipeline $0.35 + fin $0.09 + other $0.05 = $0.49/bbl</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult" id="cm-net-calc">Net margin = +$0.25 − $0.49 = −$0.24/bbl</div>
+        <div class="msub" id="cm-total-calc">On 800,000 bbls → Total net = −$192,000</div>
+        <div class="msub" id="cm-breakeven">Break-even sale diff needed = +$1.69/bbl</div>
+      </div>
+      <div class="metrow">
+        <div class="met"><div class="ml">Gross margin</div><div class="mv" id="cm-r1" style="color:var(--gold);">+$0.25/bbl</div><div class="ms">Diff sold − diff bought</div></div>
+        <div class="met"><div class="ml">Total costs</div><div class="mv" id="cm-r2" style="color:var(--danger);">−$0.49/bbl</div><div class="ms">All logistics + financing</div></div>
+        <div class="met"><div class="ml">Net margin/bbl</div><div class="mv" id="cm-r3" style="color:var(--danger);">−$0.24/bbl</div><div class="ms">Real profit per barrel</div></div>
+        <div class="met"><div class="ml">Total net P&L</div><div class="mv" id="cm-r4" style="color:var(--danger);">−$192,000</div><div class="ms">On sold volume</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- R-04  CAPITAL CHARGES                              -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="report-panel" id="r3">
+    <div class="tab-nav">
+      <button class="tnav on" onclick="goTab('r3',0,this)">What is it?</button>
+      <button class="tnav"    onclick="goTab('r3',1,this)">How it's calculated</button>
+      <button class="tnav"    onclick="goTab('r3',2,this)">Live simulator</button>
+    </div>
+
+    <div class="panel on" id="r3-p0">
+      <div class="callout c-blue">
+        <strong>The Capital Charges Report asks: is this trade worth the company's money being tied up?</strong><br>
+        Holding 1,000,000 barrels of oil worth $83M means $83M of company cash is locked up. That money has a cost — called the <strong>hurdle rate</strong> — the minimum return the company expects. If your trading profit doesn't exceed this cost, you are destroying value.
+      </div>
+      <div class="callout c-amber">
+        <strong>Simple analogy:</strong> you borrow $83M from the bank at 8% per year. Every day you hold the oil you pay interest: $83M × 8% ÷ 365 = $18,192/day. If you make less than $18k profit per day from trading, you are losing money overall — even if the trading P&L looks positive.
+      </div>
+      <div class="sh">Why senior traders obsess over this — junior traders ignore it</div>
+      <div class="met2">
+        <div class="met">
+          <div class="ml">Without capital charges</div>
+          <div class="mv pos">+$389,000</div>
+          <div class="ms" style="margin-top:8px;line-height:1.6;">Commercial margin for the month. Looks profitable. Junior trader is happy.</div>
+        </div>
+        <div class="met">
+          <div class="ml">With capital charges</div>
+          <div class="mv neg">−$121,000</div>
+          <div class="ms" style="margin-top:8px;line-height:1.6;">After deducting $510k cost of holding $83M inventory for 28 days. Senior trader is not happy.</div>
+        </div>
+      </div>
+      <div class="callout c-red">
+        <strong>The hidden killer.</strong> A trade that made $389,000 in gross margin actually destroyed $121,000 of company value because inventory was held too long. The fix: sell faster, negotiate a lower buy diff, or negotiate a higher sell diff.
+      </div>
+    </div>
+
+    <div class="panel" id="r3-p1">
+      <div class="sh">Daily capital charge — the exact calculation</div>
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">Inventory value (MtM)</span><span class="mval">$83,200,000</span><span class="mlabel">(1,000,000 bbls × $83.20 market price)</span></div>
+        <div class="mline"><span class="mop">×</span><span class="mlabel">Annual hurdle rate</span><span class="mval">8%</span><span class="mlabel">(minimum return company expects)</span></div>
+        <div class="mline"><span class="mop">÷</span><span class="mlabel">Days in year</span><span class="mval">365</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult">Daily capital charge = $83,200,000 × 8% ÷ 365 = $18,230 / day</div>
+        <div class="msub">Every single day you hold this inventory, $18,230 is charged against your P&L</div>
+      </div>
+
+      <div class="sh">Monthly accumulation</div>
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">Daily charge</span><span class="mval">$18,230 / day</span></div>
+        <div class="mline"><span class="mop">×</span><span class="mlabel">Days held</span><span class="mval">28 days</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult">Monthly capital charge = $18,230 × 28 = $510,440</div>
+      </div>
+
+      <div class="sh">Economic P&L — the full picture</div>
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">Commercial margin (trading profit)</span><span class="mval pos">+$389,000</span></div>
+        <div class="mline"><span class="mop">−</span><span class="mlabel">Capital charge (cost of holding)</span><span class="mval neg">−$510,440</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult neg">Net economic P&L = +$389,000 − $510,440 = −$121,440</div>
+        <div class="msub">This trade DESTROYED value despite positive commercial margin</div>
+      </div>
+    </div>
+
+    <div class="panel" id="r3-p2">
+      <div class="callout c-blue"><strong>Adjust the sliders</strong> to see how inventory size, holding period, and trading margin interact. Find the break-even point where the trade starts creating value.</div>
+      <div class="card">
+        <div class="srow"><div class="slabel">Market price ($/bbl)</div><input type="range" min="60" max="110" step="0.50" value="83.20" id="cc-price" oninput="calcCapital()"><div class="sval" id="cc-price-v">$83.20</div></div>
+        <div class="srow"><div class="slabel">Volume held (kbbls)</div><input type="range" min="100" max="3000" step="100" value="1000" id="cc-vol" oninput="calcCapital()"><div class="sval" id="cc-vol-v">1,000 kbbls</div></div>
+        <div class="srow"><div class="slabel">Hurdle rate (% per year)</div><input type="range" min="4" max="15" step="0.5" value="8" id="cc-rate" oninput="calcCapital()"><div class="sval" id="cc-rate-v">8%</div></div>
+        <div class="srow"><div class="slabel">Days held</div><input type="range" min="1" max="60" step="1" value="28" id="cc-days" oninput="calcCapital()"><div class="sval" id="cc-days-v">28 days</div></div>
+        <div class="srow"><div class="slabel">Commercial margin ($)</div><input type="range" min="0" max="2000000" step="10000" value="389000" id="cc-margin" oninput="calcCapital()"><div class="sval" id="cc-margin-v">$389,000</div></div>
+      </div>
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">Inventory value</span><span class="mval" id="cc-inv">$83,200,000</span><span class="mlabel">(vol × market price)</span></div>
+        <div class="mline"><span class="mlabel">Daily charge</span><span class="mval" id="cc-daily">$18,230 / day</span><span class="mlabel">(inventory × rate ÷ 365)</span></div>
+        <div class="mline"><span class="mlabel">Total capital charge</span><span class="mval neg" id="cc-total">−$510,440</span><span class="mlabel">(daily × days held)</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult" id="cc-economic">Economic P&L = +$389,000 − $510,440 = −$121,440</div>
+        <div class="msub" id="cc-breakeven">Break-even: need $510,440 commercial margin OR sell in 22 days</div>
+      </div>
+      <div class="metrow">
+        <div class="met"><div class="ml">Inventory value</div><div class="mv blu" id="cc-r1">$83.2M</div></div>
+        <div class="met"><div class="ml">Daily capital cost</div><div class="mv neg" id="cc-r2">$18,230/day</div></div>
+        <div class="met"><div class="ml">Total charge</div><div class="mv neg" id="cc-r3">−$510,440</div></div>
+        <div class="met"><div class="ml">Economic P&L</div><div class="mv" id="cc-r4" style="color:var(--danger);">−$121,440</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- R-05  EXPOSURE / RISK (links to existing file)     -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="report-panel" id="r4">
+    <div class="callout c-blue">
+      <strong>The Exposure / Risk Report</strong> covers DV01, VaR, Limits, and Stress Tests — all explained with full math and interactive sliders in your separate file: <strong>exposure-report-clean.html</strong>
+    </div>
+    <div class="sh">Quick summary — the 4 components</div>
+    <div class="card">
+      <table class="tbl">
+        <thead><tr><th>Component</th><th>Formula</th><th>What it tells you</th><th>Act when...</th></tr></thead>
+        <tbody>
+          <tr><td class="pos">DV01</td><td class="neu">Open bbls × $1</td><td class="neu">P&L change per $1 diff move</td><td class="neu">Too large vs limit</td></tr>
+          <tr><td class="gold">VaR (95%)</td><td class="neu">DV01 × daily vol × 1.65</td><td class="neu">Worst normal day loss</td><td class="gold">Above 80% of limit</td></tr>
+          <tr><td class="blu">Stress test</td><td class="neu">Open bbls × shock move</td><td class="neu">Extreme scenario loss</td><td class="neg">Loss exceeds monthly target</td></tr>
+          <tr><td class="neg">Limits</td><td class="neu">All above vs approved caps</td><td class="neu">Are you within rules?</td><td class="neg">Any limit above 95%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sh">How all 5 reports connect</div>
+    <div class="card">
+      <div class="tl-item"><div class="tl-time">R-01</div><div class="tl-dot" style="background:var(--blue);"></div><div class="tl-content"><div class="tl-title">Position Report feeds everything else</div><div class="tl-desc">Open volume from position report → becomes the input to DV01, MtM, and Capital Charges</div></div></div>
+      <div class="tl-item"><div class="tl-time">R-02</div><div class="tl-dot" style="background:var(--gold);"></div><div class="tl-content"><div class="tl-title">MtM uses position + today's market prices</div><div class="tl-desc">Open volume × (today's price − your price) = unrealized P&L. Flat price portion cancels via hedge.</div></div></div>
+      <div class="tl-item"><div class="tl-time">R-03</div><div class="tl-dot" style="background:var(--accent);"></div><div class="tl-content"><div class="tl-title">Commercial Margin = gross diff gain − all costs</div><div class="tl-desc">This is the realized P&L on closed deals. Costs reduce the diff gain significantly.</div></div></div>
+      <div class="tl-item"><div class="tl-time">R-04</div><div class="tl-dot" style="background:var(--danger);"></div><div class="tl-content"><div class="tl-title">Capital Charges = inventory value × rate × days</div><div class="tl-desc">Subtracted from commercial margin to get economic P&L. Holding inventory long kills returns.</div></div></div>
+      <div class="tl-item"><div class="tl-time">R-05</div><div class="tl-dot" style="background:var(--text2);"></div><div class="tl-content"><div class="tl-title">Exposure = open volume × market move sensitivity</div><div class="tl-desc">DV01 and VaR quantify the risk still sitting in open positions from R-01.</div></div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- R-06  END OF DAY REPORT                            -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="report-panel" id="r5">
+    <div class="tab-nav">
+      <button class="tnav on" onclick="goTab('r5',0,this)">What is it?</button>
+      <button class="tnav"    onclick="goTab('r5',1,this)">How it's built</button>
+      <button class="tnav"    onclick="goTab('r5',2,this)">Live EOD dashboard</button>
+    </div>
+
+    <div class="panel on" id="r5-p0">
+      <div class="callout c-blue">
+        <strong>The End of Day (EOD) Report is the daily scorecard — sent to management at 5pm every trading day.</strong><br>
+        It pulls together ALL the other reports into one summary. It answers: what happened today, where do we stand, and what must we do tomorrow?
+      </div>
+      <div class="sh">What the EOD report contains — and why each section matters</div>
+      <div class="card">
+        <div class="tl-item"><div class="tl-time">TODAY P&L</div><div class="tl-dot" style="background:var(--accent);"></div><div class="tl-content"><div class="tl-title">From MtM + realized trades today</div><div class="tl-desc">Realized P&L (deals you closed today) + Unrealized MtM change (diff moved in your favour or against). This is your one-day contribution.</div></div></div>
+        <div class="tl-item"><div class="tl-time">MTD P&L</div><div class="tl-dot" style="background:var(--gold);"></div><div class="tl-content"><div class="tl-title">Running total for the month — your score so far</div><div class="tl-desc">Sum of all daily P&Ls this month minus capital charges. Compared against monthly target. This is what management tracks.</div></div></div>
+        <div class="tl-item"><div class="tl-time">POSITION</div><div class="tl-dot" style="background:var(--blue);"></div><div class="tl-content"><div class="tl-title">From Position Report — are we flat?</div><div class="tl-desc">Confirms all open positions and whether hedges are in place. Any unhedged volume is flagged for action tomorrow.</div></div></div>
+        <div class="tl-item"><div class="tl-time">RISK</div><div class="tl-dot" style="background:var(--danger);"></div><div class="tl-content"><div class="tl-title">VaR and limit usage — are we within bounds?</div><div class="tl-desc">If VaR limit usage is above 80%, management will ask why. Any breach must be explained and a reduction plan provided.</div></div></div>
+        <div class="tl-item"><div class="tl-time">TRADES</div><div class="tl-dot" style="background:var(--text2);"></div><div class="tl-content"><div class="tl-title">Log of every trade done today</div><div class="tl-desc">Time, counterparty, volume, price, purpose. Audit trail and transparency. Back office confirms each trade booked correctly.</div></div></div>
+        <div class="tl-item"><div class="tl-time">TOMORROW</div><div class="tl-dot" style="background:var(--accent);"></div><div class="tl-content"><div class="tl-title">Action list — what must happen before you can trade freely</div><div class="tl-desc">Unhedged barrels, nominations due, pricing windows closing, credit approvals needed. Non-negotiable daily tasks.</div></div></div>
+      </div>
+    </div>
+
+    <div class="panel" id="r5-p1">
+      <div class="sh">How today P&L is calculated — the exact math</div>
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">Realized P&L today</span><span class="mval pos">+$45,000</span><span class="mlabel">(closed a spread trade today)</span></div>
+        <div class="mline"><span class="mop">+</span><span class="mlabel">Unrealized MtM change today</span><span class="mval pos">+$127,000</span><span class="mlabel">(diff widened $0.13/bbl × 1M bbls this session)</span></div>
+        <div class="mline"><span class="mop">−</span><span class="mlabel">Capital charge today</span><span class="mval neg">−$18,230</span><span class="mlabel">($83.2M × 8% ÷ 365)</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult">Today's net P&L = +$45,000 + $127,000 − $18,230 = +$153,770</div>
+      </div>
+
+      <div class="sh">How MTD P&L accumulates</div>
+      <div class="mathbox">
+        <div class="mline"><span class="mlabel">Yesterday MTD</span><span class="mval">+$1,086,230</span></div>
+        <div class="mline"><span class="mop">+</span><span class="mlabel">Today net P&L</span><span class="mval pos">+$153,770</span></div>
+        <div class="div" style="margin:8px 0;"></div>
+        <div class="mresult">MTD P&L = +$1,086,230 + $153,770 = +$1,240,000</div>
+        <div class="msub">Monthly target: $1,500,000 — currently at 83% of target with 3 trading days left</div>
+      </div>
+    </div>
+
+    <div class="panel" id="r5-p2">
+      <div class="callout c-blue"><strong>This is the live EOD dashboard.</strong> Adjust today's realized P&L and MtM change — watch the full EOD report update automatically.</div>
+      <div class="card">
+        <div class="srow"><div class="slabel">Realized P&L today ($)</div><input type="range" min="-200000" max="500000" step="5000" value="45000" id="eod-real" oninput="calcEOD()"><div class="sval" id="eod-real-v">+$45,000</div></div>
+        <div class="srow"><div class="slabel">MtM change today ($)</div><input type="range" min="-300000" max="500000" step="5000" value="127000" id="eod-mtm" oninput="calcEOD()"><div class="sval" id="eod-mtm-v">+$127,000</div></div>
+        <div class="srow"><div class="slabel">Yesterday MTD ($)</div><input type="range" min="0" max="3000000" step="10000" value="1086230" id="eod-ytd" oninput="calcEOD()"><div class="sval" id="eod-ytd-v">$1,086,230</div></div>
+        <div class="srow"><div class="slabel">Monthly target ($)</div><input type="range" min="500000" max="5000000" step="100000" value="1500000" id="eod-target" oninput="calcEOD()"><div class="sval" id="eod-target-v">$1,500,000</div></div>
+      </div>
+
+      <!-- EOD DASHBOARD DISPLAY -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+        <div style="background:var(--surface2);padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);letter-spacing:3px;">END OF DAY REPORT</div>
+            <div style="font-family:'Bebas Neue',cursive;font-size:22px;color:var(--white);letter-spacing:2px;">CRUDE AMERICAS — 28-MAR-2026</div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;color:var(--accent);" id="eod-clock">17:00:00</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);">
+          <div style="padding:16px;border-right:1px solid var(--border);text-align:center;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);margin-bottom:6px;">TODAY P&L</div><div style="font-family:'Bebas Neue',cursive;font-size:28px;" id="eod-d1" class="pos">+$153,770</div></div>
+          <div style="padding:16px;border-right:1px solid var(--border);text-align:center;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);margin-bottom:6px;">MTD P&L</div><div style="font-family:'Bebas Neue',cursive;font-size:28px;" id="eod-d2" class="gold">+$1,240,000</div></div>
+          <div style="padding:16px;border-right:1px solid var(--border);text-align:center;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);margin-bottom:6px;">VS TARGET</div><div style="font-family:'Bebas Neue',cursive;font-size:28px;" id="eod-d3" class="gold">83%</div></div>
+          <div style="padding:16px;text-align:center;"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);margin-bottom:6px;">VaR LIMIT</div><div style="font-family:'Bebas Neue',cursive;font-size:28px;" class="pos">42% USED</div></div>
+        </div>
+        <div style="padding:18px;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);letter-spacing:2px;margin-bottom:12px;">TODAY P&L BREAKDOWN</div>
+          <div class="barrow"><div class="barlabel">Realized P&L</div><div class="bartrack"><div class="barfill" id="eod-bar1" style="width:9%;background:var(--accent);"></div></div><div class="barval pos" id="eod-lab1">+$45,000</div></div>
+          <div class="barrow"><div class="barlabel">MtM change</div><div class="bartrack"><div class="barfill" id="eod-bar2" style="width:25%;background:var(--accent);"></div></div><div class="barval pos" id="eod-lab2">+$127,000</div></div>
+          <div class="barrow"><div class="barlabel">Capital charge</div><div class="bartrack"><div class="barfill" style="width:4%;background:var(--danger);"></div></div><div class="barval neg">−$18,230</div></div>
+          <div class="barrow"><div class="barlabel" style="color:var(--white);font-weight:600;">Net today P&L</div><div class="bartrack"><div class="barfill" id="eod-bar3" style="width:30%;background:var(--gold);"></div></div><div class="barval gold" id="eod-lab3">+$153,770</div></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2);margin-top:10px;" id="eod-math-show">$45,000 + $127,000 − $18,230 = +$153,770</div>
+        </div>
+        <div style="padding:18px;border-top:1px solid var(--border);">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);letter-spacing:2px;margin-bottom:12px;">TOMORROW'S PRIORITY ACTIONS</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;gap:10px;padding:10px 12px;background:rgba(255,77,109,0.08);border-radius:6px;border-left:3px solid var(--danger);font-size:13px;"><span style="color:var(--danger);font-weight:600;">HIGH</span><span>Find buyer for remaining 200k WTI May — unsold, capital cost running $3,646/day</span></div>
+            <div style="display:flex;gap:10px;padding:10px 12px;background:rgba(245,166,35,0.08);border-radius:6px;border-left:3px solid var(--gold);font-size:13px;"><span style="color:var(--gold);font-weight:600;">MED</span><span>Confirm June pipeline nominations with operator by 10:00am</span></div>
+            <div style="display:flex;gap:10px;padding:10px 12px;background:rgba(0,200,150,0.08);border-radius:6px;border-left:3px solid var(--accent);font-size:13px;"><span style="color:var(--accent);font-weight:600;">OK</span><span>Vessel "Pacific Star" loading May 5 — all nominations confirmed ✓</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+// ── NAVIGATION ─────────────────────────────────────────
+function goReport(idx, el) {
+  document.querySelectorAll('.rnav').forEach(r=>r.classList.remove('on'));
+  document.querySelectorAll('.report-panel').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('r'+idx).classList.add('on');
+}
+function goTab(reportId, idx, el) {
+  const rp = document.getElementById(reportId);
+  rp.querySelectorAll('.tnav').forEach(t=>t.classList.remove('on'));
+  rp.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById(reportId+'-p'+idx).classList.add('on');
+}
+
+// ── HELPERS ────────────────────────────────────────────
+function fmtM(v){ return (v>=0?'+$':'-$')+Math.abs(Math.round(v)).toLocaleString(); }
+function fmtD(v){ return (v>=0?'+$':'-$')+Math.abs(v).toFixed(2); }
+
+// ── R-01 POSITION ──────────────────────────────────────
+function calcPos(){
+  const buy  = parseInt(document.getElementById('pos-buy').value)*1000;
+  const hed  = parseInt(document.getElementById('pos-hed').value)*1000;
+  const sold = parseInt(document.getElementById('pos-sold').value)*1000;
+  document.getElementById('pos-buy-v').textContent  = (buy/1000).toLocaleString()+' kbbls';
+  document.getElementById('pos-hed-v').textContent  = (hed/1000).toLocaleString()+' kbbls';
+  document.getElementById('pos-sold-v').textContent = (sold/1000).toLocaleString()+' kbbls';
+  const physNet = buy - sold;
+  const combined = physNet - hed;
+  document.getElementById('pm-phys').textContent  = fmtM(physNet/1000)+'k bbls (bought '+(buy/1000)+'k − sold '+(sold/1000)+'k)';
+  document.getElementById('pm-paper').textContent = '−'+(hed/1000).toLocaleString()+'k bbls';
+  document.getElementById('pm-net').textContent   = fmtM(combined/1000)+'k bbls';
+  const status = combined===0?'✓ Perfectly hedged — flat position':combined>0?'⚠️ Under-hedged — net LONG '+Math.abs(combined/1000)+'k bbls':'⚠️ Over-hedged — net SHORT '+Math.abs(combined/1000)+'k bbls';
+  const col    = combined===0?'#00c896':'#f5a623';
+  document.getElementById('pm-status').textContent = status;
+  document.getElementById('pm-status').style.color = col;
+  document.getElementById('pm-c1').textContent = (buy/1000).toLocaleString()+' kbbls';
+  document.getElementById('pm-c2').textContent = (sold/1000).toLocaleString()+' kbbls';
+  document.getElementById('pm-c3').textContent = fmtM(physNet/1000)+'k';
+  document.getElementById('pm-c4').textContent = combined===0?'FLAT ✓':combined>0?'UNDER-HEDGED':'OVER-HEDGED';
+  document.getElementById('pm-c4').style.color = combined===0?'#00c896':'#f5a623';
+}
+
+// ── R-02 MTM ───────────────────────────────────────────
+function calcMtM(){
+  const buyP    = parseFloat(document.getElementById('mtm-buy').value);
+  const mktP    = parseFloat(document.getElementById('mtm-mkt').value);
+  const diffBuy = parseFloat(document.getElementById('mtm-diffbuy').value);
+  const diffMkt = parseFloat(document.getElementById('mtm-diffmkt').value);
+  const vol     = parseInt(document.getElementById('mtm-vol').value)*1000;
+  document.getElementById('mtm-buy-v').textContent     = '$'+buyP.toFixed(2);
+  document.getElementById('mtm-mkt-v').textContent     = '$'+mktP.toFixed(2);
+  document.getElementById('mtm-diffbuy-v').textContent = '+$'+diffBuy.toFixed(2);
+  document.getElementById('mtm-diffmkt-v').textContent = '+$'+diffMkt.toFixed(2);
+  document.getElementById('mtm-vol-v').textContent     = (vol/1000).toLocaleString()+' kbbls';
+  const flatMove  = mktP - buyP;
+  const physMtM   = flatMove * vol;
+  const swapMtM   = -flatMove * vol;
+  const diffMove  = diffMkt - diffBuy;
+  const diffMtM   = diffMove * vol;
+  const totalMtM  = diffMtM;
+  document.getElementById('mtm-phys-calc').textContent = vol.toLocaleString()+' × '+fmtD(flatMove)+' = '+fmtM(physMtM);
+  document.getElementById('mtm-swap-calc').textContent = vol.toLocaleString()+' × '+fmtD(-flatMove)+' = '+fmtM(swapMtM);
+  document.getElementById('mtm-diff-calc').textContent = vol.toLocaleString()+' × '+fmtD(diffMove)+' = '+fmtM(diffMtM);
+  document.getElementById('mtm-total').textContent     = 'Total Book MtM = '+fmtM(totalMtM);
+  document.getElementById('mtm-total').className       = 'mresult'+(totalMtM<0?' neg':totalMtM>0?'':' gold');
+  document.getElementById('mtm-r1').textContent = '~$0';
+  document.getElementById('mtm-r1').style.color = '#00c896';
+  document.getElementById('mtm-r2').textContent = fmtM(diffMtM);
+  document.getElementById('mtm-r2').style.color  = diffMtM>=0?'#f5a623':'#ff4d6d';
+  document.getElementById('mtm-r3').textContent = fmtM(totalMtM);
+  document.getElementById('mtm-r3').style.color  = totalMtM>=0?'#00c896':'#ff4d6d';
+  document.getElementById('mtm-r4').textContent = totalMtM>0?'GOOD TRADE ✓':totalMtM<0?'LOSING TRADE ✗':'FLAT';
+  document.getElementById('mtm-r4').style.color  = totalMtM>=0?'#00c896':'#ff4d6d';
+}
+
+// ── R-03 COMMERCIAL MARGIN ─────────────────────────────
+function calcMargin(){
+  const buyD  = parseFloat(document.getElementById('cm-buy').value);
+  const sellD = parseFloat(document.getElementById('cm-sell').value);
+  const vol   = parseInt(document.getElementById('cm-vol').value)*1000;
+  const pipe  = parseFloat(document.getElementById('cm-pipe').value);
+  const fin   = parseFloat(document.getElementById('cm-fin').value);
+  const oth   = parseFloat(document.getElementById('cm-oth').value);
+  document.getElementById('cm-buy-v').textContent  = '+$'+buyD.toFixed(2);
+  document.getElementById('cm-sell-v').textContent = '+$'+sellD.toFixed(2);
+  document.getElementById('cm-vol-v').textContent  = (vol/1000).toLocaleString()+' kbbls';
+  document.getElementById('cm-pipe-v').textContent = '$'+pipe.toFixed(2);
+  document.getElementById('cm-fin-v').textContent  = '$'+fin.toFixed(2);
+  document.getElementById('cm-oth-v').textContent  = '$'+oth.toFixed(2);
+  const gross     = sellD - buyD;
+  const totalCost = pipe + fin + oth;
+  const netPerBbl = gross - totalCost;
+  const netTotal  = netPerBbl * vol;
+  const breakeven = buyD + totalCost;
+  document.getElementById('cm-gross-calc').textContent   = 'sell $'+sellD.toFixed(2)+' − buy $'+buyD.toFixed(2)+' = '+fmtD(gross)+'/bbl';
+  document.getElementById('cm-cost-calc').textContent    = 'pipe $'+pipe.toFixed(2)+' + fin $'+fin.toFixed(2)+' + other $'+oth.toFixed(2)+' = $'+totalCost.toFixed(2)+'/bbl';
+  document.getElementById('cm-net-calc').textContent     = 'Net margin = '+fmtD(gross)+' − $'+totalCost.toFixed(2)+' = '+fmtD(netPerBbl)+'/bbl';
+  document.getElementById('cm-net-calc').className       = 'mresult'+(netPerBbl<0?' neg':'');
+  document.getElementById('cm-total-calc').textContent   = 'On '+vol.toLocaleString()+' bbls → Total net = '+fmtM(netTotal);
+  document.getElementById('cm-breakeven').textContent    = 'Break-even sale diff needed = +$'+breakeven.toFixed(2)+'/bbl';
+  document.getElementById('cm-r1').textContent = fmtD(gross)+'/bbl';
+  document.getElementById('cm-r1').style.color  = gross>=0?'#f5a623':'#ff4d6d';
+  document.getElementById('cm-r2').textContent = '−$'+totalCost.toFixed(2)+'/bbl';
+  document.getElementById('cm-r3').textContent = fmtD(netPerBbl)+'/bbl';
+  document.getElementById('cm-r3').style.color  = netPerBbl>=0?'#00c896':'#ff4d6d';
+  document.getElementById('cm-r4').textContent = fmtM(netTotal);
+  document.getElementById('cm-r4').style.color  = netTotal>=0?'#00c896':'#ff4d6d';
+}
+
+// ── R-04 CAPITAL CHARGES ───────────────────────────────
+function calcCapital(){
+  const price  = parseFloat(document.getElementById('cc-price').value);
+  const vol    = parseInt(document.getElementById('cc-vol').value)*1000;
+  const rate   = parseFloat(document.getElementById('cc-rate').value)/100;
+  const days   = parseInt(document.getElementById('cc-days').value);
+  const margin = parseInt(document.getElementById('cc-margin').value);
+  document.getElementById('cc-price-v').textContent  = '$'+price.toFixed(2);
+  document.getElementById('cc-vol-v').textContent    = (vol/1000).toLocaleString()+' kbbls';
+  document.getElementById('cc-rate-v').textContent   = (rate*100).toFixed(1)+'%';
+  document.getElementById('cc-days-v').textContent   = days+' days';
+  document.getElementById('cc-margin-v').textContent = '$'+margin.toLocaleString();
+  const invVal    = vol * price;
+  const dailyCost = invVal * rate / 365;
+  const totalCost = dailyCost * days;
+  const econPL    = margin - totalCost;
+  const beMargin  = totalCost;
+  const beDays    = Math.round(margin / dailyCost);
+  document.getElementById('cc-inv').textContent      = '$'+Math.round(invVal).toLocaleString();
+  document.getElementById('cc-daily').textContent    = '$'+Math.round(dailyCost).toLocaleString()+' / day';
+  document.getElementById('cc-total').textContent    = '−$'+Math.round(totalCost).toLocaleString();
+  document.getElementById('cc-economic').textContent = 'Economic P&L = '+fmtM(margin)+' − $'+Math.round(totalCost).toLocaleString()+' = '+fmtM(econPL);
+  document.getElementById('cc-economic').className   = 'mresult'+(econPL<0?' neg':'');
+  document.getElementById('cc-breakeven').textContent= 'Break-even: need $'+Math.round(beMargin).toLocaleString()+' margin OR sell within '+beDays+' days';
+  document.getElementById('cc-r1').textContent = '$'+(invVal/1e6).toFixed(1)+'M';
+  document.getElementById('cc-r2').textContent = '$'+Math.round(dailyCost).toLocaleString()+'/day';
+  document.getElementById('cc-r3').textContent = '−$'+Math.round(totalCost).toLocaleString();
+  document.getElementById('cc-r4').textContent = fmtM(econPL);
+  document.getElementById('cc-r4').style.color  = econPL>=0?'#00c896':'#ff4d6d';
+}
+
+// ── R-06 EOD ───────────────────────────────────────────
+function calcEOD(){
+  const real   = parseInt(document.getElementById('eod-real').value);
+  const mtm    = parseInt(document.getElementById('eod-mtm').value);
+  const ytd    = parseInt(document.getElementById('eod-ytd').value);
+  const target = parseInt(document.getElementById('eod-target').value);
+  const capChg = 18230;
+  document.getElementById('eod-real-v').textContent   = fmtM(real);
+  document.getElementById('eod-mtm-v').textContent    = fmtM(mtm);
+  document.getElementById('eod-ytd-v').textContent    = '$'+ytd.toLocaleString();
+  document.getElementById('eod-target-v').textContent = '$'+target.toLocaleString();
+  const todayNet = real + mtm - capChg;
+  const newMTD   = ytd + todayNet;
+  const vsTarget = Math.round((newMTD / target) * 100);
+  const fmt = v => (v>=0?'+$':'-$')+Math.abs(Math.round(v)).toLocaleString();
+  document.getElementById('eod-d1').textContent = fmt(todayNet);
+  document.getElementById('eod-d1').style.color = todayNet>=0?'#00c896':'#ff4d6d';
+  document.getElementById('eod-d2').textContent = fmt(newMTD);
+  document.getElementById('eod-d2').style.color = newMTD>=0?'#f5a623':'#ff4d6d';
+  document.getElementById('eod-d3').textContent = vsTarget+'%';
+  document.getElementById('eod-d3').style.color = vsTarget>=80?'#00c896':vsTarget>=50?'#f5a623':'#ff4d6d';
+  const maxBar = 500000;
+  document.getElementById('eod-bar1').style.width = Math.min(100,Math.abs(real)/maxBar*100)+'%';
+  document.getElementById('eod-bar1').style.background = real>=0?'#00c896':'#ff4d6d';
+  document.getElementById('eod-bar2').style.width = Math.min(100,Math.abs(mtm)/maxBar*100)+'%';
+  document.getElementById('eod-bar2').style.background = mtm>=0?'#00c896':'#ff4d6d';
+  document.getElementById('eod-bar3').style.width = Math.min(100,Math.abs(todayNet)/maxBar*100)+'%';
+  document.getElementById('eod-bar3').style.background = todayNet>=0?'#f5a623':'#ff4d6d';
+  document.getElementById('eod-lab1').textContent = fmt(real);
+  document.getElementById('eod-lab1').style.color = real>=0?'#00c896':'#ff4d6d';
+  document.getElementById('eod-lab2').textContent = fmt(mtm);
+  document.getElementById('eod-lab2').style.color = mtm>=0?'#00c896':'#ff4d6d';
+  document.getElementById('eod-lab3').textContent = fmt(todayNet);
+  document.getElementById('eod-lab3').style.color = todayNet>=0?'#f5a623':'#ff4d6d';
+  document.getElementById('eod-math-show').textContent = '$'+Math.abs(real).toLocaleString()+' + $'+Math.abs(mtm).toLocaleString()+' − $18,230 = '+fmt(todayNet);
+}
+
+// ── EOD CLOCK ──────────────────────────────────────────
+setInterval(()=>{
+  const el = document.getElementById('eod-clock');
+  if(el) el.textContent = new Date().toTimeString().slice(0,8);
+},1000);
+
+// ── INIT ───────────────────────────────────────────────
+calcPos(); calcMtM(); calcMargin(); calcCapital(); calcEOD();
+</script>
+</body>
+</html>
