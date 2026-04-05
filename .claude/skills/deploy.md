@@ -10,7 +10,7 @@ Pull requests get automatic preview URLs.
 
 ### Step 1 — Push repo to GitHub
 ```bash
-git remote add origin https://github.com/your-username/your-repo.git
+git remote add origin https://github.com/Advirao/blog.git
 git push -u origin main
 ```
 

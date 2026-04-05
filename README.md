@@ -3,7 +3,7 @@
 > Interactive simulators on crude oil trading mechanics and generative AI engineering.
 > Every number derived from scratch — use sliders to simulate your own position.
 
-[![Build](https://img.shields.io/github/actions/workflow/status/your-username/your-repo/deploy.yml?branch=main&style=flat-square&label=build)](https://github.com/your-username/your-repo/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/Advirao/blog/deploy.yml?branch=main&style=flat-square&label=build)](https://github.com/Advirao/blog/actions)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
 [![Tests](https://img.shields.io/badge/tests-117%20passing-brightgreen?style=flat-square)](./tests)
@@ -62,7 +62,7 @@ Six fully self-contained HTML simulations embedded as sandboxed iframes — no r
 
 ```bash
 # Clone
-git clone https://github.com/your-username/your-repo.git
+git clone https://github.com/Advirao/blog.git
 cd your-repo
 
 # Install dependencies
