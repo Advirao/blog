@@ -11,8 +11,8 @@ import {
 
 // ─── Registry shape ───────────────────────────────────────────────────────────
 describe('posts registry', () => {
-  it('contains 6 posts', () => {
-    expect(posts).toHaveLength(6)
+  it('contains 7 posts', () => {
+    expect(posts).toHaveLength(7)
   })
 
   it('every post has all required fields', () => {
@@ -60,8 +60,8 @@ describe('CATEGORIES', () => {
 
 // ─── getAllPosts() ─────────────────────────────────────────────────────────────
 describe('getAllPosts()', () => {
-  it('returns all 6 posts', () => {
-    expect(getAllPosts()).toHaveLength(6)
+  it('returns all 7 posts', () => {
+    expect(getAllPosts()).toHaveLength(7)
   })
 
   it('returns a new reference each call (not mutating)', () => {
@@ -92,8 +92,8 @@ describe('getPostsByCategory()', () => {
     expect(getPostsByCategory('oil-trading')).toHaveLength(4)
   })
 
-  it('returns 2 genai posts', () => {
-    expect(getPostsByCategory('genai')).toHaveLength(2)
+  it('returns 3 genai posts', () => {
+    expect(getPostsByCategory('genai')).toHaveLength(3)
   })
 
   it('all returned posts match the requested category', () => {
@@ -173,8 +173,8 @@ describe('getRelatedPosts()', () => {
 
   it('returns fewer posts if category has less than limit', () => {
     const genaiPost = posts.find((p) => p.slug === 'genai-phases-1-3')!
-    // Only 2 genai posts, so related for one = at most 1
+    // Only 3 genai posts, so related for one = at most 2
     const related = getRelatedPosts(genaiPost, 3)
-    expect(related.length).toBe(1)
+    expect(related.length).toBe(2)
   })
 })
