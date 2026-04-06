@@ -45,8 +45,8 @@ export function CategoryFilter({ filter, onFilterChange, postCounts }: CategoryF
                 'flex items-center gap-2 px-3.5 py-2 rounded-lg border font-mono text-xs tracking-wide',
                 'transition-all duration-150 cursor-pointer select-none',
                 isActive
-                  ? 'bg-accent/15 text-accent border-accent/40 shadow-glow-accent'
-                  : 'bg-surface border-border text-ink2 hover:border-accent/30 hover:text-ink'
+                  ? 'bg-accent/10 text-accent border-accent/30'
+                  : 'bg-surface border-border text-ink2 hover:border-ink2/40 hover:text-ink'
               )}
               aria-pressed={isActive}
             >
@@ -55,7 +55,7 @@ export function CategoryFilter({ filter, onFilterChange, postCounts }: CategoryF
               <span
                 className={cn(
                   'px-1.5 py-0.5 rounded text-[10px] font-semibold',
-                  isActive ? 'bg-accent/20 text-accent' : 'bg-surface2 text-ink2'
+                  isActive ? 'bg-accent/15 text-accent' : 'bg-surface2 text-ink2'
                 )}
               >
                 {count}
@@ -81,13 +81,13 @@ export function CategoryFilter({ filter, onFilterChange, postCounts }: CategoryF
                   'px-2.5 py-1 rounded font-mono text-[10px] tracking-wide border transition-all duration-150',
                   isActive
                     ? opt.value === 'beginner'
-                      ? 'bg-accent/15 text-accent border-accent/30'
+                      ? 'bg-accent/10 text-accent border-accent/25'
                       : opt.value === 'intermediate'
-                      ? 'bg-gold/15 text-gold border-gold/30'
+                      ? 'bg-gold/10 text-gold border-gold/25'
                       : opt.value === 'advanced'
-                      ? 'bg-danger/15 text-danger border-danger/30'
-                      : 'bg-accent/15 text-accent border-accent/30'
-                    : 'bg-transparent border-border text-ink2 hover:border-ink2'
+                      ? 'bg-danger/10 text-danger border-danger/25'
+                      : 'bg-accent/10 text-accent border-accent/25'
+                    : 'bg-transparent border-border text-ink2 hover:border-ink2/40'
                 )}
                 aria-pressed={isActive}
               >

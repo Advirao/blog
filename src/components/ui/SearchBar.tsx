@@ -31,7 +31,7 @@ export function SearchBar({
           'w-full bg-surface border border-border rounded-lg',
           'pl-9 pr-9 py-2.5',
           'font-mono text-sm text-ink placeholder:text-ink2',
-          'focus:outline-none focus:border-accent/60 focus:bg-surface2',
+          'focus:outline-none focus:border-accent/50 focus:bg-surface',
           'transition-colors duration-150'
         )}
       />

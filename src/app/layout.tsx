@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google'
+import { IBM_Plex_Mono, IBM_Plex_Sans, Lora } from 'next/font/google'
 import './globals.css'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { SiteFooter } from '@/components/layout/SiteFooter'
@@ -16,6 +16,14 @@ const ibmPlexMono = IBM_Plex_Mono({
   subsets: ['latin'],
   weight: ['400', '600'],
   variable: '--font-mono',
+  display: 'swap',
+})
+
+const lora = Lora({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-lora',
   display: 'swap',
 })
 
@@ -55,8 +63,8 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#0a0e14',
-  colorScheme: 'dark',
+  themeColor: '#FAF9F7',
+  colorScheme: 'light',
 }
 
 // ─── Root Layout ──────────────────────────────────────────────────────────────
@@ -64,14 +72,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${ibmPlexSans.variable} ${ibmPlexMono.variable} dark`}
+      className={`${ibmPlexSans.variable} ${ibmPlexMono.variable} ${lora.variable}`}
     >
       <body className="bg-bg text-ink antialiased">
-        {/* Global grid background */}
-        <div className="grid-bg" aria-hidden="true" />
-
         {/* Site shell */}
-        <div className="relative z-10 flex min-h-screen flex-col">
+        <div className="relative flex min-h-screen flex-col">
           <SiteHeader />
           <main className="flex-1">{children}</main>
           <SiteFooter />

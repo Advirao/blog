@@ -43,7 +43,7 @@ A complete curriculum from Python basics to building production AI agents.
 - **Fullscreen mode** — expand any simulator to fill your screen
 - **Search & filter** — find modules by topic, difficulty, or keyword
 - **Fast** — all pages pre-rendered, loads instantly with no server
-- **Dark terminal theme** — designed to match the simulator aesthetic
+- **Editorial light theme** — warm ivory palette with serif headings, inspired by Anthropic's design language
 
 ---
 
@@ -55,7 +55,8 @@ A complete curriculum from Python basics to building production AI agents.
 |---|---|
 | Framework | [Next.js 14](https://nextjs.org) — App Router, fully static export |
 | Language | [TypeScript](https://typescriptlang.org) 5 — strict mode |
-| Styling | [Tailwind CSS](https://tailwindcss.com) 3 + CSS custom properties |
+| Styling | [Tailwind CSS](https://tailwindcss.com) 3 + CSS custom properties — editorial light theme |
+| Fonts | [Lora](https://fonts.google.com/specimen/Lora) serif (headings) + IBM Plex Sans / Mono |
 | Icons | [lucide-react](https://lucide.dev) |
 | Testing | [Jest](https://jestjs.io) 29 + [React Testing Library](https://testing-library.com) 16 — 117 tests |
 | Package Manager | [pnpm](https://pnpm.io) 10 |

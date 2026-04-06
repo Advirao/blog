@@ -3,12 +3,12 @@ import { CATEGORIES } from '@/lib/posts'
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border bg-surface mt-20">
+    <footer className="border-t border-border bg-surface2 mt-20">
       <div className="mx-auto max-w-6xl px-4 md:px-6 py-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
           <div>
-            <div className="font-bebas text-xl text-white tracking-wider mb-2">
+            <div className="font-bebas text-xl text-white tracking-wide mb-2">
               Knowledge<span className="text-accent">Base</span>
             </div>
             <p className="text-ink2 text-sm leading-relaxed max-w-xs">

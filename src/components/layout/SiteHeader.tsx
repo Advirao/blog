@@ -3,25 +3,23 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { CATEGORIES } from '@/lib/posts'
 
 const navItems = [
   { href: '/',             label: 'All Topics' },
-  { href: '/oil-trading',  label: '🛢️ Oil Trading' },
-  { href: '/genai',        label: '🤖 GenAI' },
+  { href: '/oil-trading',  label: 'Oil Trading' },
+  { href: '/genai',        label: 'GenAI' },
 ]
 
 export function SiteHeader() {
   const pathname = usePathname()
 
-  // Hide the standard header on full-screen simulator pages
   const isSimulatorPage =
     pathname.includes('/oil-trading/') || pathname.includes('/genai/')
 
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full border-b border-border bg-bg/90 backdrop-blur-sm',
+        'sticky top-0 z-50 w-full border-b border-border bg-surface/95 backdrop-blur-sm',
         isSimulatorPage && 'border-b-0'
       )}
     >
@@ -32,10 +30,10 @@ export function SiteHeader() {
           className="flex items-center gap-2.5 group"
           aria-label="Knowledge Base home"
         >
-          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-accent/15 text-accent font-mono text-xs font-semibold border border-accent/30 group-hover:bg-accent/25 transition-colors">
+          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-accent/10 text-accent font-mono text-xs font-semibold border border-accent/20 group-hover:bg-accent/20 transition-colors">
             KB
           </span>
-          <span className="font-bebas text-lg text-white tracking-wider leading-none">
+          <span className="font-bebas text-lg text-white tracking-wide leading-none">
             Knowledge<span className="text-accent">Base</span>
           </span>
         </Link>
@@ -54,8 +52,8 @@ export function SiteHeader() {
                 className={cn(
                   'px-3 py-1.5 rounded-lg font-mono text-[11px] tracking-wide uppercase transition-all duration-150',
                   isActive
-                    ? 'bg-accent/15 text-accent border border-accent/30'
-                    : 'text-ink2 hover:text-ink hover:bg-surface2'
+                    ? 'bg-accent/10 text-accent border border-accent/25'
+                    : 'text-ink2 hover:text-ink hover:bg-surface2 border border-transparent'
                 )}
               >
                 {item.label}
@@ -64,14 +62,9 @@ export function SiteHeader() {
           })}
         </nav>
 
-        {/* Right side: post count badge */}
+        {/* Right side: module count */}
         <div className="hidden md:flex items-center gap-2">
-          <span className="font-mono text-[10px] text-ink2 tracking-widest uppercase">
-            {CATEGORIES.reduce(
-              (acc, c) => acc, 0
-            )}{' '}
-          </span>
-          <span className="pill bg-accent/10 text-accent border border-accent/20 text-[10px]">
+          <span className="pill bg-surface2 text-ink2 border border-border text-[10px]">
             6 Modules
           </span>
         </div>

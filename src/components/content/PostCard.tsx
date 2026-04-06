@@ -1,12 +1,18 @@
 import Link from 'next/link'
-import { Clock, BarChart2, ArrowRight } from 'lucide-react'
+import { Clock, ArrowRight } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
-import { cn, accentBorderClass, accentTextClass, accentBgClass, difficultyConfig, formatDate, readTimeLabel, categoryLabels } from '@/lib/utils'
+import { cn, accentTextClass, difficultyConfig, formatDate, readTimeLabel, categoryLabels } from '@/lib/utils'
 import type { Post, AccentColor } from '@/lib/types'
 
 interface PostCardProps {
   post: Post
   featured?: boolean
+}
+
+// Subtle category-tinted backgrounds (inspired by the section color palette)
+const categoryBg: Record<string, string> = {
+  'oil-trading': '#F2F8F4',  // very light sage green
+  'genai':       '#F2F2F9',  // very light lavender
 }
 
 export function PostCard({ post, featured = false }: PostCardProps) {
@@ -18,19 +24,16 @@ export function PostCard({ post, featured = false }: PostCardProps) {
     <Link
       href={href}
       className={cn(
-        'group relative flex flex-col bg-surface border border-border rounded-xl overflow-hidden',
+        'group relative flex flex-col border border-border rounded-2xl overflow-hidden',
         'transition-all duration-200',
-        'hover:border-opacity-60 hover:-translate-y-0.5',
-        accentBorderClass[accent].replace('border-', 'hover:border-'),
+        'hover:-translate-y-0.5 hover:shadow-card-hover hover:border-opacity-0',
         featured ? 'md:col-span-2' : ''
       )}
-      style={{
-        ['--hover-border' as string]: `var(--${accent === 'accent' ? 'accent' : accent})`,
-      }}
+      style={{ backgroundColor: categoryBg[post.category] ?? '#FFFFFF' }}
     >
-      {/* Top accent bar */}
+      {/* Top accent line */}
       <div
-        className={cn('h-0.5 w-full', accentBgClass[accent].replace('/10', '/60'))}
+        className="h-[3px] w-full"
         style={{ background: `var(--${accent === 'accent' ? 'accent' : accent})` }}
       />
 
@@ -60,8 +63,7 @@ export function PostCard({ post, featured = false }: PostCardProps) {
         <div>
           <h2
             className={cn(
-              'font-bebas text-xl tracking-wider text-white leading-tight mb-1.5',
-              'group-hover:text-opacity-90 transition-colors',
+              'font-bebas text-xl tracking-wide text-white leading-tight mb-1.5',
               featured ? 'text-2xl md:text-3xl' : ''
             )}
           >
@@ -82,7 +84,7 @@ export function PostCard({ post, featured = false }: PostCardProps) {
           {post.tags.slice(0, featured ? 6 : 4).map((tag) => (
             <span
               key={tag}
-              className="font-mono text-[10px] px-2 py-0.5 bg-surface2 border border-border rounded text-ink2"
+              className="font-mono text-[10px] px-2 py-0.5 bg-surface border border-border rounded text-ink2"
             >
               {tag}
             </span>
@@ -95,7 +97,7 @@ export function PostCard({ post, featured = false }: PostCardProps) {
         </div>
 
         {/* Footer row */}
-        <div className="flex items-center justify-between pt-2 border-t border-border/50">
+        <div className="flex items-center justify-between pt-2 border-t border-border/60">
           <div className="flex items-center gap-3 text-ink2">
             <span className="flex items-center gap-1 font-mono text-[10px]">
               <Clock size={11} />

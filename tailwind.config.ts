@@ -9,34 +9,28 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Core palette matching the simulation files
-        bg:       '#0a0e14',
-        surface:  '#111820',
-        surface2: '#1a2332',
-        border:   '#1e3a52',
-        accent:   '#00c896',
-        gold:     '#f5a623',
-        danger:   '#ff4d6d',
-        blue:     '#378ADD',
-        purple:   '#8b5cf6',
-        teal:     '#14b8a6',
-        ink:      '#c8d8e8',
-        ink2:     '#6a8aaa',
-        white:    '#e8f4ff',
+        // Warm ivory/cream editorial palette
+        bg:       '#FAF9F7',
+        surface:  '#FFFFFF',
+        surface2: '#F2EDE6',
+        border:   '#E5DDD5',
+        // Muted accents for light backgrounds
+        accent:   '#2A6E49',
+        gold:     '#A8711A',
+        danger:   '#B83232',
+        blue:     '#2B549A',
+        purple:   '#5E4FA0',
+        teal:     '#2A6E6E',
+        // Text
+        ink:      '#2D2926',
+        ink2:     '#7A6F68',
+        white:    '#1A1510',   // heading color (dark in light theme)
       },
       fontFamily: {
         sans:    ['var(--font-sans)', 'IBM Plex Sans', 'system-ui', 'sans-serif'],
         mono:    ['var(--font-mono)', 'IBM Plex Mono', 'monospace'],
-        display: ['var(--font-bebas)', 'Bebas Neue', 'cursive'],
-      },
-      backgroundImage: {
-        'grid-pattern': `
-          linear-gradient(rgba(0,200,150,0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0,200,150,0.03) 1px, transparent 1px)
-        `,
-      },
-      backgroundSize: {
-        'grid': '40px 40px',
+        display: ['var(--font-lora)', 'Lora', 'Georgia', 'serif'],
+        serif:   ['var(--font-lora)', 'Lora', 'Georgia', 'serif'],
       },
       animation: {
         'fade-in':    'fadeIn 0.25s ease',
@@ -59,10 +53,12 @@ const config: Config = {
         },
       },
       boxShadow: {
-        'glow-accent':  '0 0 20px rgba(0,200,150,0.25)',
-        'glow-gold':    '0 0 20px rgba(245,166,35,0.25)',
-        'glow-danger':  '0 0 20px rgba(255,77,109,0.25)',
-        'glow-blue':    '0 0 20px rgba(55,138,221,0.25)',
+        'glow-accent':  '0 2px 12px rgba(42,110,73,0.15)',
+        'glow-gold':    '0 2px 12px rgba(168,113,26,0.15)',
+        'glow-danger':  '0 2px 12px rgba(184,50,50,0.15)',
+        'glow-blue':    '0 2px 12px rgba(43,84,154,0.15)',
+        'card':         '0 1px 4px rgba(0,0,0,0.06)',
+        'card-hover':   '0 4px 16px rgba(0,0,0,0.09)',
       },
     },
   },

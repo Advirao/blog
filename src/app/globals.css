@@ -1,26 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ─── CSS Custom Properties ─────────────────────────────────────────────────── */
 :root {
-  --bg:       #0a0e14;
-  --surface:  #111820;
-  --surface2: #1a2332;
-  --border:   #1e3a52;
-  --accent:   #00c896;
-  --gold:     #f5a623;
-  --danger:   #ff4d6d;
-  --blue:     #378ADD;
-  --purple:   #8b5cf6;
-  --teal:     #14b8a6;
-  --text:     #c8d8e8;
-  --text2:    #6a8aaa;
-  --white:    #e8f4ff;
+  /* Warm ivory/cream palette — Anthropic-inspired editorial */
+  --bg:       #FAF9F7;
+  --surface:  #FFFFFF;
+  --surface2: #F2EDE6;
+  --border:   #E5DDD5;
 
-  --font-bebas: 'Bebas Neue', cursive;
+  /* Muted accent palette — readable on light backgrounds */
+  --accent:   #2A6E49;   /* forest green */
+  --gold:     #A8711A;   /* warm amber */
+  --danger:   #B83232;   /* muted red */
+  --blue:     #2B549A;   /* steel blue */
+  --purple:   #5E4FA0;   /* muted purple */
+  --teal:     #2A6E6E;   /* forest teal */
+
+  /* Text */
+  --text:     #2D2926;   /* near-black warm */
+  --text2:    #7A6F68;   /* muted warm gray */
+  --white:    #1A1510;   /* heading color (dark in light theme) */
+
+  --font-lora: 'Lora', Georgia, serif;
 }
 
 /* ─── Base Styles ────────────────────────────────────────────────────────────── */
@@ -46,34 +49,28 @@ body {
   line-height: 1.6;
 }
 
-/* ─── Grid background pattern ────────────────────────────────────────────────── */
-.grid-bg {
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(0, 200, 150, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 200, 150, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events: none;
-  z-index: 0;
+/* ─── Lora serif display font ────────────────────────────────────────────────── */
+.font-lora {
+  font-family: var(--font-lora);
 }
 
-/* ─── Bebas Neue display font ────────────────────────────────────────────────── */
+/* ─── Legacy .font-bebas → remapped to Lora ──────────────────────────────────── */
 .font-bebas {
-  font-family: var(--font-bebas);
-  letter-spacing: 0.05em;
+  font-family: var(--font-lora);
+  letter-spacing: 0.01em;
+  font-weight: 700;
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar        { width: 6px; height: 6px; }
-::-webkit-scrollbar-track  { background: var(--bg); }
+::-webkit-scrollbar-track  { background: var(--surface2); }
 ::-webkit-scrollbar-thumb  { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text2); }
 
 /* ─── Selection ──────────────────────────────────────────────────────────────── */
 ::selection {
-  background-color: rgba(0, 200, 150, 0.25);
-  color: var(--white);
+  background-color: rgba(42, 110, 73, 0.15);
+  color: var(--text);
 }
 
 /* ─── Simulator iframe ───────────────────────────────────────────────────────── */
@@ -108,7 +105,7 @@ body {
   }
 
   .card-hover {
-    @apply transition-all duration-200 hover:border-accent/40 hover:shadow-glow-accent;
+    @apply transition-all duration-200 hover:border-accent/40 hover:shadow-card-hover;
   }
 
   /* Pill / badge base */

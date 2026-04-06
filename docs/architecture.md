@@ -218,6 +218,7 @@ Blog/
 │   │       ├── Badge.tsx
 │   │       ├── Button.tsx
 │   │       └── SearchBar.tsx
+│   ├── global.d.ts             # CSS module type declaration
 │   ├── hooks/
 │   │   └── useFilter.ts        # Category + difficulty + search filter
 │   └── lib/
