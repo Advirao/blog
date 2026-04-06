@@ -5,20 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Exposure Report Explained — Oil Trading</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
 
   :root {
-    --bg: #0a0e14;
-    --surface: #111820;
-    --surface2: #1a2332;
-    --border: #1e3a52;
-    --accent: #00c896;
-    --gold: #f5a623;
-    --danger: #ff4d6d;
-    --blue: #378ADD;
-    --text: #c8d8e8;
-    --text2: #6a8aaa;
-    --white: #e8f4ff;
+    --bg: #FAF9F7;
+    --surface: #FFFFFF;
+    --surface2: #F2EDE6;
+    --border: #E5DDD5;
+    --accent: #2A6E49;
+    --gold: #A8711A;
+    --danger: #B83232;
+    --blue: #2B549A;
+    --text: #2D2926;
+    --text2: #7A6F68;
+    --white: #1A1510;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,18 +30,7 @@
     min-height: 100vh;
   }
 
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,200,150,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,200,150,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
+  
   .wrap { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; padding: 30px 20px; }
 
   header {
@@ -59,7 +48,7 @@
     margin-bottom: 10px;
   }
   h1 {
-    font-family: 'Bebas Neue', cursive;
+    font-family: 'Lora', Georgia, serif; font-weight: 700;
     font-size: clamp(36px, 6vw, 60px);
     color: var(--white);
     letter-spacing: 2px;
