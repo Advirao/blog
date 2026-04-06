@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { getAllPosts } from '@/lib/posts'
 import { useFilter } from '@/hooks/useFilter'
 import { PostCard } from '@/components/content/PostCard'
@@ -59,7 +60,7 @@ export default function HomePage() {
       {/* ── Category spotlights ───────────────────────────────────────────── */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-14">
         {/* Oil Trading */}
-        <a
+        <Link
           href="/oil-trading"
           className="group relative overflow-hidden rounded-2xl p-8 flex items-end min-h-[160px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
           style={{ background: '#DFF0E8' }}
@@ -78,10 +79,10 @@ export default function HomePage() {
           <span className="absolute right-8 top-1/2 -translate-y-1/2 text-6xl opacity-25 select-none">
             🛢️
           </span>
-        </a>
+        </Link>
 
         {/* GenAI Engineering */}
-        <a
+        <Link
           href="/genai"
           className="group relative overflow-hidden rounded-2xl p-8 flex items-end min-h-[160px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
           style={{ background: '#E0DFF0' }}
@@ -100,7 +101,7 @@ export default function HomePage() {
           <span className="absolute right-8 top-1/2 -translate-y-1/2 text-6xl opacity-25 select-none">
             🤖
           </span>
-        </a>
+        </Link>
       </section>
 
       {/* ── Filters ──────────────────────────────────────────────────────── */}
