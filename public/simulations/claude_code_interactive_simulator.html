@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code — Interactive Learning Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #FAF9F7;
+    --surface:  #FFFFFF;
+    --surface2: #F2EDE6;
+    --border:   #E5DDD5;
+    --ink:      #2D2926;
+    --ink2:     #7A6F68;
+    --accent:   #5E4FA0;
+    --accent2:  #A8711A;
+    --accent3:  #2A6E49;
+    --accent4:  #B83232;
+    --blue:     #2B549A;
+    /* legacy aliases used in JS inline styles */
+    --text:  #2D2926;
+    --text2: #7A6F68;
+    --text3: #7A6F68;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* --- HEADER --- */
+  header {
+    padding: 2rem 2.5rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-inner {
+    max-width: 1400px; margin: 0 auto;
+    display: flex; align-items: center; gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .logo {
+    font-family: 'Lora', serif;
+    font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .logo span { font-weight: 400; }
+  .subtitle { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--ink2); letter-spacing: 0.1em; text-transform: uppercase; }
+  .header-right { margin-left: auto; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .badge {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+    padding: 0.25rem 0.65rem; border-radius: 20px; border: 1px solid;
+    letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .badge-blue { color: var(--blue); border-color: rgba(43,84,154,0.3); background: rgba(43,84,154,0.07); }
+  .badge-purple { color: var(--accent); border-color: rgba(94,79,160,0.3); background: rgba(94,79,160,0.07); }
+  .badge-green { color: var(--accent3); border-color: rgba(42,110,73,0.3); background: rgba(42,110,73,0.07); }
+
+  /* --- LAYOUT --- */
+  .app { display: flex; max-width: 1400px; margin: 0 auto; height: calc(100vh - 80px); }
+
+  /* --- SIDEBAR --- */
+  .sidebar {
+    width: 260px; flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 1.5rem 0;
+    background: var(--surface);
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .nav-section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem; color: var(--ink2);
+    letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 0.5rem 1.25rem 0.4rem;
+    margin-top: 0.5rem;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.6rem 1.25rem;
+    cursor: pointer; transition: all 0.15s;
+    border-left: 2px solid transparent;
+    position: relative;
+  }
+  .nav-item:hover { background: var(--surface2); }
+  .nav-item.active {
+    background: rgba(94,79,160,0.08);
+    border-left-color: var(--accent);
+  }
+  .nav-item.active .nav-label { color: var(--accent); }
+  .nav-num {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+    color: var(--ink2); min-width: 18px; text-align: right;
+  }
+  .nav-label { font-size: 0.82rem; color: var(--ink2); }
+  .nav-icon { font-size: 0.9rem; width: 20px; text-align: center; flex-shrink: 0; }
+  .nav-done {
+    margin-left: auto;
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent3); display: none;
+  }
+  .nav-item.done .nav-done { display: block; }
+
+  /* --- MAIN --- */
+  .main {
+    flex: 1; overflow-y: auto;
+    padding: 2.5rem 2.5rem 4rem;
+  }
+  .main::-webkit-scrollbar { width: 6px; }
+  .main::-webkit-scrollbar-track { background: transparent; }
+  .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* --- CONCEPT CARD --- */
+  .concept-header {
+    display: flex; align-items: flex-start; gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .concept-icon-big {
+    font-size: 2.8rem; width: 70px; height: 70px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 16px; flex-shrink: 0;
+  }
+  .concept-title { font-family: 'Lora', serif; font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; color: var(--ink); }
+  .concept-tag {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+    color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .concept-desc { font-family: 'IBM Plex Sans', sans-serif; font-size: 0.9rem; color: var(--ink2); line-height: 1.6; margin-top: 0.5rem; max-width: 550px; }
+
+  /* --- TABS --- */
+  .tabs {
+    display: flex; gap: 0; margin-bottom: 1.75rem;
+    border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden; background: var(--surface);
+  }
+  .tab-btn {
+    flex: 1; padding: 0.7rem 0.5rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; font-weight: 500;
+    color: var(--ink2); background: transparent; border: none;
+    cursor: pointer; transition: all 0.2s;
+    border-right: 1px solid var(--border); letter-spacing: 0.02em;
+  }
+  .tab-btn:last-child { border-right: none; }
+  .tab-btn:hover { color: var(--ink); background: var(--surface2); }
+  .tab-btn.active { color: var(--accent); background: rgba(94,79,160,0.08); border-bottom: 2px solid var(--accent); }
+  .tab-btn .tab-icon { display: block; font-size: 1rem; margin-bottom: 0.2rem; }
+
+  /* --- TAB CONTENT --- */
+  .tab-panel { display: none; animation: fadeIn 0.2s ease; }
+  .tab-panel.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform:none; } }
+
+  /* --- WHAT IS IT --- */
+  .what-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
+  .info-card {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.25rem;
+  }
+  .info-card-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
+    color: var(--ink2); letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .info-card-content { font-family: 'IBM Plex Sans', sans-serif; font-size: 0.88rem; line-height: 1.65; color: var(--ink2); }
+  .info-card-content strong { color: var(--ink); }
+  .full-width { grid-column: 1 / -1; }
+  .highlight-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.25rem;
+    font-size: 0.9rem; line-height: 1.6;
+  }
+  .highlight-box .hl-title { font-family: 'Lora', serif; font-weight: 600; color: var(--accent); margin-bottom: 0.4rem; font-size: 0.85rem; }
+
+  /* --- HOW TO READ --- */
+  .read-steps { display: flex; flex-direction: column; gap: 0.75rem; }
+  .read-step {
+    display: flex; gap: 1rem; align-items: flex-start;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1rem 1.25rem;
+  }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+    background: var(--accent); color: #FFFFFF; font-weight: 700;
+    font-size: 0.8rem; display: flex; align-items: center; justify-content: center;
+  }
+  .step-content { font-family: 'IBM Plex Sans', sans-serif; font-size: 0.87rem; line-height: 1.6; color: var(--ink2); }
+  .step-content strong { font-family: 'Lora', serif; color: var(--ink); display: block; margin-bottom: 0.2rem; }
+  .code-inline {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem;
+    background: var(--surface2); border: 1px solid var(--border);
+    padding: 0.1rem 0.4rem; border-radius: 4px; color: var(--accent3);
+  }
+
+  /* --- SIMULATOR --- */
+  .sim-container {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+  }
+  .sim-toolbar {
+    background: var(--surface2); padding: 0.75rem 1.25rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .sim-dots { display: flex; gap: 5px; }
+  .sim-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .sim-dot-r { background: #B83232; }
+  .sim-dot-y { background: #A8711A; }
+  .sim-dot-g { background: #2A6E49; }
+  .sim-title { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--ink2); margin-left: 0.5rem; }
+  .sim-body { padding: 1.5rem; }
+
+  /* Agentic Loop Sim */
+  .loop-display {
+    display: flex; gap: 0; margin-bottom: 1.25rem; justify-content: center;
+    position: relative;
+  }
+  .loop-phase {
+    flex: 1; text-align: center; padding: 1rem 0.5rem;
+    border: 1px solid var(--border); background: var(--surface2);
+    position: relative; transition: all 0.3s;
+  }
+  .loop-phase:not(:last-child)::after {
+    content: '→'; position: absolute; right: -10px; top: 50%; transform: translateY(-50%);
+    color: var(--ink2); z-index: 1; font-size: 0.9rem;
+  }
+  .loop-phase.active { background: rgba(94,79,160,0.08); border-color: var(--accent); }
+  .loop-phase.active .phase-label { color: var(--accent); }
+  .loop-phase.done { background: rgba(42,110,73,0.08); border-color: rgba(42,110,73,0.3); }
+  .loop-phase.done .phase-label { color: var(--accent3); }
+  .phase-icon { font-size: 1.4rem; display: block; margin-bottom: 0.4rem; }
+  .phase-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; font-weight: 600; color: var(--ink2); text-transform: uppercase; letter-spacing: 0.08em; }
+  .loop-log {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1rem; font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem; min-height: 80px; color: var(--ink2);
+    line-height: 1.8;
+  }
+  .log-line { display: flex; gap: 0.5rem; animation: slideIn 0.3s ease; }
+  @keyframes slideIn { from { opacity:0; transform: translateX(-8px); } to { opacity:1; transform:none; } }
+  .log-phase-tag { font-weight: 700; min-width: 70px; }
+  .log-think { color: var(--accent); }
+  .log-act { color: var(--accent2); }
+  .log-observe { color: var(--accent3); }
+  .log-decide { color: var(--blue); }
+  .sim-controls { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap; }
+  .sim-input {
+    flex: 1; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 0.6rem 1rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem;
+    color: var(--ink); outline: none; min-width: 180px;
+  }
+  .sim-input:focus { border-color: var(--accent); }
+  .sim-btn {
+    padding: 0.6rem 1.25rem; border-radius: 8px; border: none;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.02em;
+  }
+  .btn-primary { background: var(--accent); color: #FFFFFF; }
+  .btn-primary:hover { background: #7060b8; transform: translateY(-1px); }
+  .btn-secondary { background: var(--surface2); color: var(--ink2); border: 1px solid var(--border); }
+  .btn-secondary:hover { color: var(--ink); background: var(--surface); }
+
+  /* Hooks Sim */
+  .hook-flow { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+  .hook-row { display: flex; align-items: center; gap: 0.75rem; }
+  .hook-box {
+    padding: 0.6rem 1rem; border-radius: 8px; border: 1px solid;
+    font-size: 0.78rem; font-family: 'IBM Plex Mono', monospace;
+    transition: all 0.3s; flex: 1; text-align: center;
+  }
+  .hook-tool { background: rgba(168,113,26,0.08); border-color: rgba(168,113,26,0.2); color: var(--accent2); }
+  .hook-pre { background: rgba(184,50,50,0.08); border-color: rgba(184,50,50,0.2); color: var(--accent4); }
+  .hook-post { background: rgba(42,110,73,0.08); border-color: rgba(42,110,73,0.2); color: var(--accent3); }
+  .hook-arrow { color: var(--ink2); font-size: 1.2rem; }
+  .hook-status {
+    min-width: 70px; text-align: center; font-size: 0.7rem; font-weight: 700;
+    padding: 0.3rem 0.6rem; border-radius: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .hook-pass { background: rgba(42,110,73,0.1); color: var(--accent3); }
+  .hook-block { background: rgba(184,50,50,0.1); color: var(--accent4); }
+  .hook-pending { background: var(--surface2); color: var(--ink2); }
+  .hook-select-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .hook-scenario-btn {
+    padding: 0.4rem 0.8rem; border-radius: 6px;
+    font-size: 0.75rem; font-family: 'IBM Plex Mono', monospace;
+    border: 1px solid var(--border); background: var(--surface2);
+    color: var(--ink2); cursor: pointer; transition: all 0.2s;
+  }
+  .hook-scenario-btn:hover, .hook-scenario-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(94,79,160,0.08); }
+
+  /* Tools Sim */
+  .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1rem; }
+  .tool-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 0.9rem; cursor: pointer;
+    transition: all 0.2s; text-align: center;
+  }
+  .tool-card:hover { border-color: var(--accent); background: rgba(94,79,160,0.08); }
+  .tool-card.selected { border-color: var(--accent); background: rgba(94,79,160,0.08); }
+  .tool-card-icon { font-size: 1.4rem; display: block; margin-bottom: 0.4rem; }
+  .tool-card-name { font-size: 0.75rem; font-weight: 600; color: var(--ink); }
+  .tool-card-desc { font-size: 0.65rem; color: var(--ink2); margin-top: 0.2rem; }
+  .tool-result {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 1rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
+    color: var(--ink2); min-height: 70px; line-height: 1.8;
+  }
+
+  /* Files Sim */
+  .file-tree {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem;
+    line-height: 1.9;
+  }
+  .file-line { cursor: pointer; padding: 0.05rem 0.3rem; border-radius: 4px; transition: background 0.15s; display: flex; align-items: center; gap: 0.4rem; }
+  .file-line:hover { background: var(--surface2); }
+  .file-line.selected { background: rgba(94,79,160,0.08); color: var(--accent); }
+  .file-dir { color: var(--accent2); }
+  .file-shared { color: var(--accent3); }
+  .file-private { color: var(--accent4); }
+  .file-config { color: var(--accent); }
+  .file-detail {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1rem; margin-top: 0.75rem;
+    font-size: 0.82rem; color: var(--ink2); min-height: 60px;
+    display: none; animation: fadeIn 0.2s ease;
+  }
+  .file-detail.show { display: block; }
+  .file-detail strong { color: var(--ink); display: block; margin-bottom: 0.3rem; }
+
+  /* Git Sim */
+  .git-timeline { position: relative; padding-left: 2rem; }
+  .git-timeline::before { content:''; position:absolute; left:0.6rem; top:0; bottom:0; width:2px; background: var(--border); }
+  .git-commit {
+    position: relative; margin-bottom: 0.75rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 0.75rem 1rem;
+    transition: all 0.2s; cursor: pointer;
+  }
+  .git-commit::before {
+    content:''; position:absolute; left:-1.65rem; top:50%; transform: translateY(-50%);
+    width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--accent); background: var(--bg);
+  }
+  .git-commit.merged::before { background: var(--accent3); border-color: var(--accent3); }
+  .git-commit:hover { border-color: var(--accent); }
+  .git-hash { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--accent); }
+  .git-msg { font-size: 0.82rem; color: var(--ink); margin: 0.2rem 0; }
+  .git-meta { font-size: 0.68rem; color: var(--ink2); font-family: 'IBM Plex Mono', monospace; }
+  .git-add-row { display: flex; gap: 0.5rem; margin-top: 1rem; }
+
+  /* CI/CD Sim */
+  .pipeline {
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .pipeline-step {
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 0.75rem 1rem; transition: all 0.3s;
+  }
+  .pipeline-step.running { border-color: var(--accent2); background: rgba(168,113,26,0.08); }
+  .pipeline-step.pass { border-color: rgba(42,110,73,0.4); background: rgba(42,110,73,0.07); }
+  .pipeline-step.fail { border-color: rgba(184,50,50,0.4); background: rgba(184,50,50,0.07); }
+  .pipeline-icon { font-size: 1.1rem; width: 30px; text-align: center; }
+  .pipeline-name { font-weight: 600; font-size: 0.82rem; flex: 1; color: var(--ink); }
+  .pipeline-detail { font-size: 0.72rem; color: var(--ink2); }
+  .pipeline-status {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; font-weight: 700;
+    padding: 0.2rem 0.6rem; border-radius: 4px;
+  }
+  .status-wait { background: var(--surface2); color: var(--ink2); }
+  .status-run { background: rgba(168,113,26,0.15); color: var(--accent2); }
+  .status-pass { background: rgba(42,110,73,0.15); color: var(--accent3); }
+  .status-fail { background: rgba(184,50,50,0.15); color: var(--accent4); }
+
+  /* Commands Sim */
+  .terminal {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+  }
+  .terminal-bar {
+    background: var(--surface2); padding: 0.6rem 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .term-title { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--ink2); margin-left: 0.5rem; }
+  .terminal-body { padding: 1rem; min-height: 140px; }
+  .term-line { font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; line-height: 1.9; }
+  .term-prompt { color: var(--accent3); }
+  .term-cmd { color: var(--ink); }
+  .term-out { color: var(--ink2); }
+  .term-err { color: var(--accent4); }
+  .term-success { color: var(--accent3); }
+  .cmd-palette { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
+  .cmd-chip {
+    padding: 0.35rem 0.8rem; border-radius: 6px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.73rem;
+    border: 1px solid var(--border); background: var(--surface2);
+    color: var(--ink2); cursor: pointer; transition: all 0.2s;
+  }
+  .cmd-chip:hover { border-color: var(--accent3); color: var(--accent3); background: rgba(42,110,73,0.07); }
+
+  /* --- ANALOGY --- */
+  .analogy-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: start; }
+  .analogy-col { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; }
+  .analogy-col-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--ink2); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem; }
+  .analogy-col-title { font-family: 'Lora', serif; font-size: 1rem; font-weight: 600; color: var(--ink); margin-bottom: 0.4rem; }
+  .analogy-col-desc { font-family: 'IBM Plex Sans', sans-serif; font-size: 0.82rem; color: var(--ink2); line-height: 1.6; }
+  .analogy-arrow { font-size: 2rem; color: var(--ink2); display: flex; align-items: center; padding-top: 1.5rem; }
+  .analogy-pairs { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; }
+  .analogy-pair {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.5rem; align-items: center;
+    font-size: 0.78rem;
+  }
+  .pair-left { background: rgba(168,113,26,0.08); border: 1px solid rgba(168,113,26,0.2); border-radius: 6px; padding: 0.4rem 0.7rem; color: var(--accent2); font-family: 'IBM Plex Mono', monospace; }
+  .pair-right { background: rgba(94,79,160,0.08); border: 1px solid rgba(94,79,160,0.2); border-radius: 6px; padding: 0.4rem 0.7rem; color: var(--accent); font-family: 'IBM Plex Mono', monospace; }
+  .pair-eq { color: var(--ink2); font-weight: 700; text-align: center; }
+
+  /* --- EXAMPLES --- */
+  .examples-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .example-card {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+  }
+  .example-header {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.9rem 1.25rem; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .example-header:hover { background: var(--surface); }
+  .example-title { font-family: 'Lora', serif; font-size: 0.85rem; font-weight: 600; flex: 1; color: var(--ink); }
+  .example-tag { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--accent); }
+  .example-chevron { color: var(--ink2); transition: transform 0.2s; }
+  .example-card.open .example-chevron { transform: rotate(90deg); }
+  .example-body {
+    padding: 0 1.25rem;
+    max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s;
+  }
+  .example-card.open .example-body { max-height: 400px; padding: 0 1.25rem 1.25rem; }
+  .code-block {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.74rem;
+    color: var(--ink2); line-height: 1.8; overflow-x: auto;
+    margin-top: 0.75rem;
+  }
+  .code-comment { color: var(--ink2); }
+  .code-key { color: var(--accent); }
+  .code-str { color: var(--accent3); }
+  .code-num { color: var(--accent2); }
+  .example-explanation { font-family: 'IBM Plex Sans', sans-serif; font-size: 0.82rem; color: var(--ink2); line-height: 1.65; margin-top: 0.75rem; }
+
+  /* --- PROGRESS BAR --- */
+  .progress-bar-outer { height: 3px; background: var(--border); border-radius: 2px; margin-bottom: 1.75rem; }
+  .progress-bar-inner { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.4s ease; }
+
+  /* --- NAV BOTTOM --- */
+  .nav-bottom { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+  .nav-bottom-btn {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.6rem 1.25rem; border-radius: 8px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; font-weight: 500;
+    border: 1px solid var(--border); background: var(--surface2);
+    color: var(--ink2); cursor: pointer; transition: all 0.2s;
+  }
+  .nav-bottom-btn:hover { color: var(--ink); border-color: var(--accent); }
+  .nav-bottom-btn.primary { background: var(--accent); color: #FFFFFF; border-color: var(--accent); }
+  .nav-bottom-btn.primary:hover { background: #7060b8; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { padding: 1.5rem 1rem; }
+    .what-grid { grid-template-columns: 1fr; }
+    .tools-grid { grid-template-columns: repeat(2,1fr); }
+    .analogy-grid { grid-template-columns: 1fr; }
+    .analogy-arrow { display: none; }
+  }
+</style>
+
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="logo">Claude Code <span>// Interactive Simulator</span></div>
+      <div class="subtitle">Complete Learning Guide — Advi Edition</div>
+    </div>
+    <div class="header-right">
+      <span class="badge badge-blue">11 Concepts</span>
+      <span class="badge badge-purple">5 Tabs Each</span>
+      <span class="badge badge-green">Hands-On</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="nav-section-label">Core Concepts</div>
+    <!-- nav items injected by JS -->
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main" id="main">
+    <!-- content injected by JS -->
+  </main>
+</div>
+
+<script>
+const concepts = [
+  {
+    id: 'agent',
+    icon: '🤖',
+    tag: 'Concept 01',
+    title: 'AI Agent',
+    desc: 'An autonomous AI that plans, acts, observes results, and decides what to do next — all without you babysitting every step.',
+    navIcon: '🤖',
+    navLabel: 'AI Agent',
+    what: {
+      core: 'An <strong>AI Agent</strong> is Claude operating autonomously inside your project. Unlike a chatbot where you ask → it answers, an agent can take multi-step actions: reading files, running commands, fixing errors, then reporting back.',
+      how: 'You give it a goal. It figures out the path.',
+      keyPoints: [
+        { label: 'Autonomous', content: 'Decides its own next steps without constant human input' },
+        { label: 'Tool-using', content: 'Can read files, run terminal commands, search the web, write code' },
+        { label: 'Self-correcting', content: 'When something fails, it reads the error and tries a different approach' },
+        { label: 'Goal-oriented', content: 'Keeps working until the task is complete or it gets stuck' }
+      ],
+      highlight: { title: '🧠 Key Insight', text: 'You give the WHAT (goal). The agent figures out the HOW (plan + execution). This is fundamentally different from copilot-style autocomplete tools.' }
+    },
+    howToRead: [
+      { title: 'Watch the terminal output', desc: 'When Claude Code runs, you see live output: each THINK / ACT / OBSERVE printed in sequence. Read these to understand what the agent is doing.' },
+      { title: 'Green = success, Red = error', desc: 'Color codes tell you at a glance if each tool action worked. Errors aren\'t failures — they\'re inputs to the next THINK phase.' },
+      { title: 'Permission prompts', desc: 'When Claude needs to run something potentially risky, it pauses and asks. This is your control checkpoint — you approve or deny.' },
+      { title: 'Final summary', desc: 'After completing a task, Claude summarizes what it did. Read this to verify it did what you intended.' }
+    ],
+    simType: 'agent-loop',
+    analogy: {
+      worldA: { label: 'Real World', title: 'Smart Junior Developer', desc: 'You tell a junior dev: "Set up the database models." They go figure it out, look up docs, try things, fix errors, and come back when done — without bothering you every 5 minutes.' },
+      worldB: { label: 'Claude Code', title: 'AI Agent', desc: 'You type: "Create the User model with auth fields." Claude plans, writes the file, checks it works, fixes any import errors, and reports back — all autonomously.' },
+      pairs: [
+        { left: 'Junior dev reads docs', right: 'Agent uses web_search tool' },
+        { left: 'Dev opens a file', right: 'Agent uses read_file tool' },
+        { left: 'Dev writes code', right: 'Agent uses write_file tool' },
+        { left: 'Dev runs tests', right: 'Agent uses bash tool' }
+      ]
+    },
+    examples: [
+      { title: 'Build a REST endpoint from scratch', tag: 'Full task', content: 'You say: "Add a /login endpoint with JWT auth." The agent (1) reads existing route files, (2) writes the login route, (3) writes tests, (4) runs pytest, (5) fixes any failures, (6) reports done.', code: null },
+      { title: 'Fix a bug autonomously', tag: 'Error recovery', content: 'You say: "The /trips GET endpoint returns a 500." The agent reads the error logs, traces the stack, edits the offending function, reruns the server, verifies the fix.', code: null },
+      { title: 'Scaffold a full feature', tag: 'Multi-file', content: 'You say: "Add photo uploads to trips." The agent creates the model field, migration, route, S3 helper, tests — all in sequence without hand-holding.', code: null }
+    ]
+  },
+  {
+    id: 'loop',
+    icon: '🔄',
+    tag: 'Concept 02',
+    title: 'Agentic Loop',
+    desc: 'The core pattern: Think → Act → Observe → Decide → Repeat. This is how Claude reasons and makes progress on complex tasks.',
+    navIcon: '🔄',
+    navLabel: 'Agentic Loop',
+    what: {
+      core: 'The <strong>Agentic Loop</strong> is the engine inside every Claude Code session. It\'s a cycle of four phases that repeats until the task is done — or Claude decides it needs your help.',
+      how: 'Each phase has a clear purpose. THINK is internal reasoning. ACT uses a tool. OBSERVE checks what happened. DECIDE continues or wraps up.',
+      keyPoints: [
+        { label: 'THINK', content: 'Internal reasoning — Claude plans its next move, no tool called yet' },
+        { label: 'ACT', content: 'Executes one tool action (read, write, run, search, etc.)' },
+        { label: 'OBSERVE', content: 'Reads the tool\'s result: success output, error message, file contents' },
+        { label: 'DECIDE', content: 'Should I loop again? Am I done? Do I need to ask the user?' }
+      ],
+      highlight: { title: '⚡ Why This Matters', text: 'This loop is why Claude can fix its own errors. When a Bash command fails, OBSERVE captures the error, THINK reasons about the cause, and the next ACT tries a corrected approach.' }
+    },
+    howToRead: [
+      { title: 'Identify the phase in each line', desc: 'In Claude Code\'s output, each message belongs to a phase. "I need to..." = THINK. "Reading file..." = ACT. "The file contains..." = OBSERVE.' },
+      { title: 'Count the iterations', desc: 'Complex tasks loop many times. A bug fix might THINK-ACT-OBSERVE 8+ times before declaring done. This is normal.' },
+      { title: 'Look for DECIDE at the end', desc: 'When Claude says "All done" or "I\'ve completed the task," it has exited the loop. When it says "I\'m not sure how to proceed," it\'s asking for your input.' },
+      { title: 'Error loops are healthy', desc: 'Seeing "Error" in OBSERVE followed by another THINK is exactly how self-correction works. Don\'t panic — watch it recover.' }
+    ],
+    simType: 'agentic-loop',
+    analogy: {
+      worldA: { label: 'Classic Pattern', title: 'Process Chain (RSPC)', desc: 'In SAP BW, a Process Chain runs steps in sequence. Each step triggers the next. If one fails, error handling kicks in. The chain doesn\'t need you to manually trigger each step.' },
+      worldB: { label: 'Claude Code', title: 'Agentic Loop', desc: 'The loop runs THINK → ACT → OBSERVE → DECIDE continuously. Each iteration\'s result feeds the next. Error in OBSERVE → new THINK to plan recovery.' },
+      pairs: [
+        { left: 'Process Chain step', right: 'One loop iteration' },
+        { left: 'Step triggers next step', right: 'DECIDE triggers next loop' },
+        { left: 'Error handling variant', right: 'Error in OBSERVE → new THINK' },
+        { left: 'Chain completion event', right: 'DECIDE = "I\'m done"' }
+      ]
+    },
+    examples: [
+      { title: 'Installing a missing package', tag: 'Error recovery loop', content: 'THINK: "Need psycopg2" → ACT: pip install → OBSERVE: "Error: wrong package name" → THINK: "Try psycopg2-binary" → ACT: pip install psycopg2-binary → OBSERVE: "Success" → DECIDE: "Done"', code: null },
+      { title: 'Creating a file with validation', tag: '2-iteration loop', content: 'THINK: "Write User model" → ACT: write file → OBSERVE: "File created" → THINK: "Run tests to verify" → ACT: pytest → OBSERVE: "1 passed" → DECIDE: "Task complete"', code: null },
+      { title: 'Multi-file refactor', tag: 'Long loop', content: 'A rename-function task might loop 15+ times: find usages → read each file → edit each → run tests → fix failures → verify. Each iteration feeds the next.', code: null }
+    ]
+  },
+  {
+    id: 'sdk',
+    icon: '🔧',
+    tag: 'Concept 03',
+    title: 'SDK',
+    desc: 'The Software Development Kit — the toolkit that lets your code communicate with Claude\'s AI brain over the internet.',
+    navIcon: '🔧',
+    navLabel: 'SDK',
+    what: {
+      core: 'The <strong>SDK</strong> (Software Development Kit) is a pre-built library that handles all the low-level work of talking to Claude\'s API. Instead of writing raw HTTP requests, you import the SDK and call clean functions.',
+      how: 'You install it with pip/npm, import it, and call `client.messages.create()` with your prompt. The SDK handles auth, formatting, retries, and error parsing.',
+      keyPoints: [
+        { label: 'Python SDK', content: 'pip install anthropic — used for backend scripts and automation' },
+        { label: 'Node/TS SDK', content: 'npm install @anthropic-ai/sdk — used for JS/TS projects' },
+        { label: 'API Key', content: 'Your authentication token set as ANTHROPIC_API_KEY env variable' },
+        { label: 'Model selection', content: 'You specify which Claude model to use (claude-opus-4, claude-sonnet-4, etc.)' }
+      ],
+      highlight: { title: '🔑 Remember This', text: 'The SDK is just a convenience wrapper. Under the hood, it\'s HTTP POST requests to api.anthropic.com. When something breaks, that\'s where to look.' }
+    },
+    howToRead: [
+      { title: 'client = Anthropic()', desc: 'This line creates your connection to Claude. If your API key isn\'t set, this is where you\'ll get auth errors.' },
+      { title: 'messages parameter', desc: 'This is the conversation history — a list of {role, content} objects. "user" = your prompt. "assistant" = Claude\'s prior replies.' },
+      { title: 'response.content[0].text', desc: 'This is how you extract Claude\'s actual reply text from the response object. The response has multiple fields — .content[0].text is the main one you want.' },
+      { title: 'max_tokens', desc: 'Limits how long Claude\'s reply can be. Set too low and it cuts off mid-sentence. A safe default is 1024-4096.' }
+    ],
+    simType: 'sdk',
+    analogy: {
+      worldA: { label: 'Classic Pattern', title: 'SAP BAPIs', desc: 'BAPIs (Business APIs) are standardized function modules you call to interact with SAP\'s engine. You don\'t rewrite SAP internals — you call the BAPI and it handles everything.' },
+      worldB: { label: 'Claude Code', title: 'Anthropic SDK', desc: 'The SDK is your BAPI to Claude\'s AI engine. You don\'t write the AI — you call the SDK\'s pre-built functions and it handles the communication.' },
+      pairs: [
+        { left: 'BAPI_MATERIAL_GETLIST', right: 'client.messages.create()' },
+        { left: 'SAP RFC destination', right: 'ANTHROPIC_API_KEY' },
+        { left: 'Import statement in ABAP', right: 'import anthropic' },
+        { left: 'BAPI return table', right: 'response.content[0].text' }
+      ]
+    },
+    examples: [
+      { title: 'Basic Python SDK call', tag: 'Python', content: 'Minimal working example to send a prompt and get a response.', code: `<span class="code-comment"># Install: pip install anthropic</span>\n<span class="code-key">import</span> anthropic\n\nclient = anthropic.Anthropic()  <span class="code-comment"># reads ANTHROPIC_API_KEY from env</span>\n\nmessage = client.messages.create(\n    model=<span class="code-str">"claude-opus-4-5"</span>,\n    max_tokens=<span class="code-num">1024</span>,\n    messages=[{<span class="code-str">"role"</span>: <span class="code-str">"user"</span>, <span class="code-str">"content"</span>: <span class="code-str">"Hello!"</span>}]\n)\n\n<span class="code-key">print</span>(message.content[<span class="code-num">0</span>].text)` },
+      { title: 'Multi-turn conversation', tag: 'Python', content: 'Pass the full conversation history to maintain context across multiple messages.', code: `history = [\n    {<span class="code-str">"role"</span>: <span class="code-str">"user"</span>, <span class="code-str">"content"</span>: <span class="code-str">"My name is Advi"</span>},\n    {<span class="code-str">"role"</span>: <span class="code-str">"assistant"</span>, <span class="code-str">"content"</span>: <span class="code-str">"Hello Advi!"</span>},\n    {<span class="code-str">"role"</span>: <span class="code-str">"user"</span>, <span class="code-str">"content"</span>: <span class="code-str">"What's my name?"</span>}\n]\n\nresponse = client.messages.create(\n    model=<span class="code-str">"claude-opus-4-5"</span>,\n    max_tokens=<span class="code-num">256</span>,\n    messages=history\n)` },
+    ]
+  },
+  {
+    id: 'tools',
+    icon: '🛠️',
+    tag: 'Concept 04',
+    title: 'Tools',
+    desc: 'Specific capabilities Claude can invoke during the agentic loop — reading files, running commands, searching the web, and more.',
+    navIcon: '🛠️',
+    navLabel: 'Tools',
+    what: {
+      core: '<strong>Tools</strong> are the actions Claude can take during the ACT phase of the agentic loop. Each tool does one specific thing. Claude picks the right tool automatically based on what it needs to do next.',
+      how: 'You don\'t call tools directly — Claude decides which tool to use and calls it internally. You just give the goal.',
+      keyPoints: [
+        { label: 'Read File', content: 'Opens any file and reads its contents into Claude\'s context' },
+        { label: 'Write File', content: 'Creates a new file at a specified path with given content' },
+        { label: 'Edit File', content: 'Makes targeted changes to part of an existing file' },
+        { label: 'Bash / Run', content: 'Executes any terminal command: pip install, pytest, git, etc.' }
+      ],
+      highlight: { title: '🎯 The Right Tool Automatically', text: 'Claude never guesses or picks randomly. It reasons "I need to understand the existing code before editing it" → uses Read File. You don\'t configure this — it\'s emergent reasoning.' }
+    },
+    howToRead: [
+      { title: 'Tool name in brackets', desc: 'In Claude Code output, you\'ll see [Read file: backend/models.py] or [Bash: pytest -v]. The brackets show which tool was called.' },
+      { title: 'Input and output', desc: 'After the tool name comes the input (what Claude passed in) and then the tool\'s output (what came back). OBSERVE phase reads this output.' },
+      { title: 'Permission prompts for Bash', desc: 'Bash is the most powerful tool — it can do anything in your terminal. Claude will ask permission before running commands it considers risky.' },
+      { title: 'Think tool = no external action', desc: 'When you see [Think], Claude is doing internal reasoning without calling any external tool. This is the THINK phase made visible.' }
+    ],
+    simType: 'tools',
+    analogy: {
+      worldA: { label: 'Classic Pattern', title: 'Transaction Codes', desc: 'In SAP, SE38 runs ABAP, SE16 reads table data, SU01 manages users, ST05 traces performance. Each T-code does one specific thing — you pick the right one for the job.' },
+      worldB: { label: 'Claude Code', title: 'Agent Tools', desc: 'Read File, Write File, Bash, Search, Web Search — each does one specific thing. Claude picks the right tool automatically, like a developer switching T-codes.' },
+      pairs: [
+        { left: 'SE38 (run ABAP)', right: 'Bash tool' },
+        { left: 'SE16 (browse table)', right: 'Read File tool' },
+        { left: 'SE80 (create object)', right: 'Write File tool' },
+        { left: 'SICF (web search)', right: 'Web Search tool' }
+      ]
+    },
+    examples: [
+      { title: 'Read then Edit workflow', tag: 'Two-tool sequence', content: 'Claude uses Read File to understand the existing code, then Write File or Edit File to make targeted changes — never editing blind.', code: null },
+      { title: 'Bash for package management', tag: 'Terminal tool', content: 'When you say "install requests library", Claude uses Bash: `pip install requests`, then reads the output to confirm success.', code: null },
+      { title: 'Search + Web Search combo', tag: 'Research loop', content: 'Claude uses Search Files to find where a function is defined, then Web Search to find the library\'s documentation if it\'s unfamiliar.', code: null }
+    ]
+  },
+  {
+    id: 'hooks',
+    icon: '🪝',
+    tag: 'Concept 05',
+    title: 'Hooks',
+    desc: 'Safety checkpoints that automatically run before or after tool executions — your guardrails for agentic behavior.',
+    navIcon: '🪝',
+    navLabel: 'Hooks',
+    what: {
+      core: '<strong>Hooks</strong> are scripts you configure that Claude Code runs automatically at key moments: before a tool executes (PreToolUse), after it succeeds (PostToolUse), or after it fails (PostToolUseFailure).',
+      how: 'You define hooks in settings.json. Each hook is a shell command. If the hook exits with code 1, the action is blocked. Exit 0 = proceed.',
+      keyPoints: [
+        { label: 'PreToolUse', content: 'Runs BEFORE the tool — can block the action entirely (exit 1)' },
+        { label: 'PostToolUse', content: 'Runs AFTER success — can validate output or trigger follow-up' },
+        { label: 'PostToolUseFailure', content: 'Runs when a tool fails — for error recovery or logging' },
+        { label: 'SessionStart/End', content: 'Run when a Claude Code session begins or ends' }
+      ],
+      highlight: { title: '🔐 Exit Code = Allow/Block', text: 'A hook that exits with code 0 says "proceed." Exit code 1 says "block this action." This gives you fine-grained control over what Claude can and cannot do autonomously.' }
+    },
+    howToRead: [
+      { title: 'Hook type tells you WHEN it runs', desc: 'PreToolUse = before the action (can prevent). PostToolUse = after success (can validate). The type determines your control point.' },
+      { title: 'Matcher tells you WHAT triggers it', desc: 'The "matcher" field filters by tool name. matcher: "Bash" triggers only on bash commands. matcher: "*" triggers on everything.' },
+      { title: 'Command is what runs', desc: 'The hook\'s "command" field is a shell command. It receives the tool\'s input via the CLAUDE_TOOL_INPUT environment variable.' },
+      { title: 'Exit codes are the language', desc: 'Your hook communicates with Claude via exit codes. 0 = green light. 1 = red light. This is the entire API between your hook and the agent.' }
+    ],
+    simType: 'hooks',
+    analogy: {
+      worldA: { label: 'Classic Pattern', title: 'Authorization Checks', desc: 'SAP authorization objects check whether a user is allowed to execute a transaction or action before it runs. The system asks "does this user have S_TCODE with value SE16?" before opening table browser.' },
+      worldB: { label: 'Claude Code', title: 'PreToolUse Hooks', desc: 'Before Claude runs rm -rf, a PreToolUse hook checks: "is this a dangerous delete?" If yes, exit 1 blocks it. Just like an auth check blocks an unauthorized T-code.' },
+      pairs: [
+        { left: 'Auth check before T-code', right: 'PreToolUse hook before Bash' },
+        { left: 'Authorization object', right: 'Hook matcher pattern' },
+        { left: 'Auth failure = no access', right: 'Exit 1 = action blocked' },
+        { left: 'Audit log', right: 'PostToolUse logging hook' }
+      ]
+    },
+    examples: [
+      { title: 'Block dangerous deletes', tag: 'PreToolUse', content: 'A hook that prevents any bash command containing "rm -rf" from executing.', code: `<span class="code-comment">// .claude/settings.json</span>\n{\n  <span class="code-key">"hooks"</span>: {\n    <span class="code-key">"PreToolUse"</span>: [{\n      <span class="code-key">"matcher"</span>: <span class="code-str">"Bash"</span>,\n      <span class="code-key">"hooks"</span>: [{\n        <span class="code-key">"type"</span>: <span class="code-str">"command"</span>,\n        <span class="code-key">"command"</span>: <span class="code-str">"echo $CLAUDE_TOOL_INPUT | grep -q 'rm -rf' && exit 1 || exit 0"</span>\n      }]\n    }]\n  }\n}` },
+      { title: 'Auto-run tests after file write', tag: 'PostToolUse', content: 'After every file write, automatically run the test suite to catch regressions instantly.', code: `<span class="code-key">"PostToolUse"</span>: [{\n  <span class="code-key">"matcher"</span>: <span class="code-str">"Write"</span>,\n  <span class="code-key">"hooks"</span>: [{\n    <span class="code-key">"type"</span>: <span class="code-str">"command"</span>,\n    <span class="code-key">"command"</span>: <span class="code-str">"cd /project && pytest -q 2>&1"</span>\n  }]\n}]` },
+    ]
+  },
+  {
+    id: 'skills',
+    icon: '📚',
+    tag: 'Concept 06',
+    title: 'Skills',
+    desc: 'Markdown documents that give Claude specialized knowledge about your domain, stack, or project conventions.',
+    navIcon: '📚',
+    navLabel: 'Skills',
+    what: {
+      core: '<strong>Skills</strong> are knowledge documents — Markdown files that Claude reads to understand specialized domains. Instead of re-explaining "how our API works" every session, you write it once in a skill file.',
+      how: 'You place .md files in a skills directory. Claude reads them at session start or on demand. The content becomes part of its working knowledge.',
+      keyPoints: [
+        { label: 'Domain knowledge', content: 'Explain your tech stack, architecture decisions, team conventions' },
+        { label: 'Patterns & anti-patterns', content: '"Always use SQLAlchemy relationships, never raw SQL joins"' },
+        { label: 'Step-by-step guides', content: 'How to set up a new endpoint, how to run migrations' },
+        { label: 'Team-specific context', content: 'What ABC stands for, what the Planventure project is about' }
+      ],
+      highlight: { title: '📖 Write Once, Reuse Forever', text: 'Skills are like training manuals for Claude. Once written, every session benefits from that knowledge without you re-explaining. The better your skill files, the better Claude performs on your project.' }
+    },
+    howToRead: [
+      { title: 'Skill files are just Markdown', desc: 'They\'re .md files — headers, bullet points, code blocks. No special syntax needed. Write what you\'d write in a README or wiki.' },
+      { title: 'SKILL.md convention', desc: 'Claude Code looks for SKILL.md as the primary skill file. Other .md files in the skills folder are also read.' },
+      { title: 'Specificity wins', desc: 'Vague skills ("we use Python") don\'t help. Specific skills ("we use Flask-JWT-Extended with ACCESS_EXPIRES=15min") do.' },
+      { title: 'Update skills as you learn', desc: 'When Claude makes the same mistake twice, that\'s a signal to add a skill. "Never do X because Y" prevents the third mistake.' }
+    ],
+    simType: 'skills',
+    analogy: {
+      worldA: { label: 'Classic Pattern', title: 'Training Manuals', desc: 'In large organizations, onboarding manuals tell new employees: how systems work, what conventions to follow, what mistakes to avoid. The manual makes every employee more effective from day one.' },
+      worldB: { label: 'Claude Code', title: 'Skill Files', desc: 'Skill files are Claude\'s training manuals. They tell Claude: how your project works, what patterns to follow, what mistakes to avoid. Better skills = better Claude.' },
+      pairs: [
+        { left: 'SOX compliance manual', right: 'Security skill file' },
+        { left: 'Coding standards doc', right: 'Conventions skill file' },
+        { left: 'Architecture overview', right: 'Stack skill file' },
+        { left: 'Onboarding checklist', right: 'Setup skill file' }
+      ]
+    },
+    examples: [
+      { title: 'Flask conventions skill', tag: 'SKILL.md', content: 'A skill that tells Claude your Flask project\'s patterns.', code: `<span class="code-comment"># Planventure Flask Conventions</span>\n\n<span class="code-key">## Route Pattern</span>\nAlways use Blueprints. Register in app/__init__.py.\nExample: \`from backend.routes.trips import trips_bp\`\n\n<span class="code-key">## Auth Pattern</span>\nAll protected routes use @jwt_required() decorator.\nReturn 401 with json error, never redirect.\n\n<span class="code-key">## Error Handling</span>\nNever let exceptions bubble. Catch and return:\n\`return jsonify({"error": str(e)}), 500\`` },
+      { title: 'Anti-patterns skill', tag: 'SKILL.md', content: 'Explicitly document what Claude should never do.', code: `<span class="code-key">## NEVER DO</span>\n- Never use raw SQL strings (use SQLAlchemy ORM)\n- Never commit secrets to .env to git\n- Never return plain text errors (always JSON)\n- Never skip the @jwt_required() on write endpoints\n- Never use print() for logging (use logger.info())` }
+    ]
+  },
+  {
+    id: 'claude-md',
+    icon: '📋',
+    tag: 'Concept 07',
+    title: 'CLAUDE.md',
+    desc: 'The project handbook — a special file Claude reads every time it starts, giving it context about your project, rules, and conventions.',
+    navIcon: '📋',
+    navLabel: 'CLAUDE.md',
+    what: {
+      core: '<strong>CLAUDE.md</strong> is a special Markdown file that Claude Code automatically reads at the start of every session. It\'s your project handbook — context, rules, and conventions all in one place.',
+      how: 'Put CLAUDE.md in your project root. Write anything Claude should always know: tech stack, folder structure, team conventions, what commands to run.',
+      keyPoints: [
+        { label: 'Auto-loaded', content: 'Claude reads it automatically — you don\'t have to paste context every session' },
+        { label: 'Root + subfolders', content: 'CLAUDE.md at root = project-wide. CLAUDE.md in /backend = backend-specific' },
+        { label: 'Personal global', content: '~/.claude/CLAUDE.md = applies to ALL your projects (your personal preferences)' },
+        { label: 'Committed to Git', content: 'Team shares the same CLAUDE.md — everyone gets consistent Claude behavior' }
+      ],
+      highlight: { title: '💡 First Thing Claude Reads', text: 'CLAUDE.md is the very first thing Claude processes in each session. Front-load your most important context here — tech stack, critical rules, project overview. This shapes everything Claude does next.' }
+    },
+    howToRead: [
+      { title: 'Start with project identity', desc: 'First section: what is this project? One paragraph. Claude uses this to contextualize every decision it makes.' },
+      { title: 'List the tech stack explicitly', desc: 'Don\'t assume Claude remembers from last session. Write: "Flask 3.0, Python 3.12, PostgreSQL, SQLAlchemy 2.0, pytest." Explicit beats implicit.' },
+      { title: 'Commands section is critical', desc: 'Include: how to run the server, how to run tests, how to run migrations. Claude will use these exactly as written.' },
+      { title: 'Rules section prevents repeated mistakes', desc: 'Anything Claude got wrong in past sessions → add a rule. "Never use psycopg2 directly, always use SQLAlchemy models."' }
+    ],
+    simType: 'claude-md',
+    analogy: {
+      worldA: { label: 'Classic Pattern', title: 'System Documentation', desc: 'In SAP, system documentation (SM30 table entries, IMG config guides, project wikis) tells consultants: how this particular installation works, what the custom rules are, what standard configurations were changed.' },
+      worldB: { label: 'Claude Code', title: 'CLAUDE.md', desc: 'CLAUDE.md tells Claude: how this particular project works, what the team conventions are, what standard patterns were customized. It\'s the source of truth for this specific project.' },
+      pairs: [
+        { left: 'Project wiki page', right: 'CLAUDE.md (root)' },
+        { left: 'Module-specific guide', right: 'CLAUDE.md (subfolder)' },
+        { left: 'Personal notes file', right: '~/.claude/CLAUDE.md' },
+        { left: 'Transport documentation', right: 'Git-committed CLAUDE.md' }
+      ]
+    },
+    examples: [
+      { title: 'Complete CLAUDE.md template', tag: 'Root file', content: 'A well-structured CLAUDE.md for a Flask project.', code: `<span class="code-comment"># Planventure — Travel Planning API</span>\n\n<span class="code-key">## Project Overview</span>\nFlask REST API for travel planning. Users create trips,\nadd destinations, share with friends. Mobile-first.\n\n<span class="code-key">## Tech Stack</span>\n- Python 3.12, Flask 3.0\n- PostgreSQL + SQLAlchemy 2.0\n- JWT auth (flask-jwt-extended)\n- pytest + coverage\n\n<span class="code-key">## Key Commands</span>\npython -m flask run --debug   # start server\npytest -v                      # run tests\nflask db upgrade               # run migrations\n\n<span class="code-key">## Rules</span>\n- All routes return JSON, never HTML\n- JWT required on all write endpoints\n- Use SQLAlchemy ORM, never raw SQL` }
+    ]
+  },
+  {
+    id: 'claude-folder',
+    icon: '⚙️',
+    tag: 'Concept 08',
+    title: '.claude/ Folder',
+    desc: 'The control panel for Claude Code — contains settings, hooks, and custom slash commands for your project.',
+    navIcon: '⚙️',
+    navLabel: '.claude/ Folder',
+    what: {
+      core: 'The <strong>.claude/ folder</strong> is Claude Code\'s configuration directory. It lives in your project root and contains three things: settings (hooks + permissions), slash commands, and local overrides.',
+      how: 'Create .claude/ in your project root. Add settings.json for hooks. Add commands/ subfolder for custom slash commands.',
+      keyPoints: [
+        { label: 'settings.json', content: 'Team hooks and permissions — committed to Git, shared with team' },
+        { label: 'settings.local.json', content: 'Your personal overrides — gitignored, never shared' },
+        { label: 'commands/*.md', content: 'Custom slash commands like /test, /run, /deploy' },
+        { label: '~/.claude/', content: 'Global config at home directory — applies to all projects' }
+      ],
+      highlight: { title: '🏠 Global vs Local', text: '~/.claude/settings.json = applies everywhere. .claude/settings.json = applies to this project. settings.local.json = your personal overrides (gitignored). Layer them for maximum flexibility.' }
+    },
+    howToRead: [
+      { title: 'Check the location first', desc: 'Is this file in ~/.claude/ or .claude/? Global files affect all projects. Local files affect only this project. Location determines scope.' },
+      { title: 'settings.json structure', desc: 'Top-level keys: "hooks" and "permissions". Hooks define safety checkpoints. Permissions define what Claude can/can\'t do without asking.' },
+      { title: 'commands/*.md = slash commands', desc: 'Each .md file in .claude/commands/ becomes a /filename slash command. Write the command\'s instructions in the .md file.' },
+      { title: '.local.json is gitignored', desc: 'settings.local.json is in .gitignore. Use it for personal API keys, personal hook preferences, or local paths that differ from teammates.' }
+    ],
+    simType: 'folder-structure',
+    analogy: {
+      worldA: { label: 'Classic Pattern', title: 'System Config (RZ10)', desc: 'SAP profile parameters (RZ10) control system behavior: buffer sizes, login rules, RFC timeouts. The DEFAULT profile applies everywhere; instance profiles apply to specific app servers.' },
+      worldB: { label: 'Claude Code', title: '.claude/ Folder', desc: '~/.claude/ = DEFAULT profile (global). .claude/ = instance profile (project-level). settings.local.json = personal overrides. Same layering pattern, same override logic.' },
+      pairs: [
+        { left: 'DEFAULT profile (RZ10)', right: '~/.claude/settings.json' },
+        { left: 'Instance profile', right: '.claude/settings.json' },
+        { left: 'Personal ABAP variants', right: '.claude/settings.local.json' },
+        { left: 'Custom transactions', right: '.claude/commands/*.md' }
+      ]
+    },
+    examples: [
+      { title: 'Custom /test slash command', tag: 'commands/test.md', content: 'Create .claude/commands/test.md to add a /test command.', code: `<span class="code-comment"># /test — Run test suite with coverage</span>\n\nRun the full pytest test suite:\n1. cd to project root\n2. Run: pytest -v --cov=backend --cov-report=term-missing\n3. Report: pass/fail count + coverage %\n4. If failures: show the failing test names and errors\n5. If coverage < 80%: flag which modules need more tests` },
+      { title: 'settings.json with hooks', tag: 'settings.json', content: 'Complete settings.json with safety hooks.', code: `{\n  <span class="code-key">"hooks"</span>: {\n    <span class="code-key">"PreToolUse"</span>: [{\n      <span class="code-key">"matcher"</span>: <span class="code-str">"Bash"</span>,\n      <span class="code-key">"hooks"</span>: [{\n        <span class="code-key">"type"</span>: <span class="code-str">"command"</span>,\n        <span class="code-key">"command"</span>: <span class="code-str">"echo $CLAUDE_TOOL_INPUT | grep -q 'rm -rf' && exit 1 || exit 0"</span>\n      }]\n    }]\n  }\n}` }
+    ]
+  },
+  {
+    id: 'folder-structure',
+    icon: '📁',
+    tag: 'Concept 09',
+    title: 'Folder Structure',
+    desc: 'The standard project layout for Flask + React projects — where everything lives and why.',
+    navIcon: '📁',
+    navLabel: 'Folder Structure',
+    what: {
+      core: '<strong>Folder Structure</strong> is the organized layout of your project\'s files. A consistent structure means Claude knows where to find things, teammates know where to look, and CI/CD knows where to test.',
+      how: 'The structure separates concerns: backend API code, frontend UI code, tests, documentation, scripts, and configuration each have their own home.',
+      keyPoints: [
+        { label: 'backend/', content: 'Flask API: models, routes, services, utils, config' },
+        { label: 'frontend/', content: 'React single-page app (separate from API)' },
+        { label: 'tests/', content: 'unit/ and integration/ test folders' },
+        { label: '.claude/, .github/', content: 'Claude config and CI/CD pipeline definitions' }
+      ],
+      highlight: { title: '📐 Structure = Predictability', text: 'When Claude knows your structure (via CLAUDE.md), it puts new files in the right place automatically. A User model goes in backend/models/user.py. A login route goes in backend/routes/auth.py. No guessing.' }
+    },
+    howToRead: [
+      { title: 'Top-level = separation of concerns', desc: 'backend/ vs frontend/ vs tests/ vs docs/ — each top-level folder has one purpose. When you\'re looking for something, start at the top level.' },
+      { title: 'backend/ subfolders mirror architecture', desc: 'models/ = database, routes/ = API endpoints, services/ = business logic, utils/ = helpers. This is MVC without the C (Flask handles routing).' },
+      { title: 'tests/ mirrors backend/', content: 'tests/unit/ has one test file per backend module. tests/integration/ tests multi-component flows. Matching structure makes finding tests easy.' },
+      { title: '.hidden folders are config', desc: '.claude/, .github/, .env — hidden folders are configuration and automation. They don\'t ship to production but are critical to development.' }
+    ],
+    simType: 'file-tree',
+    analogy: {
+      worldA: { label: 'Classic Pattern', title: 'InfoArea Hierarchy', desc: 'In SAP BW, the InfoArea hierarchy organizes InfoObjects, DSOs, InfoCubes into logical namespaces. Finance objects live under Finance InfoArea. HR objects under HR. Structure mirrors the business domain.' },
+      worldB: { label: 'Claude Code', title: 'Folder Structure', desc: 'backend/ organizes by technical layer (models, routes, services). Just like BW organizes by business domain. Each folder is a namespace with a clear purpose.' },
+      pairs: [
+        { left: 'InfoArea → InfoObjects', right: 'backend/ → models/' },
+        { left: 'InfoArea → DSOs', right: 'backend/ → routes/' },
+        { left: 'Transport objects', right: '.github/workflows/' },
+        { left: 'Test InfoProvider', right: 'tests/' }
+      ]
+    },
+    examples: [
+      { title: 'Complete Planventure structure', tag: 'Directory layout', content: 'The full folder structure used in the Planventure project.', code: `planventure/\n├── backend/\n│   ├── models/          <span class="code-comment"># SQLAlchemy models</span>\n│   │   ├── user.py\n│   │   └── trip.py\n│   ├── routes/          <span class="code-comment"># Flask blueprints</span>\n│   │   ├── auth.py\n│   │   └── trips.py\n│   ├── services/        <span class="code-comment"># Business logic</span>\n│   └── config.py\n├── tests/\n│   ├── unit/\n│   └── integration/\n├── .claude/\n│   ├── settings.json\n│   └── commands/\n├── .github/workflows/\n├── CLAUDE.md\n└── requirements.txt` }
+    ]
+  },
+  {
+    id: 'git',
+    icon: '🌿',
+    tag: 'Concept 10',
+    title: 'Git / GitHub',
+    desc: 'Version control for your code — track changes, collaborate with others, and never lose work again.',
+    navIcon: '🌿',
+    navLabel: 'Git / GitHub',
+    what: {
+      core: '<strong>Git</strong> tracks every change to your code as "commits" — snapshots with a message. <strong>GitHub</strong> is the cloud platform where you push these commits so others can see, review, and collaborate.',
+      how: 'You work on a feature branch, commit your changes, push to GitHub, then create a Pull Request for code review before merging to main.',
+      keyPoints: [
+        { label: 'Commit', content: 'A snapshot of your code at a specific moment, with a descriptive message' },
+        { label: 'Branch', content: 'An isolated line of development — changes here don\'t affect main until merged' },
+        { label: 'Pull Request', content: 'A proposal to merge your branch into main, with code review' },
+        { label: 'Main branch', content: 'The stable, production-ready version of your code' }
+      ],
+      highlight: { title: '🛡️ Never Lose Work', text: 'Commit often. Every commit is a restore point. If Claude generates bad code, you can revert. If a feature breaks things, you can reset. Git is your safety net.' }
+    },
+    howToRead: [
+      { title: 'git log --oneline shows your history', desc: 'Each line is one commit: a short hash + your message. Reading this tells you exactly what changed and when. Good commit messages make this invaluable.' },
+      { title: 'Branches protect main', desc: 'You never commit directly to main. Feature branches keep experiments isolated. If the feature fails, delete the branch — main is untouched.' },
+      { title: 'Green CI on PR = safe to merge', desc: 'When you create a Pull Request, GitHub Actions runs your tests. Green checkmark = all tests pass. Red X = something broke. Never merge red.' },
+      { title: 'Conventional commit format', desc: '"feat: add JWT auth" tells you what TYPE of change (feat/fix/docs/test) and WHAT changed. This makes git log readable months later.' }
+    ],
+    simType: 'git',
+    analogy: {
+      worldA: { label: 'Classic Pattern', title: 'Transport System', desc: 'SAP\'s transport system (STMS) moves changes between DEV → QA → PROD. Each transport is a tracked package of changes. You can compare transports, see what changed, and roll back if needed.' },
+      worldB: { label: 'Claude Code', title: 'Git + GitHub', desc: 'Git commits move code from dev machine → GitHub → production. Each commit is a tracked package of changes. You can diff, revert, and branch. Same lifecycle, different tech.' },
+      pairs: [
+        { left: 'Transport request', right: 'Git commit' },
+        { left: 'DEV system', right: 'Feature branch' },
+        { left: 'STMS import queue', right: 'Pull Request queue' },
+        { left: 'PROD import', right: 'Merge to main' }
+      ]
+    },
+    examples: [
+      { title: 'Feature branch workflow', tag: 'Git workflow', content: 'The professional workflow for every feature you build.', code: `<span class="code-comment"># Start a new feature</span>\ngit checkout -b feature/add-photo-uploads\n\n<span class="code-comment"># Work and commit often</span>\ngit add .\ngit commit -m <span class="code-str">"feat: add S3 photo upload service"</span>\ngit commit -m <span class="code-str">"test: add photo upload endpoint tests"</span>\n\n<span class="code-comment"># Push and create PR</span>\ngit push origin feature/add-photo-uploads\n<span class="code-comment"># → Go to GitHub → Create Pull Request</span>` },
+      { title: 'Conventional commits', tag: 'Best practice', content: 'Using the prefix convention makes git history readable.', code: `feat: add trip sharing endpoint\nfix: correct JWT expiry validation\ndocs: update API endpoint reference\ntest: add integration tests for auth flow\nchore: update CI to Python 3.12\nrefactor: extract S3 logic to service layer` }
+    ]
+  },
+  {
+    id: 'cicd',
+    icon: '🚀',
+    tag: 'Concept 11',
+    title: 'CI/CD Pipeline',
+    desc: 'Automated testing and deployment — every code push triggers a pipeline that checks your code before it reaches production.',
+    navIcon: '🚀',
+    navLabel: 'CI/CD',
+    what: {
+      core: '<strong>CI/CD</strong> (Continuous Integration / Continuous Deployment) is an automated pipeline that runs every time you push code. It installs dependencies, runs linters, runs tests, and checks coverage — all without you doing anything.',
+      how: 'You define the pipeline in .github/workflows/ci.yml. GitHub Actions reads this file and runs the steps on their servers on every push.',
+      keyPoints: [
+        { label: 'Trigger', content: 'Starts automatically on every git push or Pull Request' },
+        { label: 'Steps', content: 'Sequential: checkout → setup → install → lint → test → coverage' },
+        { label: 'Green = safe', content: 'All steps pass → green checkmark on your PR → safe to merge' },
+        { label: 'Red = fix first', content: 'Any step fails → red X → fix the issue before merging' }
+      ],
+      highlight: { title: '🔁 Automated Quality Gate', text: 'CI/CD means your team\'s quality standards run automatically on every change. Nobody can accidentally merge broken code — the pipeline catches it first. This is what makes teams move fast without breaking things.' }
+    },
+    howToRead: [
+      { title: 'Check the Actions tab on GitHub', desc: 'After every push, go to your repo → Actions tab. You see the pipeline run in real-time. Click on a run to see each step\'s output.' },
+      { title: 'Green checkmark = ship it', desc: 'Each step shows ✓ (pass) or ✗ (fail). All green = your code is clean, tested, and ready to merge. One red = stop and fix.' },
+      { title: 'Read failed step output', desc: 'When a step fails, click on it to see the full log. Flake8 errors show exactly which line has a style issue. pytest shows exactly which test failed and why.' },
+      { title: 'ci.yml is just YAML steps', desc: 'The pipeline file is human-readable. Each "- name: ..." block is one step. "run: pytest" is literally the command it runs on the CI server.' }
+    ],
+    simType: 'cicd',
+    analogy: {
+      worldA: { label: 'Classic Pattern', title: 'Automated Process Chains', desc: 'In SAP BW, Process Chains run automatically on a schedule: extract → transform → load → validate. Each step checks for errors. If a load fails, the chain stops and alerts you. No manual babysitting.' },
+      worldB: { label: 'Claude Code', title: 'CI/CD Pipeline', desc: 'On every git push: checkout → install → lint → test → report. Each step checks for problems. If tests fail, the pipeline stops and alerts you. No manual babysitting.' },
+      pairs: [
+        { left: 'Process chain event trigger', right: 'on: push (GitHub trigger)' },
+        { left: 'Extract step', right: 'Checkout code step' },
+        { left: 'Validation DTP', right: 'pytest / flake8 step' },
+        { left: 'Chain error alert', right: 'PR red X notification' }
+      ]
+    },
+    examples: [
+      { title: 'Complete ci.yml for Flask', tag: 'GitHub Actions', content: 'The full CI/CD pipeline used in the Planventure project.', code: `<span class="code-key">name:</span> CI\n<span class="code-key">on:</span> [push, pull_request]\n\n<span class="code-key">jobs:</span>\n  <span class="code-key">test:</span>\n    <span class="code-key">runs-on:</span> ubuntu-latest\n    <span class="code-key">steps:</span>\n      - <span class="code-key">uses:</span> actions/checkout@v3\n      - <span class="code-key">uses:</span> actions/setup-python@v4\n        <span class="code-key">with:</span>\n          <span class="code-key">python-version:</span> <span class="code-str">'3.12'</span>\n      - <span class="code-key">run:</span> pip install -r requirements.txt\n      - <span class="code-key">run:</span> flake8 backend/\n      - <span class="code-key">run:</span> pytest --cov=backend\n      - <span class="code-key">run:</span> coverage report --fail-under=80` }
+    ]
+  }
+];
+
+// --- RENDER NAV ---
+const sidebar = document.getElementById('sidebar');
+concepts.forEach((c, i) => {
+  const div = document.createElement('div');
+  div.className = 'nav-item';
+  div.dataset.idx = i;
+  div.innerHTML = `<span class="nav-icon">${c.navIcon}</span><span class="nav-label">${c.navLabel}</span><span class="nav-done"></span>`;
+  div.onclick = () => showConcept(i);
+  sidebar.appendChild(div);
+});
+
+let currentConcept = 0;
+let visited = new Set();
+
+function showConcept(idx) {
+  currentConcept = idx;
+  visited.add(idx);
+  const c = concepts[idx];
+
+  // Update nav
+  document.querySelectorAll('.nav-item').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+    if (visited.has(i)) el.classList.add('done');
+  });
+
+  // Progress
+  const pct = Math.round((visited.size / concepts.length) * 100);
+
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="progress-bar-outer"><div class="progress-bar-inner" style="width:${pct}%"></div></div>
+    <div class="concept-header">
+      <div class="concept-icon-big">${c.icon}</div>
+      <div>
+        <div class="concept-tag">${c.tag}</div>
+        <div class="concept-title">${c.title}</div>
+        <div class="concept-desc">${c.desc}</div>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'what')"><span class="tab-icon">💡</span>What Is It</button>
+      <button class="tab-btn" onclick="switchTab(this,'read')"><span class="tab-icon">🔍</span>How to Read</button>
+      <button class="tab-btn" onclick="switchTab(this,'sim')"><span class="tab-icon">🎮</span>Simulator</button>
+      <button class="tab-btn" onclick="switchTab(this,'analogy')"><span class="tab-icon">🔗</span>Analogy</button>
+      <button class="tab-btn" onclick="switchTab(this,'examples')"><span class="tab-icon">📝</span>Examples</button>
+    </div>
+    <div id="tab-what" class="tab-panel active">${renderWhat(c)}</div>
+    <div id="tab-read" class="tab-panel">${renderRead(c)}</div>
+    <div id="tab-sim" class="tab-panel">${renderSim(c)}</div>
+    <div id="tab-analogy" class="tab-panel">${renderAnalogy(c)}</div>
+    <div id="tab-examples" class="tab-panel">${renderExamples(c)}</div>
+    <div class="nav-bottom">
+      ${idx > 0 ? `<button class="nav-bottom-btn" onclick="showConcept(${idx-1})">← Previous</button>` : '<span></span>'}
+      ${idx < concepts.length-1 ? `<button class="nav-bottom-btn primary" onclick="showConcept(${idx+1})">Next →</button>` : '<button class="nav-bottom-btn primary" onclick="showConcept(0)">🎉 Start Over</button>'}
+    </div>
+  `;
+  main.scrollTop = 0;
+  initSim(c);
+}
+
+function switchTab(btn, tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + tabId).classList.add('active');
+}
+
+// --- RENDER WHAT ---
+function renderWhat(c) {
+  const w = c.what;
+  let kp = w.keyPoints.map(k => `<div class="info-card"><div class="info-card-label">${k.label}</div><div class="info-card-content">${k.content}</div></div>`).join('');
+  return `
+    <div class="what-grid">
+      <div class="info-card full-width"><div class="info-card-label">Core Definition</div><div class="info-card-content">${w.core}</div><div class="info-card-content" style="margin-top:0.5rem;font-style:italic;">${w.how}</div></div>
+      ${kp}
+      <div class="info-card full-width"><div class="highlight-box"><div class="hl-title">${w.highlight.title}</div>${w.highlight.text}</div></div>
+    </div>`;
+}
+
+// --- RENDER HOW TO READ ---
+function renderRead(c) {
+  let steps = c.howToRead.map((s, i) => `
+    <div class="read-step">
+      <div class="step-num">${i+1}</div>
+      <div class="step-content"><strong>${s.title}</strong>${s.desc}</div>
+    </div>`).join('');
+  return `<div class="read-steps">${steps}</div>`;
+}
+
+// --- RENDER ANALOGY ---
+function renderAnalogy(c) {
+  const a = c.analogy;
+  let pairs = a.pairs.map(p => `
+    <div class="analogy-pair">
+      <div class="pair-left">${p.left}</div>
+      <div class="pair-eq">≡</div>
+      <div class="pair-right">${p.right}</div>
+    </div>`).join('');
+  return `
+    <div class="analogy-grid">
+      <div class="analogy-col">
+        <div class="analogy-col-label">${a.worldA.label}</div>
+        <div class="analogy-col-title">${a.worldA.title}</div>
+        <div class="analogy-col-desc">${a.worldA.desc}</div>
+      </div>
+      <div class="analogy-arrow">⟷</div>
+      <div class="analogy-col">
+        <div class="analogy-col-label">${a.worldB.label}</div>
+        <div class="analogy-col-title">${a.worldB.title}</div>
+        <div class="analogy-col-desc">${a.worldB.desc}</div>
+      </div>
+    </div>
+    <div class="analogy-pairs" style="margin-top:1.25rem;">${pairs}</div>`;
+}
+
+// --- RENDER EXAMPLES ---
+function renderExamples(c) {
+  let cards = c.examples.map((ex, i) => `
+    <div class="example-card" id="ex-${c.id}-${i}">
+      <div class="example-header" onclick="toggleExample('ex-${c.id}-${i}')">
+        <span class="example-title">${ex.title}</span>
+        <span class="example-tag">${ex.tag}</span>
+        <span class="example-chevron">▶</span>
+      </div>
+      <div class="example-body">
+        <div class="example-explanation">${ex.content}</div>
+        ${ex.code ? `<div class="code-block">${ex.code}</div>` : ''}
+      </div>
+    </div>`).join('');
+  return `<div class="examples-list">${cards}</div>`;
+}
+
+function toggleExample(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+// --- SIMULATORS ---
+function renderSim(c) {
+  switch(c.simType) {
+    case 'agent-loop':
+    case 'agentic-loop':
+      return renderLoopSim(c.simType === 'agent-loop');
+    case 'tools':
+      return renderToolsSim();
+    case 'hooks':
+      return renderHooksSim();
+    case 'sdk':
+      return renderSDKSim();
+    case 'file-tree':
+    case 'folder-structure':
+      return renderFileTreeSim(c.simType === 'file-tree');
+    case 'git':
+      return renderGitSim();
+    case 'cicd':
+      return renderCICDSim();
+    case 'claude-md':
+      return renderClaudeMDSim();
+    case 'skills':
+      return renderSkillsSim();
+    default:
+      return renderLoopSim(true);
+  }
+}
+
+function renderLoopSim(isAgent) {
+  return `
+    <div class="sim-container">
+      <div class="sim-toolbar">
+        <div class="sim-dots"><div class="sim-dot sim-dot-r"></div><div class="sim-dot sim-dot-y"></div><div class="sim-dot sim-dot-g"></div></div>
+        <span class="sim-title">Agentic Loop Simulator</span>
+      </div>
+      <div class="sim-body">
+        <div class="loop-display" id="loop-display">
+          <div class="loop-phase" id="lp-think"><span class="phase-icon">🧠</span><span class="phase-label">Think</span></div>
+          <div class="loop-phase" id="lp-act"><span class="phase-icon">⚡</span><span class="phase-label">Act</span></div>
+          <div class="loop-phase" id="lp-observe"><span class="phase-icon">👁️</span><span class="phase-label">Observe</span></div>
+          <div class="loop-phase" id="lp-decide"><span class="phase-icon">🎯</span><span class="phase-label">Decide</span></div>
+        </div>
+        <div class="loop-log" id="loop-log"><span style="color:var(--text3)">Enter a task below and click Run to watch the agentic loop in action...</span></div>
+        <div class="sim-controls">
+          <input class="sim-input" id="loop-task" placeholder="e.g. Create a User model with email and password" value="Create a User model with email and password" />
+          <button class="sim-btn btn-primary" onclick="runLoop()">▶ Run</button>
+          <button class="sim-btn btn-secondary" onclick="resetLoop()">↺ Reset</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+const loopScenarios = {
+  'Create a User model with email and password': [
+    {phase:'think', msg:'I need to create a User model. Let me check what models already exist.'},
+    {phase:'act', msg:'[Read File] backend/models/__init__.py'},
+    {phase:'observe', msg:'File is empty — no models defined yet. Good starting point.'},
+    {phase:'think', msg:'I\'ll write the User model with SQLAlchemy. Needs email, password_hash, timestamps.'},
+    {phase:'act', msg:'[Write File] backend/models/user.py'},
+    {phase:'observe', msg:'File created successfully.'},
+    {phase:'think', msg:'Let me verify the imports are correct by running tests.'},
+    {phase:'act', msg:'[Bash] python -m pytest tests/unit/test_user.py -v'},
+    {phase:'observe', msg:'1 passed in 0.3s ✓'},
+    {phase:'decide', msg:'Task complete. User model created with email, password_hash, created_at fields.'},
+  ],
+  'default': [
+    {phase:'think', msg:'Let me analyze what this task requires before taking any action.'},
+    {phase:'act', msg:'[Read File] CLAUDE.md — understanding project context'},
+    {phase:'observe', msg:'Project is a Flask API with SQLAlchemy. Good context loaded.'},
+    {phase:'think', msg:'Now I know the conventions. I\'ll implement following the established patterns.'},
+    {phase:'act', msg:'[Write File] Creating the requested file with proper structure'},
+    {phase:'observe', msg:'File written successfully. Let me verify it works.'},
+    {phase:'think', msg:'Should run tests to confirm everything integrates correctly.'},
+    {phase:'act', msg:'[Bash] pytest -v'},
+    {phase:'observe', msg:'All tests passing ✓'},
+    {phase:'decide', msg:'Task complete. Implementation follows project conventions. All tests pass.'},
+  ]
+};
+
+let loopRunning = false;
+function runLoop() {
+  if (loopRunning) return;
+  loopRunning = true;
+  const task = document.getElementById('loop-task').value.trim();
+  const steps = loopScenarios[task] || loopScenarios['default'];
+  const log = document.getElementById('loop-log');
+  log.innerHTML = '';
+  resetPhases();
+  let i = 0;
+  function next() {
+    if (i >= steps.length) { loopRunning = false; return; }
+    const s = steps[i];
+    setPhase(s.phase);
+    const line = document.createElement('div');
+    line.className = 'log-line';
+    const colorMap = {think:'log-think', act:'log-act', observe:'log-observe', decide:'log-decide'};
+    const labelMap = {think:'[THINK]', act:'[ACT]  ', observe:'[OBS]  ', decide:'[DONE] '};
+    line.innerHTML = `<span class="log-phase-tag ${colorMap[s.phase]}">${labelMap[s.phase]}</span><span>${s.msg}</span>`;
+    log.appendChild(line);
+    i++;
+    setTimeout(next, 900);
+  }
+  next();
+}
+
+function resetLoop() {
+  loopRunning = false;
+  resetPhases();
+  document.getElementById('loop-log').innerHTML = '<span style="color:var(--text3)">Enter a task below and click Run to watch the agentic loop in action...</span>';
+}
+
+function resetPhases() {
+  ['think','act','observe','decide'].forEach(p => {
+    const el = document.getElementById('lp-'+p);
+    if (el) { el.classList.remove('active','done'); }
+  });
+}
+
+function setPhase(p) {
+  const order = ['think','act','observe','decide'];
+  const idx = order.indexOf(p);
+  order.forEach((ph, i) => {
+    const el = document.getElementById('lp-'+ph);
+    if (!el) return;
+    el.classList.remove('active','done');
+    if (i < idx) el.classList.add('done');
+    if (i === idx) el.classList.add('active');
+  });
+}
+
+function renderToolsSim() {
+  const tools = [
+    {icon:'📄', name:'Read File', desc:'Open any file', result: '[Read File] backend/models/user.py\n→ Contents loaded (47 lines)\n→ Found: class User, fields: id, email, password_hash'},
+    {icon:'✍️', name:'Write File', desc:'Create new file', result: '[Write File] backend/models/trip.py\n→ File created successfully\n→ 32 lines written'},
+    {icon:'✂️', name:'Edit File', desc:'Modify existing', result: '[Edit File] backend/routes/auth.py\n→ Lines 23-31 replaced\n→ Added: @jwt_required() decorator'},
+    {icon:'⚡', name:'Bash', desc:'Run any command', result: '[Bash] pytest -v --cov=backend\n→ 12 passed, 0 failed\n→ Coverage: 84%'},
+    {icon:'🔍', name:'Search Files', desc:'Find across project', result: '[Search] "password_hash"\n→ Found in: models/user.py (line 8)\n→ Found in: routes/auth.py (line 15)'},
+    {icon:'🌐', name:'Web Search', desc:'Search the internet', result: '[Web Search] "flask-jwt-extended refresh token"\n→ Docs: Access tokens expire in 15min\n→ Use create_refresh_token() for long sessions'},
+  ];
+  let cards = tools.map((t, i) => `
+    <div class="tool-card" onclick="selectTool(${i})" id="tool-${i}">
+      <span class="tool-card-icon">${t.icon}</span>
+      <div class="tool-card-name">${t.name}</div>
+      <div class="tool-card-desc">${t.desc}</div>
+    </div>`).join('');
+  return `
+    <div class="sim-container">
+      <div class="sim-toolbar">
+        <div class="sim-dots"><div class="sim-dot sim-dot-r"></div><div class="sim-dot sim-dot-y"></div><div class="sim-dot sim-dot-g"></div></div>
+        <span class="sim-title">Tools Explorer — click a tool to see it in action</span>
+      </div>
+      <div class="sim-body">
+        <div class="tools-grid">${cards}</div>
+        <div class="tool-result" id="tool-result"><span style="color:var(--text3)">↑ Click any tool above to see what it does...</span></div>
+      </div>
+    </div>`;
+}
+
+function selectTool(i) {
+  const tools = [
+    {result: '[Read File] backend/models/user.py\n→ Contents loaded (47 lines)\n→ Found: class User, fields: id, email, password_hash'},
+    {result: '[Write File] backend/models/trip.py\n→ File created successfully\n→ 32 lines written'},
+    {result: '[Edit File] backend/routes/auth.py\n→ Lines 23-31 replaced\n→ Added: @jwt_required() decorator'},
+    {result: '[Bash] pytest -v --cov=backend\n→ 12 passed, 0 failed\n→ Coverage: 84%'},
+    {result: '[Search Files] "password_hash"\n→ Found in: models/user.py (line 8)\n→ Found in: routes/auth.py (line 15)'},
+    {result: '[Web Search] "flask-jwt-extended refresh token"\n→ Docs: Access tokens expire in 15min\n→ Use create_refresh_token() for long sessions'},
+  ];
+  document.querySelectorAll('.tool-card').forEach((el, idx) => el.classList.toggle('selected', idx === i));
+  document.getElementById('tool-result').innerText = tools[i].result;
+}
+
+function renderHooksSim() {
+  const scenarios = [
+    {label:'Normal bash', cmd:'pip install requests', pre:'PASS', tool:'PASS', post:'PASS', note:'Safe command — hook allows it'},
+    {label:'Dangerous delete', cmd:'rm -rf /backend', pre:'BLOCK', tool:'—', post:'—', note:'PreToolUse hook detected rm -rf — action blocked before execution'},
+    {label:'File write', cmd:'Write: user.py', pre:'PASS', tool:'PASS', post:'PASS', note:'PostToolUse hook runs pytest automatically after write'},
+    {label:'Unknown command', cmd:'sudo apt-get install', pre:'BLOCK', tool:'—', post:'—', note:'PreToolUse hook blocks sudo commands — requires explicit permission'},
+  ];
+  let btns = scenarios.map((s,i) => `<button class="hook-scenario-btn" onclick="runHookScenario(${i})">${s.label}</button>`).join('');
+  return `
+    <div class="sim-container">
+      <div class="sim-toolbar">
+        <div class="sim-dots"><div class="sim-dot sim-dot-r"></div><div class="sim-dot sim-dot-y"></div><div class="sim-dot sim-dot-g"></div></div>
+        <span class="sim-title">Hooks Simulator — test different scenarios</span>
+      </div>
+      <div class="sim-body">
+        <div class="hook-select-row">${btns}</div>
+        <div class="hook-flow">
+          <div class="hook-row">
+            <div class="hook-box hook-pre" id="h-pre">PreToolUse Hook</div>
+            <div class="hook-arrow">→</div>
+            <div class="hook-box hook-tool" id="h-tool">Tool Execution</div>
+            <div class="hook-arrow">→</div>
+            <div class="hook-box hook-post" id="h-post">PostToolUse Hook</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;margin:0.75rem 0;">
+          <div class="hook-status hook-pending" id="hs-pre">waiting</div>
+          <div class="hook-status hook-pending" id="hs-tool">waiting</div>
+          <div class="hook-status hook-pending" id="hs-post">waiting</div>
+        </div>
+        <div class="tool-result" id="hook-result"><span style="color:var(--text3)">↑ Select a scenario to see how hooks intercept tool actions...</span></div>
+      </div>
+    </div>`;
+}
+
+function runHookScenario(i) {
+  const scenarios = [
+    {pre:'PASS', tool:'PASS', post:'PASS', note:'✓ Safe command — PreToolUse hook allows it (exit 0)\n✓ Tool executes: pip install requests\n✓ PostToolUse hook validates output'},
+    {pre:'BLOCK', tool:'—', post:'—', note:'✗ PreToolUse hook detected "rm -rf" pattern\n✗ Hook exits with code 1 — action BLOCKED\n✗ Tool never executes. No harm done.'},
+    {pre:'PASS', tool:'PASS', post:'PASS', note:'✓ Write allowed — no dangerous patterns\n✓ File written: user.py created\n✓ PostToolUse hook auto-runs: pytest -q (2 passed)'},
+    {pre:'BLOCK', tool:'—', post:'—', note:'✗ PreToolUse hook detected "sudo" command\n✗ Elevated permissions require explicit user approval\n✗ Hook exits 1 — Claude pauses and asks you first'},
+  ];
+  document.querySelectorAll('.hook-scenario-btn').forEach((b,idx) => b.classList.toggle('active', idx===i));
+  const s = scenarios[i];
+  const setPre = s.pre === 'BLOCK' ? 'hook-block' : 'hook-pass';
+  const setTool = s.tool === 'PASS' ? 'hook-pass' : 'hook-pending';
+  const setPost = s.post === 'PASS' ? 'hook-pass' : 'hook-pending';
+  document.getElementById('hs-pre').className = 'hook-status ' + setPre;
+  document.getElementById('hs-pre').innerText = s.pre;
+  document.getElementById('hs-tool').className = 'hook-status ' + setTool;
+  document.getElementById('hs-tool').innerText = s.tool;
+  document.getElementById('hs-post').className = 'hook-status ' + setPost;
+  document.getElementById('hs-post').innerText = s.post;
+  document.getElementById('hook-result').innerText = s.note;
+}
+
+function renderSDKSim() {
+  return `
+    <div class="sim-container">
+      <div class="sim-toolbar">
+        <div class="sim-dots"><div class="sim-dot sim-dot-r"></div><div class="sim-dot sim-dot-y"></div><div class="sim-dot sim-dot-g"></div></div>
+        <span class="sim-title">SDK Call Simulator</span>
+      </div>
+      <div class="sim-body">
+        <div style="margin-bottom:0.75rem;">
+          <div class="info-card-label" style="margin-bottom:0.4rem;">Your prompt</div>
+          <div style="display:flex;gap:0.5rem;">
+            <input class="sim-input" id="sdk-prompt" value="Explain what a REST API is in 2 sentences" />
+            <button class="sim-btn btn-primary" onclick="callSDK()">Send →</button>
+          </div>
+        </div>
+        <div class="code-block" id="sdk-request" style="margin-bottom:0.75rem;font-size:0.72rem;">
+<span class="code-comment">// Waiting for input...</span>
+        </div>
+        <div class="info-card-label" style="margin-bottom:0.4rem;">Claude's response</div>
+        <div class="tool-result" id="sdk-response"><span style="color:var(--text3)">Response will appear here...</span></div>
+      </div>
+    </div>`;
+}
+
+async function callSDK() {
+  const prompt = document.getElementById('sdk-prompt').value;
+  document.getElementById('sdk-request').innerHTML = `<span class="code-key">client</span>.messages.create({\n  model: <span class="code-str">"claude-sonnet-4-5"</span>,\n  max_tokens: <span class="code-num">1024</span>,\n  messages: [{\n    role: <span class="code-str">"user"</span>,\n    content: <span class="code-str">"${prompt.replace(/"/g, '\\"')}"</span>\n  }]\n})`;
+  document.getElementById('sdk-response').innerText = '⏳ Calling Claude API...';
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{role: 'user', content: prompt}]
+      })
+    });
+    const data = await res.json();
+    const text = data.content && data.content[0] && data.content[0].text ? data.content[0].text : JSON.stringify(data);
+    document.getElementById('sdk-response').innerText = text;
+  } catch(e) {
+    document.getElementById('sdk-response').innerText = 'API call complete. In a real environment with your API key set, Claude\'s response would appear here.\n\nThis simulator shows you the SDK call structure — the actual response requires your ANTHROPIC_API_KEY.';
+  }
+}
+
+function renderFileTreeSim(isMain) {
+  const files = [
+    {indent:0, icon:'📁', name:'planventure/', cls:'file-dir', type:'dir', desc:'Project root — contains everything', shared: null},
+    {indent:1, icon:'📁', name:'backend/', cls:'file-dir', type:'dir', desc:'Flask REST API source code', shared: null},
+    {indent:2, icon:'📁', name:'models/', cls:'file-dir', type:'dir', desc:'SQLAlchemy database models — one file per entity', shared: null},
+    {indent:3, icon:'🐍', name:'user.py', cls:'file-shared', type:'file', desc:'User model: id, email, password_hash, created_at. Used by auth routes.', shared: 'Git'},
+    {indent:3, icon:'🐍', name:'trip.py', cls:'file-shared', type:'file', desc:'Trip model: id, user_id (FK), title, destinations, created_at.', shared: 'Git'},
+    {indent:2, icon:'📁', name:'routes/', cls:'file-dir', type:'dir', desc:'Flask Blueprint route handlers', shared: null},
+    {indent:3, icon:'🐍', name:'auth.py', cls:'file-shared', type:'file', desc:'Login, register, refresh token endpoints. Uses JWT.', shared: 'Git'},
+    {indent:2, icon:'📁', name:'services/', cls:'file-dir', type:'dir', desc:'Business logic layer — keeps routes thin', shared: null},
+    {indent:1, icon:'📁', name:'tests/', cls:'file-dir', type:'dir', desc:'All tests live here — mirrors backend/ structure', shared: null},
+    {indent:2, icon:'📁', name:'unit/', cls:'file-dir', type:'dir', desc:'Isolated unit tests — one test file per model/service', shared: null},
+    {indent:2, icon:'📁', name:'integration/', cls:'file-dir', type:'dir', desc:'Multi-component tests — test full HTTP request flows', shared: null},
+    {indent:1, icon:'⚙️', name:'.claude/', cls:'file-config', type:'dir', desc:'Claude Code configuration directory', shared: null},
+    {indent:2, icon:'📄', name:'settings.json', cls:'file-shared', type:'file', desc:'Team hooks and permissions. Committed to Git — shared with team.', shared: 'Git'},
+    {indent:2, icon:'🔒', name:'settings.local.json', cls:'file-private', type:'file', desc:'Your personal overrides. In .gitignore — NEVER shared.', shared: 'Private'},
+    {indent:2, icon:'📁', name:'commands/', cls:'file-dir', type:'dir', desc:'Custom slash commands: /test, /run, /review, /commit', shared: null},
+    {indent:1, icon:'📋', name:'CLAUDE.md', cls:'file-shared', type:'file', desc:'Project handbook. Claude reads this first in every session. Committed to Git.', shared: 'Git'},
+    {indent:1, icon:'🔧', name:'requirements.txt', cls:'file-shared', type:'file', desc:'Python package dependencies. Run: pip install -r requirements.txt', shared: 'Git'},
+    {indent:1, icon:'🔐', name:'.env', cls:'file-private', type:'file', desc:'Secret keys and environment variables. NEVER commit this. In .gitignore.', shared: 'Private'},
+    {indent:1, icon:'🚀', name:'.github/', cls:'file-dir', type:'dir', desc:'GitHub configuration including CI/CD workflow files', shared: null},
+    {indent:2, icon:'⚡', name:'ci.yml', cls:'file-shared', type:'file', desc:'GitHub Actions CI/CD pipeline. Runs on every push: lint → test → coverage.', shared: 'Git'},
+  ];
+  let lines = files.map((f, i) => {
+    let indent = '&nbsp;'.repeat(f.indent * 3);
+    let shareTag = f.shared ? `<span class="badge badge-${f.shared === 'Git' ? 'green' : 'blue'}" style="font-size:0.55rem;margin-left:auto;">${f.shared}</span>` : '';
+    return `<div class="file-line" onclick="selectFile(${i})" id="fl-${i}">
+      <span>${indent}</span><span>${f.icon}</span><span class="${f.cls}">${f.name}</span>${shareTag}
+    </div>`;
+  }).join('');
+  return `
+    <div class="sim-container">
+      <div class="sim-toolbar">
+        <div class="sim-dots"><div class="sim-dot sim-dot-r"></div><div class="sim-dot sim-dot-y"></div><div class="sim-dot sim-dot-g"></div></div>
+        <span class="sim-title">Project Explorer — click any file to learn about it</span>
+      </div>
+      <div class="sim-body">
+        <div class="file-tree">${lines}</div>
+        <div class="file-detail" id="file-detail"></div>
+      </div>
+    </div>`;
+}
+
+const fileData = [
+  null,null,null,
+  {name:'models/user.py', desc:'SQLAlchemy User model. Contains: id, email, password_hash, created_at. The password_hash field stores a bcrypt hash — never the plain password.'},
+  {name:'models/trip.py', desc:'SQLAlchemy Trip model. Has a foreign key to users.id. Stores trip metadata and a JSON column for destinations list.'},
+  null,
+  {name:'routes/auth.py', desc:'Flask Blueprint for authentication. Endpoints: POST /auth/login, POST /auth/register, POST /auth/refresh. All use flask-jwt-extended.'},
+  null,null,null,null,null,
+  {name:'.claude/settings.json', desc:'Team-shared hooks and permissions. Defines PreToolUse hooks (safety checks) and PostToolUse hooks (auto-validation). All teammates get the same Claude behavior.'},
+  {name:'.claude/settings.local.json', desc:'Your personal Claude settings. Gitignored — never pushed. Use for personal API preferences, local path overrides, or development-only hooks.'},
+  null,null,
+  {name:'CLAUDE.md', desc:'The most important file for Claude Code. Contains: project overview, tech stack, key commands (how to run, test, migrate), and team conventions. Claude reads this first.'},
+  {name:'requirements.txt', desc:'Lists all Python packages: flask, flask-jwt-extended, sqlalchemy, pytest, etc. Anyone cloning the project runs "pip install -r requirements.txt" to set up.'},
+  {name:'.env', desc:'Contains secrets: DATABASE_URL, JWT_SECRET_KEY, ANTHROPIC_API_KEY. Never committed to Git. Each developer has their own .env file with their local values.'},
+  null,
+  {name:'.github/workflows/ci.yml', desc:'GitHub Actions pipeline. Triggers on every push. Steps: checkout code → setup Python → pip install → flake8 lint → pytest → coverage check. Green = safe to merge.'},
+];
+
+function selectFile(i) {
+  document.querySelectorAll('.file-line').forEach((el,idx) => el.classList.toggle('selected', idx === i));
+  const fd = document.getElementById('file-detail');
+  if (fileData[i]) {
+    fd.className = 'file-detail show';
+    fd.innerHTML = `<strong>${fileData[i].name}</strong>${fileData[i].desc}`;
+  } else {
+    fd.className = 'file-detail';
+  }
+}
+
+function renderGitSim() {
+  return `
+    <div class="sim-container">
+      <div class="sim-toolbar">
+        <div class="sim-dots"><div class="sim-dot sim-dot-r"></div><div class="sim-dot sim-dot-y"></div><div class="sim-dot sim-dot-g"></div></div>
+        <span class="sim-title">Git Timeline Simulator</span>
+      </div>
+      <div class="sim-body">
+        <div class="terminal" style="margin-bottom:1rem;">
+          <div class="terminal-bar">
+            <div class="sim-dots"><div class="sim-dot sim-dot-r"></div><div class="sim-dot sim-dot-y"></div><div class="sim-dot sim-dot-g"></div></div>
+            <span class="term-title">bash — planventure/</span>
+          </div>
+          <div class="terminal-body" id="git-terminal">
+            <div class="term-line"><span class="term-prompt">$ </span><span class="term-out" style="color:var(--text3)">Click a command below to run it...</span></div>
+          </div>
+        </div>
+        <div class="cmd-palette">
+          <div class="cmd-chip" onclick="runGitCmd('branch')">git checkout -b feature/auth</div>
+          <div class="cmd-chip" onclick="runGitCmd('add')">git add .</div>
+          <div class="cmd-chip" onclick="runGitCmd('commit')">git commit -m "feat: add JWT"</div>
+          <div class="cmd-chip" onclick="runGitCmd('push')">git push origin feature/auth</div>
+          <div class="cmd-chip" onclick="runGitCmd('log')">git log --oneline</div>
+          <div class="cmd-chip" onclick="runGitCmd('status')">git status</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+const gitOutputs = {
+  branch: {cmd:'git checkout -b feature/auth', out:'Switched to a new branch \'feature/auth\'\nYou are now isolated from main — changes here are safe.'},
+  add: {cmd:'git add .', out:'Staged files:\n  modified: backend/routes/auth.py\n  new file: tests/unit/test_auth.py\nAll changes staged and ready to commit.'},
+  commit: {cmd:'git commit -m "feat: add JWT auth endpoint"', out:'[feature/auth a3f9d21] feat: add JWT auth endpoint\n 2 files changed, 47 insertions(+), 3 deletions(-)\n ✓ Snapshot saved! You can always revert to this point.'},
+  push: {cmd:'git push origin feature/auth', out:'Counting objects: 5, done.\nTo github.com:advi/planventure.git\n * [new branch] feature/auth → feature/auth\n→ Go to GitHub to create a Pull Request'},
+  log: {cmd:'git log --oneline', out:'a3f9d21 feat: add JWT auth endpoint\n8b2c4e1 test: add auth flow tests\n6f1a9b3 fix: correct token expiry\n3d8e2c0 feat: add User model\n1a2b3c4 chore: initial project setup'},
+  status: {cmd:'git status', out:'On branch feature/auth\nNothing to commit, working tree clean\n✓ All changes committed. Branch is up to date.'},
+};
+
+function runGitCmd(key) {
+  const o = gitOutputs[key];
+  const t = document.getElementById('git-terminal');
+  t.innerHTML = `<div class="term-line"><span class="term-prompt">$ </span><span class="term-cmd">${o.cmd}</span></div>` +
+    o.out.split('\n').map(l => `<div class="term-line"><span class="term-out">${l}</span></div>`).join('');
+}
+
+function renderCICDSim() {
+  const steps = [
+    {icon:'📥', name:'Checkout code', detail:'Download latest from GitHub', id:'pip0'},
+    {icon:'🐍', name:'Setup Python 3.12', detail:'Configure runtime environment', id:'pip1'},
+    {icon:'📦', name:'Install dependencies', detail:'pip install -r requirements.txt', id:'pip2'},
+    {icon:'🔍', name:'Run linter (flake8)', detail:'Check code style and quality', id:'pip3'},
+    {icon:'🧪', name:'Run tests (pytest)', detail:'Execute full test suite', id:'pip4'},
+    {icon:'📊', name:'Check coverage', detail:'Ensure ≥80% test coverage', id:'pip5'},
+  ];
+  let rows = steps.map((s,i) => `
+    <div class="pipeline-step" id="ps-${i}">
+      <div class="pipeline-icon">${s.icon}</div>
+      <div class="pipeline-name">${s.name}<div class="pipeline-detail">${s.detail}</div></div>
+      <div class="pipeline-status status-wait" id="pst-${i}">waiting</div>
+    </div>`).join('');
+  return `
+    <div class="sim-container">
+      <div class="sim-toolbar">
+        <div class="sim-dots"><div class="sim-dot sim-dot-r"></div><div class="sim-dot sim-dot-y"></div><div class="sim-dot sim-dot-g"></div></div>
+        <span class="sim-title">CI/CD Pipeline Simulator</span>
+      </div>
+      <div class="sim-body">
+        <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+          <button class="sim-btn btn-primary" onclick="runCICD(true)">▶ Push with passing tests</button>
+          <button class="sim-btn btn-secondary" onclick="runCICD(false)">✗ Push with failing tests</button>
+          <button class="sim-btn btn-secondary" onclick="resetCICD()">↺ Reset</button>
+        </div>
+        <div class="pipeline">${rows}</div>
+        <div class="tool-result" id="cicd-result" style="margin-top:0.75rem;"><span style="color:var(--text3)">Click a button above to simulate a CI/CD run...</span></div>
+      </div>
+    </div>`;
+}
+
+let ciRunning = false;
+function runCICD(pass) {
+  if (ciRunning) return;
+  ciRunning = true;
+  resetCICD();
+  const failAt = pass ? -1 : 4; // fail at pytest step
+  let i = 0;
+  function next() {
+    if (i >= 6) {
+      ciRunning = false;
+      document.getElementById('cicd-result').innerText = pass
+        ? '✅ All 6 steps passed! Green checkmark on your PR. Safe to merge to main.'
+        : '❌ Pipeline failed at: Run tests (pytest)\n2 tests failed: test_login_invalid_password, test_register_duplicate_email\nFix the failures, push again — CI re-runs automatically.';
+      return;
+    }
+    const el = document.getElementById(`ps-${i}`);
+    const st = document.getElementById(`pst-${i}`);
+    el.className = 'pipeline-step running';
+    st.className = 'pipeline-status status-run';
+    st.innerText = 'running...';
+    setTimeout(() => {
+      if (i === failAt) {
+        el.className = 'pipeline-step fail';
+        st.className = 'pipeline-status status-fail';
+        st.innerText = 'FAILED';
+        for (let j = i+1; j < 6; j++) {
+          document.getElementById(`pst-${j}`).innerText = 'skipped';
+        }
+        ciRunning = false;
+        document.getElementById('cicd-result').innerText = '❌ Pipeline failed at: Run tests (pytest)\n2 tests failed: test_login_invalid_password, test_register_duplicate_email\nFix the failures, push again — CI re-runs automatically.';
+        return;
+      }
+      el.className = 'pipeline-step pass';
+      st.className = 'pipeline-status status-pass';
+      st.innerText = 'PASS ✓';
+      i++;
+      setTimeout(next, 600);
+    }, 800);
+  }
+  next();
+}
+
+function resetCICD() {
+  ciRunning = false;
+  for (let i = 0; i < 6; i++) {
+    document.getElementById(`ps-${i}`).className = 'pipeline-step';
+    const st = document.getElementById(`pst-${i}`);
+    st.className = 'pipeline-status status-wait';
+    st.innerText = 'waiting';
+  }
+  document.getElementById('cicd-result').innerHTML = '<span style="color:var(--text3)">Click a button above to simulate a CI/CD run...</span>';
+}
+
+function renderClaudeMDSim() {
+  const sections = [
+    { key:'overview', label:'Project Overview', placeholder:'What is this project? One paragraph.', example:'Planventure is a Flask REST API for travel planning. Users create trips, add destinations, and share with friends. Mobile-first, JWT-authenticated.' },
+    { key:'stack', label:'Tech Stack', placeholder:'List your technologies explicitly.', example:'Python 3.12, Flask 3.0, PostgreSQL, SQLAlchemy 2.0, flask-jwt-extended, pytest, GitHub Actions' },
+    { key:'commands', label:'Key Commands', placeholder:'How to run, test, migrate?', example:'python -m flask run --debug\npytest -v\nflask db upgrade' },
+    { key:'rules', label:'Team Rules', placeholder:'What should Claude always/never do?', example:'All routes return JSON. JWT required on write endpoints. Never use raw SQL. Never commit .env.' },
+  ];
+  let inputs = sections.map(s => `
+    <div style="margin-bottom:0.75rem;">
+      <div class="info-card-label"># ${s.label}</div>
+      <textarea class="sim-input" id="cmd-${s.key}" style="width:100%;min-height:55px;resize:vertical;padding:0.5rem;font-size:0.72rem;" placeholder="${s.placeholder}">${s.example}</textarea>
+    </div>`).join('');
+  return `
+    <div class="sim-container">
+      <div class="sim-toolbar">
+        <div class="sim-dots"><div class="sim-dot sim-dot-r"></div><div class="sim-dot sim-dot-y"></div><div class="sim-dot sim-dot-g"></div></div>
+        <span class="sim-title">CLAUDE.md Builder — edit sections, see the file</span>
+      </div>
+      <div class="sim-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div>${inputs}<button class="sim-btn btn-primary" onclick="buildClaudeMD()" style="width:100%">Generate CLAUDE.md →</button></div>
+          <div><div class="info-card-label" style="margin-bottom:0.4rem;">Generated CLAUDE.md</div><div class="code-block" id="claudemd-out" style="min-height:250px;white-space:pre-wrap;font-size:0.7rem;">Click "Generate" to preview...</div></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function buildClaudeMD() {
+  const v = id => document.getElementById(id).value.trim();
+  const out = `# ${v('cmd-overview').split('\n')[0].slice(0,50) || 'My Project'}\n\n## Project Overview\n${v('cmd-overview')}\n\n## Tech Stack\n${v('cmd-stack')}\n\n## Key Commands\n\`\`\`bash\n${v('cmd-commands')}\n\`\`\`\n\n## Team Rules\n${v('cmd-rules')}`;
+  document.getElementById('claudemd-out').innerText = out;
+}
+
+function renderSkillsSim() {
+  const templates = [
+    { name:'Flask Conventions', content: '# Flask Conventions\n\n## Route Pattern\nAlways use Blueprints.\nRegister in app/__init__.py.\n\n## Auth Pattern\nAll protected routes use @jwt_required().\nReturn 401 JSON error, never redirect.\n\n## Error Handling\nCatch all exceptions. Return:\nreturn jsonify({"error": str(e)}), 500' },
+    { name:'Anti-Patterns', content: '# Never Do These\n\n- Never use raw SQL strings\n- Never commit secrets to git\n- Never return plain text errors\n- Never skip @jwt_required() on writes\n- Never use print() for logging\n- Never delete migrations once applied' },
+    { name:'Test Patterns', content: '# Testing Conventions\n\n## Fixture Pattern\nUse conftest.py for shared fixtures.\napp fixture creates test Flask app.\nclient fixture creates test HTTP client.\n\n## Naming\ntest_feature_scenario_expected_result\nExample: test_login_invalid_password_returns_401' },
+  ];
+  let btns = templates.map((t,i) => `<button class="hook-scenario-btn" onclick="loadSkillTemplate(${i})">${t.name}</button>`).join('');
+  return `
+    <div class="sim-container">
+      <div class="sim-toolbar">
+        <div class="sim-dots"><div class="sim-dot sim-dot-r"></div><div class="sim-dot sim-dot-y"></div><div class="sim-dot sim-dot-g"></div></div>
+        <span class="sim-title">Skill File Builder — write a skill and preview it</span>
+      </div>
+      <div class="sim-body">
+        <div class="hook-select-row" style="margin-bottom:0.75rem;">${btns}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div>
+            <div class="info-card-label" style="margin-bottom:0.4rem;">Write your SKILL.md</div>
+            <textarea class="sim-input" id="skill-editor" style="width:100%;min-height:200px;resize:vertical;padding:0.75rem;font-size:0.73rem;font-family:'IBM Plex Mono',monospace;" placeholder="# My Skill\n\nWrite markdown here. Claude will read this to learn your project's conventions...">${templates[0].content}</textarea>
+          </div>
+          <div>
+            <div class="info-card-label" style="margin-bottom:0.4rem;">Claude reads this as...</div>
+            <div class="tool-result" id="skill-preview" style="min-height:200px;white-space:pre-wrap;">${templates[0].content}</div>
+          </div>
+        </div>
+        <button class="sim-btn btn-primary" onclick="previewSkill()" style="margin-top:0.75rem;">Preview →</button>
+      </div>
+    </div>`;
+}
+
+function loadSkillTemplate(i) {
+  const templates = [
+    '# Flask Conventions\n\n## Route Pattern\nAlways use Blueprints.\nRegister in app/__init__.py.\n\n## Auth Pattern\nAll protected routes use @jwt_required().\nReturn 401 JSON error, never redirect.\n\n## Error Handling\nCatch all exceptions. Return:\nreturn jsonify({"error": str(e)}), 500',
+    '# Never Do These\n\n- Never use raw SQL strings\n- Never commit secrets to git\n- Never return plain text errors\n- Never skip @jwt_required() on writes\n- Never use print() for logging\n- Never delete migrations once applied',
+    '# Testing Conventions\n\n## Fixture Pattern\nUse conftest.py for shared fixtures.\napp fixture creates test Flask app.\nclient fixture creates test HTTP client.\n\n## Naming\ntest_feature_scenario_expected_result\nExample: test_login_invalid_password_returns_401',
+  ];
+  document.getElementById('skill-editor').value = templates[i];
+  document.getElementById('skill-preview').innerText = templates[i];
+  document.querySelectorAll('.hook-scenario-btn').forEach((b,idx) => b.classList.toggle('active', idx===i));
+}
+
+function previewSkill() {
+  const val = document.getElementById('skill-editor').value;
+  document.getElementById('skill-preview').innerText = val;
+}
+
+function initSim(c) {
+  // nothing extra needed — sims are self-contained
+}
+
+// Init
+showConcept(0);
+</script>
+</body>
+</html>

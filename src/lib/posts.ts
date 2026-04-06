@@ -92,6 +92,23 @@ export const posts: Post[] = [
   },
   // ── GenAI Engineering ────────────────────────────────────────────────────────
   {
+    slug: 'claude-code-interactive-simulator',
+    category: 'genai',
+    title: 'Claude Code Interactive Simulator',
+    subtitle: 'Full walkthrough of Claude Code features',
+    description:
+      'A hands-on guide to Claude Code — from understanding the agentic loop to using hooks, tools, and skills. Each concept includes live simulations, real-world analogies, and interactive examples.',
+    tags: ['Claude Code', 'Agentic Loop', 'Tools', 'Hooks', 'Skills', 'SDK'],
+    simulationFile: '/simulations/claude_code_interactive_simulator.html',
+    difficulty: 'intermediate',
+    readTime: 40,
+    lastUpdated: '2026-04-06',
+    featured: true,
+    downloadable: true,
+    accentColor: 'purple',
+    icon: '🖥️',
+  },
+  {
     slug: 'genai-phases-1-3',
     category: 'genai',
     title: 'GenAI Engineering — Phases 1–3',
