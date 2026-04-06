@@ -144,7 +144,7 @@ Hosted on **GitHub Pages**. Every push to `main` automatically:
 
 No secrets or tokens required — GitHub Actions handles everything.
 
-See [docs/architecture.md](./docs/architecture.md) for full architecture diagrams.
+See [docs/architecture.md](./docs/architecture.md) for full architecture diagrams and [docs/design-system.md](./docs/design-system.md) for the color and font reference.
 
 ---
 

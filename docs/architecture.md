@@ -103,6 +103,8 @@ flowchart LR
 
 **Security:** The `sandbox` attribute restricts the iframe to only what it needs. `allow-top-navigation` is intentionally excluded.
 
+**Theme:** Each simulator HTML file carries its own internal `<style>` block with matching CSS variables (`--bg`, `--surface`, `--ink`, etc.) and Google Fonts imports. They cannot inherit the blog's Tailwind CSS. See `docs/design-system.md` for the color reference.
+
 ### External links inside simulators (Resource Vault)
 
 GitHub Pages sets `Cross-Origin-Opener-Policy` headers. When a sandboxed iframe opens a new tab, that tab inherits the security context and external sites (YouTube, docs, etc.) respond with `ERR_BLOCKED_BY_RESPONSE`.
