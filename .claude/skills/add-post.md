@@ -20,7 +20,7 @@ Add a new entry to the `posts` array:
 ```typescript
 {
   slug: 'your-slug',                    // URL: /oil-trading/your-slug
-  category: 'oil-trading',             // or 'genai'
+  category: 'oil-trading',             // or 'genai' or 'claude-code'
   title: 'Your Title',
   subtitle: 'Short subtitle',
   description: 'One-paragraph description for the card and SEO meta.',

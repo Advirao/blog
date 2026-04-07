@@ -13,7 +13,7 @@ Live site: **advirao.github.io/blog**
 | Styling | Tailwind CSS 3 + CSS custom properties |
 | Fonts | Lora (serif, headings) + IBM Plex Sans + IBM Plex Mono |
 | Icons | lucide-react |
-| Testing | Jest 29 + React Testing Library — 117 tests |
+| Testing | Jest 29 + React Testing Library — 121 tests |
 | Package manager | pnpm 10 |
 | Hosting | GitHub Pages via GitHub Actions |
 
@@ -70,6 +70,7 @@ See `docs/design-system.md` for the full plain-language design guide.
 |---|---|---|
 | `oil-trading` | Sage green | `accent` |
 | `genai` | Lavender | `purple` |
+| `claude-code` | Lavender | `purple` |
 
 ---
 

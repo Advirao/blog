@@ -21,7 +21,11 @@ pnpm ingest
 `scripts/ingest-html.ts`
 
 ## Adding a new category
-If you add a category other than `oil-trading` or `genai`:
-1. Add it to `CATEGORIES` in `src/lib/posts.ts`
-2. Create `src/app/[new-category]/page.tsx` (copy from existing category page)
-3. Add the category to the nav in `src/components/layout/SiteHeader.tsx`
+Current categories: `oil-trading`, `genai`, `claude-code`. To add another:
+1. Add it to the `Category` union in `src/lib/types.ts`
+2. Add it to `CATEGORIES` in `src/lib/posts.ts`
+3. Create `src/app/[new-category]/page.tsx` (copy from existing category page)
+4. Create `src/app/[new-category]/[slug]/page.tsx` (copy from existing slug page)
+5. Add the category to the nav in `src/components/layout/SiteHeader.tsx`
+6. Add it to `CategoryFilter.tsx`, `page.tsx` (home), `utils.ts`, and `PostCard.tsx`
+7. Run `/publish` — it handles all of this automatically.

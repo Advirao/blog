@@ -9,7 +9,7 @@ Every module is a live simulator. Move sliders, change inputs, and watch every n
 [![Build](https://img.shields.io/github/actions/workflow/status/Advirao/blog/deploy.yml?branch=main&style=flat-square&label=build)](https://github.com/Advirao/blog/actions)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
-[![Tests](https://img.shields.io/badge/tests-117%20passing-brightgreen?style=flat-square)](./tests)
+[![Tests](https://img.shields.io/badge/tests-121%20passing-brightgreen?style=flat-square)](./tests)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](./LICENSE)
 
 ---
@@ -33,6 +33,13 @@ A complete curriculum from Python basics to building production AI agents.
 |---|---|
 | **Phases 1–3** | Python fundamentals → LLM APIs → tokens → prompting → RAG → embeddings |
 | **Phases 4–6** | Tool calling → Model Context Protocol (MCP) → OpenAI Agents SDK → LangGraph |
+
+### 🖥️ Claude Code
+Master the agentic CLI — from the core loop to hooks, skills, and CI/CD integration.
+
+| Module | What you'll learn |
+|---|---|
+| **Claude Code Interactive Simulator** | Agentic loop, tools, hooks, skills, CLAUDE.md, folder structure, Git, CI/CD — with ELI10 explainers and a Resource Vault |
 
 ---
 
@@ -58,7 +65,7 @@ A complete curriculum from Python basics to building production AI agents.
 | Styling | [Tailwind CSS](https://tailwindcss.com) 3 + CSS custom properties — editorial light theme |
 | Fonts | [Lora](https://fonts.google.com/specimen/Lora) serif (headings) + IBM Plex Sans / Mono |
 | Icons | [lucide-react](https://lucide.dev) |
-| Testing | [Jest](https://jestjs.io) 29 + [React Testing Library](https://testing-library.com) 16 — 117 tests |
+| Testing | [Jest](https://jestjs.io) 29 + [React Testing Library](https://testing-library.com) 16 — 121 tests |
 | Package Manager | [pnpm](https://pnpm.io) 10 |
 | Hosting | [GitHub Pages](https://pages.github.com) via GitHub Actions |
 
@@ -83,7 +90,7 @@ Open [http://localhost:3000](http://localhost:3000).
 ```bash
 pnpm dev            # Local dev server
 pnpm build          # Production build (outputs to ./out/)
-pnpm test           # Run 117 tests
+pnpm test           # Run 121 tests
 pnpm test:coverage  # Test coverage report
 pnpm ingest         # Validate simulation files against registry
 pnpm type-check     # TypeScript check
@@ -93,9 +100,9 @@ pnpm lint           # ESLint
 ### Project structure
 
 ```
-├── public/simulations/       # Self-contained HTML simulator files
+├── public/simulations/       # Self-contained HTML simulator files (7 total)
 ├── src/
-│   ├── app/                  # Pages (home, /oil-trading, /genai, + slug pages)
+│   ├── app/                  # Pages (home, /oil-trading, /genai, /claude-code, + slug pages)
 │   ├── components/           # UI, layout, and content components
 │   ├── hooks/useFilter.ts    # Search + filter logic
 │   └── lib/posts.ts          # Content registry — add new posts here
@@ -115,7 +122,7 @@ The easiest way is the `/publish` command inside Claude Code — drop your HTML 
 ```ts
 {
   slug: 'my-simulator',
-  category: 'oil-trading',       // or 'genai'
+  category: 'oil-trading',       // or 'genai' or 'claude-code'
   title: 'My Simulator',
   subtitle: 'One-line description',
   description: 'Shown on cards and in page metadata.',
@@ -138,7 +145,7 @@ The easiest way is the `/publish` command inside Claude Code — drop your HTML 
 Hosted on **GitHub Pages**. Every push to `main` automatically:
 1. Installs dependencies
 2. Validates simulation files (`pnpm ingest`)
-3. Type-checks and runs all 117 tests
+3. Type-checks and runs all 121 tests
 4. Builds a static export
 5. Deploys to [advirao.github.io/blog](https://advirao.github.io/blog)
 

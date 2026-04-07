@@ -13,19 +13,24 @@ graph TD
     U[Browser] -->|GET /| HP[Home Page]
     U -->|GET /oil-trading| OT[Oil Trading Category]
     U -->|GET /genai| GA[GenAI Category]
+    U -->|GET /claude-code| CC[Claude Code Category]
     U -->|GET /oil-trading/:slug| OTS[Simulator Page]
     U -->|GET /genai/:slug| GAS[Simulator Page]
+    U -->|GET /claude-code/:slug| CCS[Simulator Page]
 
     OTS --> SF[SimulatorFrame component]
     GAS --> SF
+    CCS --> SF
 
     SF -->|iframe src=| SIM[/public/simulations/*.html\nFull JS preserved, sandboxed]
 
     PR[src/lib/posts.ts\nsingle source of truth] -->|getPostsByCategory| OT
     PR -->|getPostsByCategory| GA
+    PR -->|getPostsByCategory| CC
     PR -->|getAllPosts| HP
     PR -->|getPostBySlug| OTS
     PR -->|getPostBySlug| GAS
+    PR -->|getPostBySlug| CCS
 ```
 
 ---
@@ -71,8 +76,10 @@ flowchart LR
         HP[Home]
         OT[/oil-trading]
         GA[/genai]
+        CC[/claude-code]
         OS[/oil-trading/:slug]
         GS[/genai/:slug]
+        CS[/claude-code/:slug]
     end
 
     subgraph Assets ["public/simulations/"]
@@ -82,10 +89,13 @@ flowchart LR
     PT -->|getAllPosts| HP
     PT -->|getPostsByCategory| OT
     PT -->|getPostsByCategory| GA
+    PT -->|getPostsByCategory| CC
     PT -->|getPostBySlug| OS
     PT -->|getPostBySlug| GS
+    PT -->|getPostBySlug| CS
     OS -->|simulationFile| SIM
     GS -->|simulationFile| SIM
+    CS -->|simulationFile| SIM
 ```
 
 ---
@@ -140,7 +150,7 @@ flowchart LR
     subgraph CI Pipeline
         I[pnpm install\nfrozen lockfile] --> V[pnpm ingest\nvalidate HTML files]
         V --> T[tsc --noEmit\ntype check]
-        T --> TS[pnpm test\n117 tests]
+        T --> TS[pnpm test\n121 tests]
         TS --> B[pnpm build\nNext.js static export]
     end
 
@@ -152,7 +162,7 @@ flowchart LR
 
 ## Adding a New Category
 
-The site supports any number of categories. To add one beyond `oil-trading` and `genai`:
+The site currently has three categories: `oil-trading`, `genai`, and `claude-code`. To add another:
 
 ```mermaid
 flowchart TD
@@ -193,7 +203,7 @@ Blog/
 │   └── architecture.md         # This file
 ├── public/
 │   ├── .nojekyll               # Prevents GitHub Pages Jekyll processing
-│   └── simulations/            # HTML simulation files (6 total)
+│   └── simulations/            # HTML simulation files (7 total)
 ├── scripts/
 │   └── ingest-html.ts          # Validation script
 ├── src/
@@ -204,7 +214,10 @@ Blog/
 │   │   ├── oil-trading/
 │   │   │   ├── page.tsx        # Category listing
 │   │   │   └── [slug]/page.tsx # Simulator page
-│   │   └── genai/
+│   │   ├── genai/
+│   │   │   ├── page.tsx
+│   │   │   └── [slug]/page.tsx
+│   │   └── claude-code/
 │   │       ├── page.tsx
 │   │       └── [slug]/page.tsx
 │   ├── components/
