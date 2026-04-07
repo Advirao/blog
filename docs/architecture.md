@@ -117,11 +117,13 @@ flowchart LR
 
 **Responsive height:** The iframe height is CSS-driven via the `.sim-frame` class in `src/app/globals.css` — `85vh` on desktop, `60vh` on screens ≤ 768px. The `SimulatorFrame` component only overrides `minHeight` for fullscreen mode.
 
-### External links inside simulators (Resource Vault)
+### postMessage bridge — two message types
 
-GitHub Pages sets `Cross-Origin-Opener-Policy` headers. When a sandboxed iframe opens a new tab, that tab inherits the security context and external sites (YouTube, docs, etc.) respond with `ERR_BLOCKED_BY_RESPONSE`.
+Simulators communicate with the parent page via `window.postMessage`. There are two distinct flows:
 
-**Fix — postMessage bridge:**
+**1. External links (iframe → parent)**
+
+GitHub Pages sets `Cross-Origin-Opener-Policy` headers. When a sandboxed iframe opens a new tab, external sites respond with `ERR_BLOCKED_BY_RESPONSE`.
 
 ```
 iframe (vault link clicked)
@@ -129,7 +131,7 @@ iframe (vault link clicked)
        └─ SimulatorFrame listener → window.open(url, '_blank')
 ```
 
-The link opens from the **parent page** context, completely outside the sandbox. Any simulator HTML file that has external links in a `.vault` block must include this script at the bottom:
+Any simulator HTML file that has external links must use this pattern:
 
 ```js
 document.querySelectorAll('.vault a').forEach(function(a) {
@@ -139,6 +141,74 @@ document.querySelectorAll('.vault a').forEach(function(a) {
   });
 });
 ```
+
+**2. Dark/light theme sync (parent → iframe)**
+
+The iframe is sandboxed and cannot read the parent page's CSS. When the user toggles the `☀/🌙` button, the theme is forwarded into the iframe:
+
+```
+User clicks toggle
+  └─ SiteHeader: html.dark toggled + dispatches kb-theme-change event
+       └─ SimulatorFrame: listens to kb-theme-change
+            └─ postMessage({ type: 'theme', dark: true/false }) → iframe
+                 └─ Simulator HTML: applies/removes html.dark class
+```
+
+Also fires on iframe load so the simulator always opens in the correct theme.
+
+Any new simulator HTML must listen for this message:
+
+```js
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'theme') {
+    document.documentElement.classList.toggle('dark', !!e.data.dark);
+  }
+});
+```
+
+And must have an `html.dark { ... }` CSS block with dark palette variables.
+
+---
+
+## Dark Mode
+
+The site supports a full light/dark toggle persisted across sessions.
+
+### How it works
+
+```mermaid
+sequenceDiagram
+    participant OS as OS / localStorage
+    participant Script as Anti-flash script (layout.tsx)
+    participant HTML as html element
+    participant Header as SiteHeader
+    participant Frame as SimulatorFrame
+    participant IFrame as Simulator HTML
+
+    OS->>Script: page load
+    Script->>HTML: add class="dark" if preference=dark
+    Header->>HTML: user clicks ☀/🌙 — toggle class + save to localStorage
+    Header->>Frame: dispatch kb-theme-change event
+    Frame->>IFrame: postMessage({ type:'theme', dark })
+    IFrame->>IFrame: toggle html.dark class → CSS vars switch
+```
+
+### Implementation details
+
+| File | What it does |
+|---|---|
+| `src/app/globals.css` | `:root` (light) and `html.dark` (dark) CSS variable sets + `--rgb-X` triplets for Tailwind opacity modifiers |
+| `tailwind.config.ts` | Colors defined as `rgb(var(--rgb-X)/<alpha-value>)` — opacity modifiers work in both themes |
+| `src/app/layout.tsx` | Inline `<script>` runs before paint; reads `localStorage` then OS pref; applies `dark` class; `suppressHydrationWarning` on `<html>` |
+| `src/components/layout/SiteHeader.tsx` | `☀/🌙` button; toggles `html.dark`; saves to `localStorage`; dispatches `kb-theme-change` |
+| `src/components/content/SimulatorFrame.tsx` | Listens to `kb-theme-change` + iframe `load`; postMessages theme into iframe |
+| `public/simulations/*.html` | Must have `html.dark { ... }` CSS vars + `window.addEventListener('message', ...)` theme listener |
+
+### Adding dark mode to a new simulator HTML
+
+1. Add `html.dark { ... }` CSS block with dark values for all `--bg`, `--surface`, `--surface2`, `--border`, `--ink`, `--ink2`, and accent vars
+2. Add the theme listener (see postMessage bridge section above)
+3. All colors in the HTML must use CSS vars, not hardcoded hex — so they flip automatically
 
 ---
 

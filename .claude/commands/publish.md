@@ -140,6 +140,32 @@ Every simulator HTML must have an `@media (max-width: 768px)` block. At minimum:
 ```
 Use `claude_code_interactive_simulator.html` as the reference implementation for the slide-in sidebar pattern.
 
+**Required dark mode block (add after `:root`, before other rules):**
+```css
+html.dark {
+  --bg:       #16151C;
+  --surface:  #201F29;
+  --surface2: #1A1924;
+  --border:   #2E2D3C;
+  --ink:      #E8E3DC;
+  --ink2:     #9B9399;
+  --accent:   /* brightened version of the category accent for dark bg */;
+  /* add any other accent vars used in this file */
+}
+```
+
+**Required theme sync listener (add at the bottom of `<script>`):**
+```js
+// Receive dark/light theme from parent page
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'theme') {
+    document.documentElement.classList.toggle('dark', !!e.data.dark);
+  }
+});
+```
+
+**Important:** All colors in the HTML must use CSS vars (`var(--bg)`, `var(--ink)`, etc.), never hardcoded hex — so they flip automatically when `html.dark` is applied.
+
 **Header cleanup:**
 - Remove any personal edition labels (e.g. "— Advi Edition", "— John Edition", "v2 Personal")
 - If the header says "Interactive Simulator" as a subtype, change it to match the content (e.g. "Learning", "Explorer", "Walkthrough")

@@ -6,9 +6,11 @@ This is a plain-language reference for the visual design of the KB interactive l
 
 ## The Big Idea
 
-The site uses an **editorial light theme** — think a well-designed textbook or a magazine like The Atlantic, not a tech dashboard. It's warm and easy to read, not bright or flashy. The inspiration is Anthropic's own product and docs pages.
+The site uses an **editorial light/dark theme** — think a well-designed textbook or a magazine like The Atlantic, not a tech dashboard. It's warm and easy to read, not bright or flashy. The inspiration is Anthropic's own product and docs pages.
 
 **Core feeling:** calm, professional, trustworthy, readable.
+
+A `☀/🌙` toggle in the header switches between modes. The choice is saved to `localStorage` and the OS preference is used on first visit. An anti-flash inline script ensures the correct theme is applied before the first paint.
 
 ---
 
@@ -31,21 +33,31 @@ The site previously used Bebas Neue (a bold all-caps display font). That was rep
 
 ## Colors
 
-### Base palette
+### Base palette — light mode (`:root`)
 
-These are the building blocks. Every color in the site comes from these.
+| Name | Hex code | Used for |
+|---|---|---|
+| `bg` | `#FAF9F7` | Page background (warm ivory) |
+| `surface` | `#FFFFFF` | Cards, header, content panels |
+| `surface2` | `#F2EDE6` | Footer, muted sections |
+| `border` | `#E5DDD5` | All borders and dividers |
+| `ink` | `#2D2926` | Primary text, headings |
+| `ink2` | `#7A6F68` | Secondary text, captions, metadata |
+| `white` | `#1A1510` | Tailwind `text-white` → dark heading colour in light mode |
 
-| Name | Hex code | What it looks like | Used for |
-|---|---|---|---|
-| `bg` | `#FAF9F7` | Warm off-white / ivory | Page background |
-| `surface` | `#FFFFFF` | Pure white | Cards, header, main content panels |
-| `surface2` | `#F2EDE6` | Light warm gray/cream | Footer, "related posts" sections, muted areas |
-| `border` | `#E5DDD5` | Soft warm beige | All borders and dividers |
-| `ink` | `#2D2926` | Near-black, slightly warm | Primary text, headings |
-| `ink2` | `#7A6F68` | Warm medium gray | Secondary text, captions, metadata |
-| `white` | `#1A1510` | Very dark warm brown | Used internally as the "white" Tailwind token — renders as dark heading color |
+### Base palette — dark mode (`html.dark`)
 
-> **Note for developers:** In Tailwind config, `white` is remapped to `#1A1510`. So `text-white` in this codebase produces dark text. This is intentional — it lets us keep component markup unchanged while flipping from the old dark theme.
+| Name | Hex code | Used for |
+|---|---|---|
+| `bg` | `#16151C` | Page background (deep navy-black) |
+| `surface` | `#201F29` | Cards, header |
+| `surface2` | `#1A1924` | Footer, muted sections |
+| `border` | `#2E2D3C` | All borders |
+| `ink` | `#E8E3DC` | Primary text (warm off-white) |
+| `ink2` | `#9B9399` | Secondary text |
+| `white` | `#F0EAE0` | Tailwind `text-white` → light heading colour in dark mode |
+
+> **Implementation note:** All colors in `tailwind.config.ts` are defined as `rgb(var(--rgb-X)/<alpha-value>)`. This means every Tailwind opacity modifier (`bg-accent/10`, `border-border/40`, `bg-surface/95`) works automatically in both themes — no `dark:` prefix needed anywhere in component code.
 
 ### Accent colors (for categories and badges)
 
@@ -129,6 +141,7 @@ Fonts are loaded in each HTML file via a `<link>` to Google Fonts importing Lora
 7. **No dark grid backgrounds.** The old theme used a dot-grid overlay. This has been removed everywhere.
 8. **Section color follows category.** Green (`#2A6E49`) = Oil Trading. Purple (`#5E4FA0`) = GenAI and Claude Code. Never swap these.
 9. **Mobile-first responsive.** All layouts must work at 375px width. Use `flex-wrap`, responsive padding (`p-4 md:p-8`), and hide non-essential elements on mobile with `hidden sm:flex`.
+10. **Dark mode compatible.** Never hardcode hex colours in `style={{}}` props — use `var(--cat-oil-banner)` etc. so they automatically switch in dark mode. All new simulator HTML must have `html.dark { ... }` CSS vars and a postMessage theme listener.
 
 ---
 

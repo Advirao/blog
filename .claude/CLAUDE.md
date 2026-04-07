@@ -19,8 +19,13 @@ Live site: **advirao.github.io/blog**
 
 ---
 
-## Color palette (light editorial theme)
+## Color palette (light / dark themes)
 
+The site supports **light and dark mode** toggled by the `☀/🌙` button in the header. Choice is persisted to `localStorage`. On first visit the OS preference is used. An anti-flash inline script in `layout.tsx` applies the class before first paint.
+
+Colors are defined as CSS custom properties in `globals.css` under `:root` (light) and `html.dark` (dark). Tailwind reads them via `rgb(var(--rgb-X)/<alpha-value>)` — so opacity modifiers like `bg-accent/10` work in both themes with no component changes.
+
+### Light palette
 | Token | Hex | Role |
 |---|---|---|
 | `bg` | `#FAF9F7` | Page background (warm ivory) |
@@ -30,17 +35,28 @@ Live site: **advirao.github.io/blog**
 | `ink` | `#2D2926` | Primary text |
 | `ink2` | `#7A6F68` | Secondary / meta text |
 | `accent` | `#2A6E49` | Oil Trading (sage green) |
-| `purple` | `#5E4FA0` | GenAI (lavender) |
+| `purple` | `#5E4FA0` | GenAI / Claude Code (lavender) |
 | `gold` | `#A8711A` | Intermediate badge |
 | `danger` | `#B83232` | Advanced badge |
 | `blue` | `#2B549A` | Beginner badge |
 
-Category banners: Oil Trading `#DFF0E8`, GenAI `#E0DFF0`.  
-Card bg tints: Oil Trading `#F2F8F4`, GenAI `#F2F2F9`.
+### Dark palette
+| Token | Hex | Role |
+|---|---|---|
+| `bg` | `#16151C` | Page background |
+| `surface` | `#201F29` | Cards, header |
+| `surface2` | `#1A1924` | Footer, muted sections |
+| `border` | `#2E2D3C` | All borders |
+| `ink` | `#E8E3DC` | Primary text |
+| `ink2` | `#9B9399` | Secondary / meta text |
+| `accent` | `#3D9A6C` | Brightened green for dark bg |
+| `purple` | `#7B6BBD` | Brightened purple for dark bg |
 
-`white` in Tailwind config is remapped to `#1A1510` (dark heading color) so existing `text-white` usage renders correctly on the light theme without touching component markup.
+Category banner and card-tint vars (`--cat-oil-banner`, `--cat-ai-banner`, `--cat-oil-card`, `--cat-ai-card`) switch automatically in `html.dark`.
 
-See `docs/design-system.md` for the full plain-language design guide.
+`white` in Tailwind is remapped to `#1A1510` (light) / `#F0EAE0` (dark) so `text-white` renders as the correct heading colour in both modes.
+
+See `docs/design-system.md` for the full design guide.
 
 ---
 
@@ -55,11 +71,13 @@ See `docs/design-system.md` for the full plain-language design guide.
 ## Key conventions
 
 - **Content registry** — `src/lib/posts.ts` is the single source of truth. Add all new simulators here.
-- **No dark theme** — The site is light-only. No `dark:` Tailwind classes, no dark color variables.
+- **Dark mode** — Toggled via `☀/🌙` button in `SiteHeader`. Class `dark` on `<html>`, persisted to `localStorage`, initialised by anti-flash script. All colors use CSS vars — no `dark:` Tailwind prefix needed. Simulator iframes receive theme via `postMessage({ type:'theme', dark })` from `SimulatorFrame`.
 - **No glow effects** — Hover states use `shadow-card-hover`, not color glows.
 - **Simulator HTML files** — `public/simulations/*.html` are self-contained and carry their own `<style>` block with matching CSS variables. They cannot inherit the blog's Tailwind CSS.
 - **Links** — Always use `<Link>` from `next/link` for internal navigation, never plain `<a>`. Plain `<a>` bypasses `basePath` and causes 404s on GitHub Pages.
-- **postMessage bridge** — Simulators with external vault links must use `window.parent.postMessage({ type: 'open-url', url })` to open links from the parent context. See `docs/architecture.md`.
+- **postMessage bridge** — Two message types flow between `SimulatorFrame` and simulator HTML:
+  - `{ type: 'open-url', url }` — iframe → parent, opens external links outside the sandbox
+  - `{ type: 'theme', dark: boolean }` — parent → iframe, syncs light/dark on toggle and on load
 - **basePath** — Set only in CI via `NEXT_PUBLIC_BASE_PATH=/blog`. Local dev runs at `/`.
 - **Mobile-first** — All new UI must work at 375px. Use responsive padding (`p-4 md:p-8`), `flex-wrap`, and `hidden sm:flex` to hide non-critical elements on small screens. The SiteHeader uses a hamburger menu on mobile. The simulator iframe height is CSS-driven (60vh mobile / 85vh desktop via `.sim-frame` in globals.css).
 - **Simulator HTML mobile** — Any new simulator HTML must include a responsive `@media (max-width: 768px)` block. If it has a sidebar, implement a slide-in drawer pattern with overlay (see claude_code_interactive_simulator.html as reference).

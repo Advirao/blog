@@ -46,12 +46,13 @@ Master the agentic CLI — from the core loop to hooks, skills, and CI/CD integr
 ## Features
 
 - **Live simulators** — every module has interactive sliders and real-time calculations
+- **Light & dark mode** — toggle with `☀/🌙` in the header; preference saved across visits; OS default on first load; simulators sync automatically
 - **Mobile-friendly** — fully responsive on phones, tablets, and desktops; hamburger nav on mobile, adaptive simulator heights
 - **Download for offline use** — grab any simulator as a standalone HTML file
 - **Fullscreen mode** — expand any simulator to fill your screen
 - **Search & filter** — find modules by topic, difficulty, or keyword
 - **Fast** — all pages pre-rendered, loads instantly with no server
-- **Editorial light theme** — warm ivory palette with serif headings, inspired by Anthropic's design language
+- **Editorial theme** — warm ivory (light) / deep navy (dark) palette with serif headings, inspired by Anthropic's design language
 
 ---
 
@@ -153,6 +154,16 @@ Hosted on **GitHub Pages**. Every push to `main` automatically:
 No secrets or tokens required — GitHub Actions handles everything.
 
 See [docs/architecture.md](./docs/architecture.md) for full architecture diagrams and [docs/design-system.md](./docs/design-system.md) for the color and font reference.
+
+---
+
+## Author
+
+**Advi Rao** — 17 years of IT experience in consulting, architecting, leading teams, and winning proposals. AI evangelist bringing data to insights.
+
+- Email: [advirao@gmail.com](mailto:advirao@gmail.com)
+- Phone: +1 346 395 8885
+- LinkedIn: [linkedin.com/in/advirao](https://www.linkedin.com/in/advirao/)
 
 ---
 
