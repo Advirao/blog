@@ -64,7 +64,7 @@ export default function HomePage() {
         <Link
           href="/oil-trading"
           className="group relative overflow-hidden rounded-2xl p-5 md:p-8 flex items-end min-h-[140px] md:min-h-[160px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
-          style={{ background: '#DFF0E8' }}
+          style={{ background: 'var(--cat-oil-banner)' }}
         >
           <div className="relative z-10">
             <div className="font-mono text-[10px] tracking-widest uppercase text-accent/80 mb-2">
@@ -86,7 +86,7 @@ export default function HomePage() {
         <Link
           href="/genai"
           className="group relative overflow-hidden rounded-2xl p-5 md:p-8 flex items-end min-h-[140px] md:min-h-[160px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
-          style={{ background: '#E0DFF0' }}
+          style={{ background: 'var(--cat-ai-banner)' }}
         >
           <div className="relative z-10">
             <div className="font-mono text-[10px] tracking-widest uppercase text-purple/80 mb-2">
@@ -108,7 +108,7 @@ export default function HomePage() {
         <Link
           href="/claude-code"
           className="group relative overflow-hidden rounded-2xl p-5 md:p-8 flex items-end min-h-[140px] md:min-h-[160px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
-          style={{ background: '#E0DFF0' }}
+          style={{ background: 'var(--cat-ai-banner)' }}
         >
           <div className="relative z-10">
             <div className="font-mono text-[10px] tracking-widest uppercase text-purple/80 mb-2">

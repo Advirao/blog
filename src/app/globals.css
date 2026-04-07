@@ -2,28 +2,91 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─── CSS Custom Properties ─────────────────────────────────────────────────── */
+/* ─── Light theme (default) ─────────────────────────────────────────────────── */
 :root {
-  /* Warm ivory/cream palette — Anthropic-inspired editorial */
+  /* ── Named hex vars (used by non-Tailwind CSS, simulators, globals.css rules) */
   --bg:       #FAF9F7;
   --surface:  #FFFFFF;
   --surface2: #F2EDE6;
   --border:   #E5DDD5;
+  --accent:   #2A6E49;
+  --gold:     #A8711A;
+  --danger:   #B83232;
+  --blue:     #2B549A;
+  --purple:   #5E4FA0;
+  --teal:     #2A6E6E;
+  --ink:      #2D2926;
+  --ink2:     #7A6F68;
+  --white:    #1A1510;   /* heading colour — dark in light theme */
+  /* legacy aliases */
+  --text:     #2D2926;
+  --text2:    #7A6F68;
+  --text3:    #7A6F68;
 
-  /* Muted accent palette — readable on light backgrounds */
-  --accent:   #2A6E49;   /* forest green */
-  --gold:     #A8711A;   /* warm amber */
-  --danger:   #B83232;   /* muted red */
-  --blue:     #2B549A;   /* steel blue */
-  --purple:   #5E4FA0;   /* muted purple */
-  --teal:     #2A6E6E;   /* forest teal */
+  /* ── RGB triplets — Tailwind needs these for opacity modifiers (/10, /95, etc.) */
+  --rgb-bg:       250 249 247;
+  --rgb-surface:  255 255 255;
+  --rgb-surface2: 242 237 230;
+  --rgb-border:   229 221 213;
+  --rgb-accent:   42 110 73;
+  --rgb-gold:     168 113 26;
+  --rgb-danger:   184 50 50;
+  --rgb-blue:     43 84 154;
+  --rgb-purple:   94 79 160;
+  --rgb-teal:     42 110 110;
+  --rgb-ink:      45 41 38;
+  --rgb-ink2:     122 111 104;
+  --rgb-white:    26 21 16;
 
-  /* Text */
-  --text:     #2D2926;   /* near-black warm */
-  --text2:    #7A6F68;   /* muted warm gray */
-  --white:    #1A1510;   /* heading color (dark in light theme) */
+  /* ── Category tint backgrounds (used as inline styles in pages) */
+  --cat-oil-banner: #DFF0E8;
+  --cat-ai-banner:  #E0DFF0;
+  --cat-oil-card:   #F2F8F4;
+  --cat-ai-card:    #F2F2F9;
 
   --font-lora: 'Lora', Georgia, serif;
+}
+
+/* ─── Dark theme ─────────────────────────────────────────────────────────────── */
+html.dark {
+  /* ── Named hex vars */
+  --bg:       #16151C;
+  --surface:  #201F29;
+  --surface2: #1A1924;
+  --border:   #2E2D3C;
+  --accent:   #3D9A6C;
+  --gold:     #C48F2A;
+  --danger:   #D44848;
+  --blue:     #4872C4;
+  --purple:   #7B6BBD;
+  --teal:     #3D9A9A;
+  --ink:      #E8E3DC;
+  --ink2:     #9B9399;
+  --white:    #F0EAE0;   /* heading colour — light in dark theme */
+  --text:     #E8E3DC;
+  --text2:    #9B9399;
+  --text3:    #9B9399;
+
+  /* ── RGB triplets */
+  --rgb-bg:       22 21 28;
+  --rgb-surface:  32 31 41;
+  --rgb-surface2: 26 25 36;
+  --rgb-border:   46 45 60;
+  --rgb-accent:   61 154 108;
+  --rgb-gold:     196 143 42;
+  --rgb-danger:   212 72 72;
+  --rgb-blue:     72 114 196;
+  --rgb-purple:   123 107 189;
+  --rgb-teal:     61 154 154;
+  --rgb-ink:      232 227 220;
+  --rgb-ink2:     155 147 153;
+  --rgb-white:    240 234 224;
+
+  /* ── Category tints — dark versions */
+  --cat-oil-banner: #1B2E26;
+  --cat-ai-banner:  #1E1B2E;
+  --cat-oil-card:   #192420;
+  --cat-ai-card:    #1B1928;
 }
 
 /* ─── Base Styles ────────────────────────────────────────────────────────────── */
@@ -43,7 +106,7 @@ html {
 
 body {
   background-color: var(--bg);
-  color: var(--text);
+  color: var(--ink);
   font-family: 'IBM Plex Sans', var(--font-sans), system-ui, sans-serif;
   min-height: 100vh;
   line-height: 1.6;
@@ -66,12 +129,12 @@ body {
 ::-webkit-scrollbar        { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track  { background: var(--surface2); }
 ::-webkit-scrollbar-thumb  { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text2); }
+::-webkit-scrollbar-thumb:hover { background: var(--ink2); }
 
 /* ─── Selection ──────────────────────────────────────────────────────────────── */
 ::selection {
   background-color: rgba(42, 110, 73, 0.15);
-  color: var(--text);
+  color: var(--ink);
 }
 
 /* ─── Simulator iframe ───────────────────────────────────────────────────────── */

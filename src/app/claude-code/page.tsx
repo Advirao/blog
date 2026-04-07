@@ -18,7 +18,7 @@ export default function ClaudeCodePage() {
       {/* Category hero */}
       <section
         className="rounded-2xl px-8 py-12 mt-8 mb-10 relative overflow-hidden"
-        style={{ background: '#E0DFF0' }}
+        style={{ background: 'var(--cat-ai-banner)' }}
       >
         <div className="relative z-10">
           <div className="font-mono text-[10px] tracking-widest uppercase text-purple/70 mb-3">

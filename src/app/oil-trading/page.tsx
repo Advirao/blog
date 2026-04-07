@@ -18,7 +18,7 @@ export default function OilTradingPage() {
       {/* Category hero */}
       <section
         className="rounded-2xl px-8 py-12 mt-8 mb-10 relative overflow-hidden"
-        style={{ background: '#DFF0E8' }}
+        style={{ background: 'var(--cat-oil-banner)' }}
       >
         <div className="relative z-10">
           <div className="font-mono text-[10px] tracking-widest uppercase text-accent/70 mb-3">

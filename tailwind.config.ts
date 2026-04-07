@@ -6,25 +6,28 @@ const config: Config = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  // Enable class-based dark mode (toggled via html.dark)
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        // Warm ivory/cream editorial palette
-        bg:       '#FAF9F7',
-        surface:  '#FFFFFF',
-        surface2: '#F2EDE6',
-        border:   '#E5DDD5',
-        // Muted accents for light backgrounds
-        accent:   '#2A6E49',
-        gold:     '#A8711A',
-        danger:   '#B83232',
-        blue:     '#2B549A',
-        purple:   '#5E4FA0',
-        teal:     '#2A6E6E',
-        // Text
-        ink:      '#2D2926',
-        ink2:     '#7A6F68',
-        white:    '#1A1510',   // heading color (dark in light theme)
+        // Colors use CSS variables with alpha-value support.
+        // --rgb-X is a space-separated RGB triplet defined in globals.css.
+        // This lets Tailwind opacity modifiers (bg-accent/10, border-border/40) work
+        // in both light and dark themes without any component changes.
+        bg:       'rgb(var(--rgb-bg)       / <alpha-value>)',
+        surface:  'rgb(var(--rgb-surface)  / <alpha-value>)',
+        surface2: 'rgb(var(--rgb-surface2) / <alpha-value>)',
+        border:   'rgb(var(--rgb-border)   / <alpha-value>)',
+        accent:   'rgb(var(--rgb-accent)   / <alpha-value>)',
+        gold:     'rgb(var(--rgb-gold)     / <alpha-value>)',
+        danger:   'rgb(var(--rgb-danger)   / <alpha-value>)',
+        blue:     'rgb(var(--rgb-blue)     / <alpha-value>)',
+        purple:   'rgb(var(--rgb-purple)   / <alpha-value>)',
+        teal:     'rgb(var(--rgb-teal)     / <alpha-value>)',
+        ink:      'rgb(var(--rgb-ink)      / <alpha-value>)',
+        ink2:     'rgb(var(--rgb-ink2)     / <alpha-value>)',
+        white:    'rgb(var(--rgb-white)    / <alpha-value>)',
       },
       fontFamily: {
         sans:    ['var(--font-sans)', 'IBM Plex Sans', 'system-ui', 'sans-serif'],

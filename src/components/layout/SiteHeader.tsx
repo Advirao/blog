@@ -2,8 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
-import { Menu, X } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Menu, X, Sun, Moon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
@@ -16,6 +16,18 @@ const navItems = [
 export function SiteHeader() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [dark, setDark] = useState(false)
+
+  // Sync with the class applied by the anti-flash script
+  useEffect(() => {
+    setDark(document.documentElement.classList.contains('dark'))
+  }, [])
+
+  function toggleTheme() {
+    const isDark = document.documentElement.classList.toggle('dark')
+    setDark(isDark)
+    localStorage.setItem('kb-theme', isDark ? 'dark' : 'light')
+  }
 
   const isSimulatorPage =
     pathname.includes('/oil-trading/') || pathname.includes('/genai/') || pathname.includes('/claude-code/')
@@ -71,6 +83,17 @@ export function SiteHeader() {
           <span className="hidden md:inline-flex pill bg-surface2 text-ink2 border border-border text-[10px]">
             7 Modules
           </span>
+
+          {/* Theme toggle */}
+          <button
+            onClick={toggleTheme}
+            title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+            aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+            className="flex items-center justify-center h-8 w-8 rounded-lg text-ink2 hover:text-ink hover:bg-surface2 transition-colors"
+          >
+            {dark ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+
           {/* Mobile hamburger */}
           <button
             className="md:hidden flex items-center justify-center h-8 w-8 rounded-lg text-ink2 hover:text-ink hover:bg-surface2 transition-colors"

@@ -63,18 +63,29 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#FAF9F7',
-  colorScheme: 'light',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#FAF9F7' },
+    { media: '(prefers-color-scheme: dark)',  color: '#16151C' },
+  ],
+  colorScheme: 'light dark',
 }
+
+// Inline script to apply dark class before first paint — prevents flash of wrong theme.
+// Reads localStorage first, then falls back to OS preference.
+const themeScript = `(function(){try{var t=localStorage.getItem('kb-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');if(t==='dark')document.documentElement.classList.add('dark')}catch(e){}})();`
 
 // ─── Root Layout ──────────────────────────────────────────────────────────────
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${ibmPlexSans.variable} ${ibmPlexMono.variable} ${lora.variable}`}
     >
       <body className="bg-bg text-ink antialiased">
+        {/* Theme initialisation — must be first child, runs synchronously before paint */}
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+
         {/* Site shell */}
         <div className="relative flex min-h-screen flex-col">
           <SiteHeader />

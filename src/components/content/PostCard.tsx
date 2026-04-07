@@ -11,9 +11,9 @@ interface PostCardProps {
 
 // Subtle category-tinted backgrounds (inspired by the section color palette)
 const categoryBg: Record<string, string> = {
-  'oil-trading':  '#F2F8F4',  // very light sage green
-  'genai':        '#F2F2F9',  // very light lavender
-  'claude-code':  '#F2F2F9',  // very light lavender (same as genai — both are purple)
+  'oil-trading': 'var(--cat-oil-card)',
+  'genai':       'var(--cat-ai-card)',
+  'claude-code': 'var(--cat-ai-card)',
 }
 
 export function PostCard({ post, featured = false }: PostCardProps) {
