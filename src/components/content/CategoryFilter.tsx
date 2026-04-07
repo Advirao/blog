@@ -68,11 +68,11 @@ export function CategoryFilter({ filter, onFilterChange, postCounts }: CategoryF
       </div>
 
       {/* Difficulty selector */}
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <span className="font-mono text-[10px] text-ink2 uppercase tracking-widest whitespace-nowrap">
           Level:
         </span>
-        <div className="flex gap-1" role="group" aria-label="Filter by difficulty">
+        <div className="flex flex-wrap gap-1" role="group" aria-label="Filter by difficulty">
           {DIFFICULTY_OPTIONS.map((opt) => {
             const isActive = filter.difficulty === opt.value
             return (

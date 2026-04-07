@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useState } from 'react'
+import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
@@ -13,6 +15,7 @@ const navItems = [
 
 export function SiteHeader() {
   const pathname = usePathname()
+  const [menuOpen, setMenuOpen] = useState(false)
 
   const isSimulatorPage =
     pathname.includes('/oil-trading/') || pathname.includes('/genai/') || pathname.includes('/claude-code/')
@@ -39,8 +42,8 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        {/* Navigation */}
-        <nav className="flex items-center gap-1" aria-label="Main navigation">
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
           {navItems.map((item) => {
             const isActive =
               item.href === '/'
@@ -63,13 +66,49 @@ export function SiteHeader() {
           })}
         </nav>
 
-        {/* Right side: module count */}
-        <div className="hidden md:flex items-center gap-2">
-          <span className="pill bg-surface2 text-ink2 border border-border text-[10px]">
+        {/* Right side */}
+        <div className="flex items-center gap-2">
+          <span className="hidden md:inline-flex pill bg-surface2 text-ink2 border border-border text-[10px]">
             7 Modules
           </span>
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden flex items-center justify-center h-8 w-8 rounded-lg text-ink2 hover:text-ink hover:bg-surface2 transition-colors"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label="Toggle navigation"
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile dropdown */}
+      {menuOpen && (
+        <div className="md:hidden border-t border-border bg-surface/95 backdrop-blur-sm px-4 py-3 flex flex-col gap-1">
+          {navItems.map((item) => {
+            const isActive =
+              item.href === '/'
+                ? pathname === '/'
+                : pathname.startsWith(item.href)
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMenuOpen(false)}
+                className={cn(
+                  'px-3 py-2.5 rounded-lg font-mono text-[12px] tracking-wide uppercase transition-all duration-150',
+                  isActive
+                    ? 'bg-accent/10 text-accent border border-accent/25'
+                    : 'text-ink2 hover:text-ink hover:bg-surface2 border border-transparent'
+                )}
+              >
+                {item.label}
+              </Link>
+            )
+          })}
+        </div>
+      )}
     </header>
   )
 }

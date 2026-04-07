@@ -57,7 +57,7 @@ export default function ClaudeCodeSlugPage({ params }: Props) {
               <Clock size={11} />
               {readTimeLabel(post.readTime)}
             </span>
-            <span className="flex items-center gap-1 font-mono text-[11px] text-ink2">
+            <span className="hidden sm:flex items-center gap-1 font-mono text-[11px] text-ink2">
               <Calendar size={11} />
               {formatDate(post.lastUpdated)}
             </span>
@@ -75,7 +75,7 @@ export default function ClaudeCodeSlugPage({ params }: Props) {
       <div className="border-b border-border bg-bg px-4 md:px-6 py-5">
         <div className="mx-auto max-w-6xl">
           <div className="flex items-start gap-4">
-            <span className="text-4xl select-none">{post.icon}</span>
+            <span className="text-3xl md:text-4xl select-none shrink-0">{post.icon}</span>
             <div className="min-w-0">
               <h1 className="font-bebas text-2xl md:text-3xl text-white tracking-wide leading-tight">
                 {post.title}

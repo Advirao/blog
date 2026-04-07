@@ -504,14 +504,98 @@
   .resource-arrow { font-size: 0.85rem; color: var(--accent); flex-shrink: 0; opacity: 0.6; }
   .resource-item:hover .resource-arrow { opacity: 1; }
 
-  /* Responsive */
+  /* --- MOBILE SIDEBAR TOGGLE --- */
+  .sidebar-toggle {
+    display: none;
+    align-items: center; gap: 0.45rem;
+    padding: 0.38rem 0.75rem;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: transparent; color: var(--ink2);
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+    cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  }
+  .sidebar-toggle:hover { background: var(--surface2); color: var(--ink); }
+
+  .sidebar-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.35); z-index: 90;
+  }
+  .sidebar-overlay.show { display: block; }
+
+  /* --- RESPONSIVE --- */
   @media (max-width: 768px) {
-    .sidebar { display: none; }
-    .main { padding: 1.5rem 1rem; }
+    /* Header */
+    header { padding: 1rem 1.25rem 0.9rem; }
+    .sidebar-toggle { display: flex; }
+    .header-right { display: none; }
+
+    /* App layout */
+    .app { height: auto; min-height: calc(100vh - 68px); }
+
+    /* Sidebar becomes a slide-in drawer */
+    .sidebar {
+      display: flex !important;
+      flex-direction: column;
+      position: fixed;
+      left: -280px; top: 0; height: 100%;
+      z-index: 100; width: 260px;
+      transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+      padding-top: 0.5rem;
+    }
+    .sidebar.mobile-open { left: 0; }
+
+    /* Main content full width */
+    .main { padding: 1.25rem 1rem 3rem; }
+
+    /* Tabs: horizontal scroll */
+    .tabs {
+      flex-wrap: nowrap; overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      min-width: 68px; flex-shrink: 0;
+      font-size: 0.66rem; padding: 0.55rem 0.3rem;
+    }
+
+    /* Content grids */
     .what-grid { grid-template-columns: 1fr; }
-    .tools-grid { grid-template-columns: repeat(2,1fr); }
+    .tools-grid { grid-template-columns: repeat(2, 1fr); }
     .analogy-grid { grid-template-columns: 1fr; }
     .analogy-arrow { display: none; }
+
+    /* Agentic loop phases: 2-column grid */
+    .loop-display {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+    .loop-phase { flex: unset; }
+    .loop-phase:not(:last-child)::after { display: none; }
+
+    /* Concept header */
+    .concept-header { gap: 1rem; }
+    .concept-title { font-size: 1.45rem; }
+    .concept-icon-big { width: 54px; height: 54px; font-size: 2rem; border-radius: 12px; }
+
+    /* Sim controls */
+    .sim-controls { flex-direction: column; }
+    .sim-input { min-width: unset; width: 100%; }
+
+    /* Git add row */
+    .git-add-row { flex-direction: column; }
+
+    /* Bottom nav */
+    .nav-bottom { flex-direction: column; gap: 0.75rem; }
+    .nav-bottom-btn { justify-content: center; }
+
+    /* ELI10 / Resources */
+    .eli10-wrap, .resource-vault { max-width: 100%; }
+
+    /* Analogy pairs */
+    .analogy-pair { grid-template-columns: 1fr; gap: 0.3rem; }
+    .pair-eq { text-align: left; padding-left: 0.5rem; }
   }
 </style>
 
@@ -524,6 +608,9 @@
       <div class="logo">Claude Code <span>// Learning</span></div>
       <div class="subtitle">Complete Learning Guide</div>
     </div>
+    <button class="sidebar-toggle" id="sidebar-btn" onclick="toggleMobileSidebar()" aria-label="Open navigation">
+      ☰ Menu
+    </button>
     <div class="header-right">
       <span class="badge badge-blue">11 Concepts</span>
       <span class="badge badge-purple">5 Tabs Each</span>
@@ -531,6 +618,8 @@
     </div>
   </div>
 </header>
+
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
 
 <div class="app">
   <!-- SIDEBAR -->
@@ -1014,7 +1103,30 @@ concepts.forEach((c, i) => {
 let currentConcept = 0;
 let visited = new Set();
 
+function toggleMobileSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const btn = document.getElementById('sidebar-btn');
+  const isOpen = sidebar.classList.contains('mobile-open');
+  sidebar.classList.toggle('mobile-open', !isOpen);
+  overlay.classList.toggle('show', !isOpen);
+  btn.textContent = isOpen ? '☰ Menu' : '✕ Close';
+  document.body.style.overflow = isOpen ? '' : 'hidden';
+}
+
+function closeMobileSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const btn = document.getElementById('sidebar-btn');
+  if (!sidebar || !sidebar.classList.contains('mobile-open')) return;
+  sidebar.classList.remove('mobile-open');
+  overlay.classList.remove('show');
+  btn.textContent = '☰ Menu';
+  document.body.style.overflow = '';
+}
+
 function showConcept(idx) {
+  closeMobileSidebar();
   currentConcept = idx;
   visited.add(idx);
   const c = concepts[idx];

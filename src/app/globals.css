@@ -47,6 +47,7 @@ body {
   font-family: 'IBM Plex Sans', var(--font-sans), system-ui, sans-serif;
   min-height: 100vh;
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 /* ─── Lora serif display font ────────────────────────────────────────────────── */
@@ -79,6 +80,13 @@ body {
   height: 100%;
   border: none;
   background: var(--bg);
+  min-height: 85vh;
+}
+
+@media (max-width: 768px) {
+  .sim-frame {
+    min-height: 60vh;
+  }
 }
 
 /* ─── Focus rings ────────────────────────────────────────────────────────────── */

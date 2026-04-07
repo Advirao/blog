@@ -40,14 +40,14 @@ export default function HomePage() {
         </p>
 
         {/* Stats strip */}
-        <div className="flex items-center justify-center gap-12 mt-12">
+        <div className="flex items-center justify-center gap-6 md:gap-12 mt-10 md:mt-12">
           {[
             { label: 'Interactive Modules', value: `${allPosts.length}` },
             { label: 'Live Simulators',     value: '20+' },
             { label: 'Topics Covered',      value: '3' },
           ].map((s) => (
             <div key={s.label} className="text-center">
-              <div className="font-bebas text-4xl text-accent tracking-wide leading-none">
+              <div className="font-bebas text-3xl md:text-4xl text-accent tracking-wide leading-none">
                 {s.value}
               </div>
               <div className="font-mono text-[10px] text-ink2 uppercase tracking-widest mt-1.5">
@@ -63,7 +63,7 @@ export default function HomePage() {
         {/* Oil Trading */}
         <Link
           href="/oil-trading"
-          className="group relative overflow-hidden rounded-2xl p-8 flex items-end min-h-[160px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
+          className="group relative overflow-hidden rounded-2xl p-5 md:p-8 flex items-end min-h-[140px] md:min-h-[160px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
           style={{ background: '#DFF0E8' }}
         >
           <div className="relative z-10">
@@ -85,7 +85,7 @@ export default function HomePage() {
         {/* GenAI Engineering */}
         <Link
           href="/genai"
-          className="group relative overflow-hidden rounded-2xl p-8 flex items-end min-h-[160px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
+          className="group relative overflow-hidden rounded-2xl p-5 md:p-8 flex items-end min-h-[140px] md:min-h-[160px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
           style={{ background: '#E0DFF0' }}
         >
           <div className="relative z-10">
@@ -107,7 +107,7 @@ export default function HomePage() {
         {/* Claude Code */}
         <Link
           href="/claude-code"
-          className="group relative overflow-hidden rounded-2xl p-8 flex items-end min-h-[160px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
+          className="group relative overflow-hidden rounded-2xl p-5 md:p-8 flex items-end min-h-[140px] md:min-h-[160px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
           style={{ background: '#E0DFF0' }}
         >
           <div className="relative z-10">
