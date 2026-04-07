@@ -1,6 +1,6 @@
 export type Difficulty = 'beginner' | 'intermediate' | 'advanced'
 export type AccentColor = 'accent' | 'gold' | 'blue' | 'danger' | 'purple' | 'teal'
-export type Category = 'oil-trading' | 'genai'
+export type Category = 'oil-trading' | 'genai' | 'claude-code'
 
 export interface Post {
   slug: string

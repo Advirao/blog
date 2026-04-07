@@ -70,7 +70,8 @@ export const difficultyConfig: Record<
 
 // ─── Category display labels ──────────────────────────────────────────────────
 export const categoryLabels: Record<string, string> = {
-  'oil-trading': 'Oil Trading',
-  'genai':       'GenAI Engineering',
-  'all':         'All Topics',
+  'oil-trading':  'Oil Trading',
+  'genai':        'GenAI Engineering',
+  'claude-code':  'Claude Code',
+  'all':          'All Topics',
 }

@@ -10,13 +10,15 @@ interface CategoryFilterProps {
     all: number
     'oil-trading': number
     genai: number
+    'claude-code': number
   }
 }
 
 const CATEGORY_OPTIONS = [
-  { value: 'all',         label: 'All Topics',          icon: '📚' },
-  { value: 'oil-trading', label: 'Oil Trading',          icon: '🛢️' },
-  { value: 'genai',       label: 'GenAI Engineering',    icon: '🤖' },
+  { value: 'all',          label: 'All Topics',       icon: '📚' },
+  { value: 'oil-trading',  label: 'Oil Trading',      icon: '🛢️' },
+  { value: 'genai',        label: 'GenAI Engineering', icon: '🤖' },
+  { value: 'claude-code',  label: 'Claude Code',      icon: '🖥️' },
 ] as const
 
 const DIFFICULTY_OPTIONS: { value: Difficulty | 'all'; label: string }[] = [

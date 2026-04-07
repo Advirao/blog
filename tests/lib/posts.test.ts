@@ -18,7 +18,7 @@ describe('posts registry', () => {
   it('every post has all required fields', () => {
     posts.forEach((post) => {
       expect(post.slug).toBeTruthy()
-      expect(post.category).toMatch(/^(oil-trading|genai)$/)
+      expect(post.category).toMatch(/^(oil-trading|genai|claude-code)$/)
       expect(post.title).toBeTruthy()
       expect(post.subtitle).toBeTruthy()
       expect(post.description).toBeTruthy()
@@ -47,14 +47,15 @@ describe('posts registry', () => {
 
 // ─── CATEGORIES ───────────────────────────────────────────────────────────────
 describe('CATEGORIES', () => {
-  it('has exactly 2 categories', () => {
-    expect(CATEGORIES).toHaveLength(2)
+  it('has exactly 3 categories', () => {
+    expect(CATEGORIES).toHaveLength(3)
   })
 
-  it('contains oil-trading and genai', () => {
+  it('contains oil-trading, genai, and claude-code', () => {
     const slugs = CATEGORIES.map((c) => c.slug)
     expect(slugs).toContain('oil-trading')
     expect(slugs).toContain('genai')
+    expect(slugs).toContain('claude-code')
   })
 })
 
@@ -92,8 +93,12 @@ describe('getPostsByCategory()', () => {
     expect(getPostsByCategory('oil-trading')).toHaveLength(4)
   })
 
-  it('returns 3 genai posts', () => {
-    expect(getPostsByCategory('genai')).toHaveLength(3)
+  it('returns 2 genai posts', () => {
+    expect(getPostsByCategory('genai')).toHaveLength(2)
+  })
+
+  it('returns 1 claude-code post', () => {
+    expect(getPostsByCategory('claude-code')).toHaveLength(1)
   })
 
   it('all returned posts match the requested category', () => {
@@ -127,6 +132,17 @@ describe('getPostBySlug()', () => {
     // oil-trading-simulator exists under oil-trading, not genai
     expect(getPostBySlug('genai', 'oil-trading-simulator')).toBeUndefined()
   })
+
+  it('finds the claude-code-interactive-simulator post', () => {
+    const post = getPostBySlug('claude-code', 'claude-code-interactive-simulator')
+    expect(post).toBeDefined()
+    expect(post?.category).toBe('claude-code')
+  })
+
+  it('returns undefined for claude-code-interactive-simulator under genai', () => {
+    // post moved from genai to claude-code
+    expect(getPostBySlug('genai', 'claude-code-interactive-simulator')).toBeUndefined()
+  })
 })
 
 // ─── getCategoryMeta() ────────────────────────────────────────────────────────
@@ -144,6 +160,12 @@ describe('getCategoryMeta()', () => {
     const meta = getCategoryMeta('genai')
     expect(meta).toBeDefined()
     expect(meta?.label).toBe('GenAI Engineering')
+  })
+
+  it('returns claude-code meta', () => {
+    const meta = getCategoryMeta('claude-code')
+    expect(meta).toBeDefined()
+    expect(meta?.label).toBe('Claude Code')
   })
 })
 
@@ -173,8 +195,8 @@ describe('getRelatedPosts()', () => {
 
   it('returns fewer posts if category has less than limit', () => {
     const genaiPost = posts.find((p) => p.slug === 'genai-phases-1-3')!
-    // Only 3 genai posts, so related for one = at most 2
+    // Only 2 genai posts, so related for one = at most 1
     const related = getRelatedPosts(genaiPost, 3)
-    expect(related.length).toBe(2)
+    expect(related.length).toBe(1)
   })
 })

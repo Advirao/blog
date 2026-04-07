@@ -16,6 +16,13 @@ export const CATEGORIES: CategoryMeta[] = [
     icon: '🤖',
     accentColor: 'blue',
   },
+  {
+    slug: 'claude-code',
+    label: 'Claude Code',
+    description: 'Master Claude Code — the agentic CLI that writes, edits, and tests code autonomously. Covers the agentic loop, tools, hooks, skills, CLAUDE.md, and CI/CD integration.',
+    icon: '🖥️',
+    accentColor: 'purple',
+  },
 ]
 
 // ─── Post Registry ─────────────────────────────────────────────────────────────
@@ -93,7 +100,7 @@ export const posts: Post[] = [
   // ── GenAI Engineering ────────────────────────────────────────────────────────
   {
     slug: 'claude-code-interactive-simulator',
-    category: 'genai',
+    category: 'claude-code',
     title: 'Claude Code Interactive Simulator',
     subtitle: 'Full walkthrough of Claude Code features',
     description:

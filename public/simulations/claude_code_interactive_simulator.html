@@ -481,6 +481,29 @@
   .nav-bottom-btn.primary { background: var(--accent); color: #FFFFFF; border-color: var(--accent); }
   .nav-bottom-btn.primary:hover { background: #7060b8; }
 
+  /* --- ELI10 --- */
+  .eli10-wrap { max-width: 680px; }
+  .eli10-header { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem; }
+  .eli10-icon { font-size: 2.5rem; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: rgba(94,79,160,0.08); border: 1px solid rgba(94,79,160,0.2); border-radius: 14px; flex-shrink: 0; }
+
+  /* --- RESOURCE VAULT --- */
+  .resource-vault { max-width: 680px; }
+  .resource-section-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--ink2); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.6rem; }
+  .resource-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .resource-item {
+    display: flex; align-items: center; gap: 0.9rem;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 0.85rem 1rem;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .resource-item:hover { border-color: var(--accent); background: rgba(94,79,160,0.06); }
+  .resource-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .resource-text { flex: 1; min-width: 0; }
+  .resource-title { font-family: 'IBM Plex Sans', sans-serif; font-size: 0.85rem; font-weight: 500; color: var(--ink); margin-bottom: 0.15rem; }
+  .resource-url { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--ink2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .resource-arrow { font-size: 0.85rem; color: var(--accent); flex-shrink: 0; opacity: 0.6; }
+  .resource-item:hover .resource-arrow { opacity: 1; }
+
   /* Responsive */
   @media (max-width: 768px) {
     .sidebar { display: none; }
@@ -498,8 +521,8 @@
 <header>
   <div class="header-inner">
     <div>
-      <div class="logo">Claude Code <span>// Interactive Simulator</span></div>
-      <div class="subtitle">Complete Learning Guide — Advi Edition</div>
+      <div class="logo">Claude Code <span>// Learning</span></div>
+      <div class="subtitle">Complete Learning Guide</div>
     </div>
     <div class="header-right">
       <span class="badge badge-blue">11 Concepts</span>
@@ -593,13 +616,13 @@ const concepts = [
     ],
     simType: 'agentic-loop',
     analogy: {
-      worldA: { label: 'Classic Pattern', title: 'Process Chain (RSPC)', desc: 'In SAP BW, a Process Chain runs steps in sequence. Each step triggers the next. If one fails, error handling kicks in. The chain doesn\'t need you to manually trigger each step.' },
+      worldA: { label: 'Universal Pattern', title: 'Baking a Cake', desc: 'When you bake a cake, you follow steps in order: mix ingredients → pour into tin → bake → check if done → cool → frost. Each step feeds into the next. If the oven breaks, you fix the oven before proceeding — you don\'t skip straight to frosting.' },
       worldB: { label: 'Claude Code', title: 'Agentic Loop', desc: 'The loop runs THINK → ACT → OBSERVE → DECIDE continuously. Each iteration\'s result feeds the next. Error in OBSERVE → new THINK to plan recovery.' },
       pairs: [
-        { left: 'Process Chain step', right: 'One loop iteration' },
-        { left: 'Step triggers next step', right: 'DECIDE triggers next loop' },
-        { left: 'Error handling variant', right: 'Error in OBSERVE → new THINK' },
-        { left: 'Chain completion event', right: 'DECIDE = "I\'m done"' }
+        { left: 'One baking step', right: 'One loop iteration' },
+        { left: 'Check if baked through', right: 'OBSERVE phase' },
+        { left: '"Is it done yet?"', right: 'DECIDE phase' },
+        { left: 'Oven failure → retry', right: 'Error in OBSERVE → new THINK' }
       ]
     },
     examples: [
@@ -635,13 +658,13 @@ const concepts = [
     ],
     simType: 'sdk',
     analogy: {
-      worldA: { label: 'Classic Pattern', title: 'SAP BAPIs', desc: 'BAPIs (Business APIs) are standardized function modules you call to interact with SAP\'s engine. You don\'t rewrite SAP internals — you call the BAPI and it handles everything.' },
-      worldB: { label: 'Claude Code', title: 'Anthropic SDK', desc: 'The SDK is your BAPI to Claude\'s AI engine. You don\'t write the AI — you call the SDK\'s pre-built functions and it handles the communication.' },
+      worldA: { label: 'Universal Pattern', title: 'TV Remote Control', desc: 'You don\'t need to understand the TV\'s internal circuitry to change channels. The remote is your interface — press a button (call a function), the TV responds (you get output). The remote handles all the signal encoding for you.' },
+      worldB: { label: 'Claude Code', title: 'Anthropic SDK', desc: 'The SDK is your remote control for Claude\'s AI engine. You don\'t write the AI — you call the SDK\'s pre-built functions and it handles all the communication underneath.' },
       pairs: [
-        { left: 'BAPI_MATERIAL_GETLIST', right: 'client.messages.create()' },
-        { left: 'SAP RFC destination', right: 'ANTHROPIC_API_KEY' },
-        { left: 'Import statement in ABAP', right: 'import anthropic' },
-        { left: 'BAPI return table', right: 'response.content[0].text' }
+        { left: 'Pressing a button on remote', right: 'client.messages.create()' },
+        { left: 'Your TV\'s pairing code', right: 'ANTHROPIC_API_KEY' },
+        { left: 'Picking up the remote', right: 'import anthropic' },
+        { left: 'What appears on screen', right: 'response.content[0].text' }
       ]
     },
     examples: [
@@ -676,13 +699,13 @@ const concepts = [
     ],
     simType: 'tools',
     analogy: {
-      worldA: { label: 'Classic Pattern', title: 'Transaction Codes', desc: 'In SAP, SE38 runs ABAP, SE16 reads table data, SU01 manages users, ST05 traces performance. Each T-code does one specific thing — you pick the right one for the job.' },
-      worldB: { label: 'Claude Code', title: 'Agent Tools', desc: 'Read File, Write File, Bash, Search, Web Search — each does one specific thing. Claude picks the right tool automatically, like a developer switching T-codes.' },
+      worldA: { label: 'Universal Pattern', title: 'Craftsperson\'s Toolbox', desc: 'A carpenter\'s toolbox holds a hammer, saw, screwdriver, and measuring tape. Each does exactly one job — a hammer drives nails, it doesn\'t cut wood. The craftsperson automatically reaches for the right tool without thinking about it.' },
+      worldB: { label: 'Claude Code', title: 'Agent Tools', desc: 'Read File, Write File, Bash, Search, Web Search — each does one specific thing. Claude picks the right tool automatically, like a craftsperson reaching for the right tool.' },
       pairs: [
-        { left: 'SE38 (run ABAP)', right: 'Bash tool' },
-        { left: 'SE16 (browse table)', right: 'Read File tool' },
-        { left: 'SE80 (create object)', right: 'Write File tool' },
-        { left: 'SICF (web search)', right: 'Web Search tool' }
+        { left: 'Hammer (drive nails)', right: 'Bash tool' },
+        { left: 'Measuring tape', right: 'Read File tool' },
+        { left: 'Saw (create new cuts)', right: 'Write File tool' },
+        { left: 'Blueprint lookup', right: 'Web Search tool' }
       ]
     },
     examples: [
@@ -718,13 +741,13 @@ const concepts = [
     ],
     simType: 'hooks',
     analogy: {
-      worldA: { label: 'Classic Pattern', title: 'Authorization Checks', desc: 'SAP authorization objects check whether a user is allowed to execute a transaction or action before it runs. The system asks "does this user have S_TCODE with value SE16?" before opening table browser.' },
-      worldB: { label: 'Claude Code', title: 'PreToolUse Hooks', desc: 'Before Claude runs rm -rf, a PreToolUse hook checks: "is this a dangerous delete?" If yes, exit 1 blocks it. Just like an auth check blocks an unauthorized T-code.' },
+      worldA: { label: 'Universal Pattern', title: 'Airport Security Checkpoint', desc: 'Before any passenger boards a flight, security scans every bag. If something prohibited is found, the passenger is stopped right there — they don\'t board until the issue is resolved. The check runs for every person, every single time.' },
+      worldB: { label: 'Claude Code', title: 'PreToolUse Hooks', desc: 'Before Claude runs rm -rf, a PreToolUse hook checks: "is this a dangerous delete?" If yes, exit 1 blocks it. Just like security stops a passenger with a prohibited item.' },
       pairs: [
-        { left: 'Auth check before T-code', right: 'PreToolUse hook before Bash' },
-        { left: 'Authorization object', right: 'Hook matcher pattern' },
-        { left: 'Auth failure = no access', right: 'Exit 1 = action blocked' },
-        { left: 'Audit log', right: 'PostToolUse logging hook' }
+        { left: 'Bag scan before boarding', right: 'PreToolUse hook before Bash' },
+        { left: 'Prohibited items list', right: 'Hook matcher pattern' },
+        { left: 'Item found = no boarding', right: 'Exit 1 = action blocked' },
+        { left: 'Post-flight customs check', right: 'PostToolUse logging hook' }
       ]
     },
     examples: [
@@ -800,13 +823,13 @@ const concepts = [
     ],
     simType: 'claude-md',
     analogy: {
-      worldA: { label: 'Classic Pattern', title: 'System Documentation', desc: 'In SAP, system documentation (SM30 table entries, IMG config guides, project wikis) tells consultants: how this particular installation works, what the custom rules are, what standard configurations were changed.' },
+      worldA: { label: 'Universal Pattern', title: 'Employee Onboarding Guide', desc: 'When a new hire joins a company, HR gives them an onboarding handbook: office hours, team norms, how to submit expenses, who to call for IT. Without it, everyone would have to discover everything by trial and error — wasting time on the same questions.' },
       worldB: { label: 'Claude Code', title: 'CLAUDE.md', desc: 'CLAUDE.md tells Claude: how this particular project works, what the team conventions are, what standard patterns were customized. It\'s the source of truth for this specific project.' },
       pairs: [
-        { left: 'Project wiki page', right: 'CLAUDE.md (root)' },
-        { left: 'Module-specific guide', right: 'CLAUDE.md (subfolder)' },
-        { left: 'Personal notes file', right: '~/.claude/CLAUDE.md' },
-        { left: 'Transport documentation', right: 'Git-committed CLAUDE.md' }
+        { left: 'Company handbook', right: 'CLAUDE.md (root)' },
+        { left: 'Department-specific guide', right: 'CLAUDE.md (subfolder)' },
+        { left: 'Personal notes', right: '~/.claude/CLAUDE.md' },
+        { left: 'Shared handbook in Drive', right: 'Git-committed CLAUDE.md' }
       ]
     },
     examples: [
@@ -840,13 +863,13 @@ const concepts = [
     ],
     simType: 'folder-structure',
     analogy: {
-      worldA: { label: 'Classic Pattern', title: 'System Config (RZ10)', desc: 'SAP profile parameters (RZ10) control system behavior: buffer sizes, login rules, RFC timeouts. The DEFAULT profile applies everywhere; instance profiles apply to specific app servers.' },
-      worldB: { label: 'Claude Code', title: '.claude/ Folder', desc: '~/.claude/ = DEFAULT profile (global). .claude/ = instance profile (project-level). settings.local.json = personal overrides. Same layering pattern, same override logic.' },
+      worldA: { label: 'Universal Pattern', title: 'Phone Settings Layers', desc: 'Your phone has three tiers of settings: OS-wide defaults (affect every app) → per-app preferences (affect just that app) → your personal profile (affect only your account). Each layer overrides the one above it.' },
+      worldB: { label: 'Claude Code', title: '.claude/ Folder', desc: '~/.claude/ = global settings (all projects). .claude/ = project-level settings. settings.local.json = personal overrides (gitignored). Same layering — most specific setting wins.' },
       pairs: [
-        { left: 'DEFAULT profile (RZ10)', right: '~/.claude/settings.json' },
-        { left: 'Instance profile', right: '.claude/settings.json' },
-        { left: 'Personal ABAP variants', right: '.claude/settings.local.json' },
-        { left: 'Custom transactions', right: '.claude/commands/*.md' }
+        { left: 'OS global defaults', right: '~/.claude/settings.json' },
+        { left: 'Per-app preferences', right: '.claude/settings.json' },
+        { left: 'Your personal profile', right: '.claude/settings.local.json' },
+        { left: 'Custom app shortcuts', right: '.claude/commands/*.md' }
       ]
     },
     examples: [
@@ -881,13 +904,13 @@ const concepts = [
     ],
     simType: 'file-tree',
     analogy: {
-      worldA: { label: 'Classic Pattern', title: 'InfoArea Hierarchy', desc: 'In SAP BW, the InfoArea hierarchy organizes InfoObjects, DSOs, InfoCubes into logical namespaces. Finance objects live under Finance InfoArea. HR objects under HR. Structure mirrors the business domain.' },
-      worldB: { label: 'Claude Code', title: 'Folder Structure', desc: 'backend/ organizes by technical layer (models, routes, services). Just like BW organizes by business domain. Each folder is a namespace with a clear purpose.' },
+      worldA: { label: 'Universal Pattern', title: 'Library Card Catalog', desc: 'A library organizes books into sections: Fiction → by author, Science → by subject, Reference → by type. Each section has sub-sections. You don\'t dump all books in one pile — logical grouping makes finding anything fast.' },
+      worldB: { label: 'Claude Code', title: 'Folder Structure', desc: 'backend/ organizes by technical layer (models, routes, services). Just like a library organizes by genre. Each folder is a clear namespace — you always know where to look.' },
       pairs: [
-        { left: 'InfoArea → InfoObjects', right: 'backend/ → models/' },
-        { left: 'InfoArea → DSOs', right: 'backend/ → routes/' },
-        { left: 'Transport objects', right: '.github/workflows/' },
-        { left: 'Test InfoProvider', right: 'tests/' }
+        { left: 'Library section (Fiction)', right: 'backend/ → models/' },
+        { left: 'Sub-shelf (by author)', right: 'backend/ → routes/' },
+        { left: 'Reference catalog', right: '.github/workflows/' },
+        { left: 'Study room', right: 'tests/' }
       ]
     },
     examples: [
@@ -921,13 +944,13 @@ const concepts = [
     ],
     simType: 'git',
     analogy: {
-      worldA: { label: 'Classic Pattern', title: 'Transport System', desc: 'SAP\'s transport system (STMS) moves changes between DEV → QA → PROD. Each transport is a tracked package of changes. You can compare transports, see what changed, and roll back if needed.' },
-      worldB: { label: 'Claude Code', title: 'Git + GitHub', desc: 'Git commits move code from dev machine → GitHub → production. Each commit is a tracked package of changes. You can diff, revert, and branch. Same lifecycle, different tech.' },
+      worldA: { label: 'Universal Pattern', title: 'Video Game Save System', desc: 'A good video game lets you save at any point. Each save captures the full state. If you make a mistake, you reload an earlier save. You can have multiple save files to try different paths — nothing is irreversible.' },
+      worldB: { label: 'Claude Code', title: 'Git + GitHub', desc: 'Git commits are saves for your code. Each commit captures the full project state. Broke something? Revert to any earlier commit. Try a risky change on a branch — like a new save file.' },
       pairs: [
-        { left: 'Transport request', right: 'Git commit' },
-        { left: 'DEV system', right: 'Feature branch' },
-        { left: 'STMS import queue', right: 'Pull Request queue' },
-        { left: 'PROD import', right: 'Merge to main' }
+        { left: 'Press Save', right: 'git commit' },
+        { left: 'View save history', right: 'git log' },
+        { left: 'Create new save file', right: 'Feature branch' },
+        { left: 'Load earlier save', right: 'git revert / git checkout' }
       ]
     },
     examples: [
@@ -962,13 +985,13 @@ const concepts = [
     ],
     simType: 'cicd',
     analogy: {
-      worldA: { label: 'Classic Pattern', title: 'Automated Process Chains', desc: 'In SAP BW, Process Chains run automatically on a schedule: extract → transform → load → validate. Each step checks for errors. If a load fails, the chain stops and alerts you. No manual babysitting.' },
+      worldA: { label: 'Universal Pattern', title: 'Car Assembly Line', desc: 'A car factory has an automated assembly line: weld frame → install engine → run electrical → paint → quality inspection. Each station checks for problems. If a weld fails inspection, the whole line stops — no car ships with a known defect.' },
       worldB: { label: 'Claude Code', title: 'CI/CD Pipeline', desc: 'On every git push: checkout → install → lint → test → report. Each step checks for problems. If tests fail, the pipeline stops and alerts you. No manual babysitting.' },
       pairs: [
-        { left: 'Process chain event trigger', right: 'on: push (GitHub trigger)' },
-        { left: 'Extract step', right: 'Checkout code step' },
-        { left: 'Validation DTP', right: 'pytest / flake8 step' },
-        { left: 'Chain error alert', right: 'PR red X notification' }
+        { left: 'Assembly line starts', right: 'on: push (GitHub trigger)' },
+        { left: 'Station quality check', right: 'pytest / flake8 step' },
+        { left: 'Inspector rejects car', right: 'PR red X notification' },
+        { left: 'Final clearance = ships', right: 'All checks pass = merge allowed' }
       ]
     },
     examples: [
@@ -1022,12 +1045,16 @@ function showConcept(idx) {
       <button class="tab-btn" onclick="switchTab(this,'sim')"><span class="tab-icon">🎮</span>Simulator</button>
       <button class="tab-btn" onclick="switchTab(this,'analogy')"><span class="tab-icon">🔗</span>Analogy</button>
       <button class="tab-btn" onclick="switchTab(this,'examples')"><span class="tab-icon">📝</span>Examples</button>
+      <button class="tab-btn" onclick="switchTab(this,'eli10')"><span class="tab-icon">🧒</span>ELI10</button>
+      <button class="tab-btn" onclick="switchTab(this,'resources')"><span class="tab-icon">📚</span>Resources</button>
     </div>
     <div id="tab-what" class="tab-panel active">${renderWhat(c)}</div>
     <div id="tab-read" class="tab-panel">${renderRead(c)}</div>
     <div id="tab-sim" class="tab-panel">${renderSim(c)}</div>
     <div id="tab-analogy" class="tab-panel">${renderAnalogy(c)}</div>
     <div id="tab-examples" class="tab-panel">${renderExamples(c)}</div>
+    <div id="tab-eli10" class="tab-panel">${renderELI10(c)}</div>
+    <div id="tab-resources" class="tab-panel">${renderResources(c)}</div>
     <div class="nav-bottom">
       ${idx > 0 ? `<button class="nav-bottom-btn" onclick="showConcept(${idx-1})">← Previous</button>` : '<span></span>'}
       ${idx < concepts.length-1 ? `<button class="nav-bottom-btn primary" onclick="showConcept(${idx+1})">Next →</button>` : '<button class="nav-bottom-btn primary" onclick="showConcept(0)">🎉 Start Over</button>'}
@@ -1111,6 +1138,112 @@ function renderExamples(c) {
 
 function toggleExample(id) {
   document.getElementById(id).classList.toggle('open');
+}
+
+// --- OPEN EXTERNAL LINK (postMessage bridge for iframe context) ---
+function openLink(url) {
+  try { window.parent.postMessage({ type: 'open-url', url }, '*'); } catch(e) {}
+  window.open(url, '_blank', 'noopener');
+}
+
+// --- RENDER ELI10 (Explain Like I'm 10) ---
+const eli10Data = {
+  agent:        { simple: 'Imagine you have a super-smart robot friend. You just say what you want — "build me a LEGO castle" — and it figures out all the steps by itself: which bricks to pick, how to stack them, how to fix mistakes. You don\'t tell it every single step!', analogy: 'Like giving a chore list to a really capable younger sibling. You say "clean your room" — they decide to start with the floor, then the desk, then make the bed. You don\'t need to supervise every move.' },
+  loop:         { simple: 'It\'s like solving a jigsaw puzzle. You LOOK at the puzzle (Think), TRY to fit a piece (Act), CHECK if it fits (Observe), and decide "am I done or do I need to try more pieces?" (Decide). You keep going until the whole puzzle is finished!', analogy: 'Like writing a test at school: read the question → write your answer → check if it makes sense → decide if you\'re done. Repeat for each question.' },
+  sdk:          { simple: 'The SDK is like a TV remote. The TV (Claude) is really complicated inside, but the remote makes it simple. Press a button = ask Claude something. See the screen change = Claude answers. You don\'t need to know how the TV works — just use the remote!', analogy: 'Or like a light switch. You don\'t need to understand wiring to turn on a light. Flip the switch (call the function), the light turns on (you get a response).' },
+  tools:        { simple: 'Claude has a toolbox like a craftsperson. When it needs to look inside a file, it uses the "Read" tool (like a flashlight). When it needs to write new code, it uses the "Write" tool (like a pen). It always picks the right tool automatically — no guessing!', analogy: 'Like a chef\'s kitchen — there\'s a knife for cutting, a whisk for mixing, a pot for boiling. The chef doesn\'t use a knife to boil water. Each tool does one job perfectly.' },
+  hooks:        { simple: 'Hooks are like a hall monitor at school. Before anyone does something big (like leaving class), the hall monitor checks: "Is this allowed?" If yes, they go. If no, they\'re stopped right there. YOU decide what the hall monitor checks for!', analogy: 'Like a parent checking your homework before you go to play. Before the action happens, there\'s a checkpoint. Pass the check → proceed. Fail the check → blocked.' },
+  skills:       { simple: 'Skills are like teaching your robot a new trick. You write a file that explains something once — "here\'s how our project works." After that, Claude knows the trick forever. You only teach it once, and every session benefits!', analogy: 'Like a recipe card in a cookbook. Write the recipe once → any cook can follow it perfectly, every time. The card is the "skill." The cook is Claude.' },
+  'claude-md':  { simple: 'CLAUDE.md is like a "Welcome to my project!" letter you leave for Claude. Before it starts helping, it reads your letter: "Here\'s what we\'re building, here\'s how things work, here are the rules." Every session, it reads the letter again so it never forgets.', analogy: 'Like a sticky note on the fridge for a babysitter: "Kids\' bedtime is 8pm. Dinner is in the microwave. No TV after 7." Quick, clear instructions that make every visit go smoothly.' },
+  'claude-folder': { simple: 'Think of it like settings in a video game. Global settings apply to all your games (character speed, sound volume). Game-specific settings apply to just this game. Your personal settings are just for your profile. Each level adds more specific rules on top!', analogy: 'Like a matryoshka (nesting) doll. The outermost doll = global settings. Middle doll = project settings. Innermost doll = your personal settings. The smallest, most specific one always wins.' },
+  'file-tree':  { simple: 'Imagine your room has shelves and drawers. Clothes in the wardrobe, toys on the shelf, books in the bookcase. Code is the same — models in the models folder, routes in routes, tests in tests. Everything has its own place so you can find it instantly!', analogy: 'Like a backpack with pockets. Pencils in the front pocket, books in the main compartment, snacks in the side. You always know where to look. No digging through everything.' },
+  git:          { simple: 'Git is like a magic SAVE button for code — but way better! Every save (commit) remembers everything. If you break something, you can travel back to any earlier save. You can also make a "practice save" (branch) to try risky things without messing up the main game!', analogy: 'Like "undo" in a document editor, but permanent and shared with your whole team. Every change is tracked. You can undo anything, see who changed what, and even undo the undo!' },
+  cicd:         { simple: 'Imagine a robot quality inspector at a toy factory. After every toy is made, the robot checks: does it work? Is it safe? Is the color right? Only toys that pass ALL checks get shipped to stores. CI/CD is that robot for code — it checks automatically before anything goes live!', analogy: 'Like a spell-checker that runs automatically every time you send an email. Before the email sends, it scans for mistakes. If it finds errors, it stops and shows you before anything goes out.' }
+};
+
+function renderELI10(c) {
+  const d = eli10Data[c.id];
+  if (!d) return '<div class="info-card"><div class="info-card-content">No ELI10 explanation yet for this concept.</div></div>';
+  return `
+    <div class="eli10-wrap">
+      <div class="eli10-header">
+        <div class="eli10-icon">🧒</div>
+        <div>
+          <div class="info-card-label">Explain Like I'm 10 Years Old</div>
+          <div class="concept-title" style="font-size:1.4rem;">${c.title}</div>
+        </div>
+      </div>
+      <div class="info-card" style="margin-bottom:1rem;">
+        <div class="info-card-label">Simple Explanation</div>
+        <div class="info-card-content" style="font-size:0.95rem;line-height:1.8;">${d.simple}</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">Real-World Analogy</div>
+        <div class="info-card-content" style="font-size:0.95rem;line-height:1.8;">${d.analogy}</div>
+      </div>
+    </div>`;
+}
+
+// --- RENDER RESOURCES ---
+const resourceData = {
+  agent:        { docs: [{ title: 'Claude Code Overview', url: 'https://docs.anthropic.com/en/docs/claude-code/overview' }, { title: 'Agentic Concepts', url: 'https://docs.anthropic.com/en/docs/build-with-claude/agentic-loop' }], videos: [{ title: 'Anthropic YouTube Channel — Claude Code demos', url: 'https://www.youtube.com/@anthropic-ai' }] },
+  loop:         { docs: [{ title: 'Agentic Loop Docs', url: 'https://docs.anthropic.com/en/docs/build-with-claude/agentic-loop' }, { title: 'Claude Code Overview', url: 'https://docs.anthropic.com/en/docs/claude-code/overview' }], videos: [{ title: 'Anthropic YouTube — Agent walkthroughs', url: 'https://www.youtube.com/@anthropic-ai' }] },
+  sdk:          { docs: [{ title: 'Python SDK Reference', url: 'https://docs.anthropic.com/en/api/getting-started' }, { title: 'Anthropic SDK on PyPI', url: 'https://pypi.org/project/anthropic/' }, { title: 'Node.js SDK on npm', url: 'https://www.npmjs.com/package/@anthropic-ai/sdk' }], videos: [{ title: 'Anthropic YouTube — API tutorials', url: 'https://www.youtube.com/@anthropic-ai' }] },
+  tools:        { docs: [{ title: 'Tool Use Documentation', url: 'https://docs.anthropic.com/en/docs/build-with-claude/tool-use/overview' }, { title: 'Claude Code Tools Reference', url: 'https://docs.anthropic.com/en/docs/claude-code/overview' }], videos: [{ title: 'Anthropic YouTube — Tool use demos', url: 'https://www.youtube.com/@anthropic-ai' }] },
+  hooks:        { docs: [{ title: 'Hooks Documentation', url: 'https://docs.anthropic.com/en/docs/claude-code/hooks' }, { title: 'Claude Code Settings', url: 'https://docs.anthropic.com/en/docs/claude-code/settings' }], videos: [{ title: 'Anthropic YouTube — Hooks and safety', url: 'https://www.youtube.com/@anthropic-ai' }] },
+  skills:       { docs: [{ title: 'Claude Code Skills / Commands', url: 'https://docs.anthropic.com/en/docs/claude-code/slash-commands' }, { title: 'Memory & Context', url: 'https://docs.anthropic.com/en/docs/claude-code/memory' }], videos: [{ title: 'Anthropic YouTube — Customizing Claude Code', url: 'https://www.youtube.com/@anthropic-ai' }] },
+  'claude-md':  { docs: [{ title: 'CLAUDE.md Reference', url: 'https://docs.anthropic.com/en/docs/claude-code/memory' }, { title: 'Project Configuration', url: 'https://docs.anthropic.com/en/docs/claude-code/settings' }], videos: [{ title: 'Anthropic YouTube — CLAUDE.md deep dive', url: 'https://www.youtube.com/@anthropic-ai' }] },
+  'claude-folder': { docs: [{ title: 'Claude Code Settings Docs', url: 'https://docs.anthropic.com/en/docs/claude-code/settings' }, { title: 'Custom Commands', url: 'https://docs.anthropic.com/en/docs/claude-code/slash-commands' }], videos: [{ title: 'Anthropic YouTube — Configuration guide', url: 'https://www.youtube.com/@anthropic-ai' }] },
+  'file-tree':  { docs: [{ title: 'Claude Code Project Setup', url: 'https://docs.anthropic.com/en/docs/claude-code/overview' }, { title: 'Best Practices', url: 'https://docs.anthropic.com/en/docs/claude-code/best-practices' }], videos: [{ title: 'Anthropic YouTube — Project structure tips', url: 'https://www.youtube.com/@anthropic-ai' }] },
+  git:          { docs: [{ title: 'Claude Code & Git Workflows', url: 'https://docs.anthropic.com/en/docs/claude-code/overview' }, { title: 'GitHub Actions Integration', url: 'https://docs.github.com/en/actions' }], videos: [{ title: 'Anthropic YouTube — Git with Claude Code', url: 'https://www.youtube.com/@anthropic-ai' }] },
+  cicd:         { docs: [{ title: 'Claude Code in CI/CD', url: 'https://docs.anthropic.com/en/docs/claude-code/overview' }, { title: 'GitHub Actions Docs', url: 'https://docs.github.com/en/actions/writing-workflows' }], videos: [{ title: 'Anthropic YouTube — Automation demos', url: 'https://www.youtube.com/@anthropic-ai' }] }
+};
+
+const sharedResources = [
+  { title: 'Claude Code — Official Page', url: 'https://claude.ai/code', type: 'official' },
+  { title: 'Anthropic Documentation Hub', url: 'https://docs.anthropic.com', type: 'docs' },
+  { title: 'Claude Code on GitHub (MCP + SDK)', url: 'https://github.com/anthropics', type: 'github' },
+  { title: 'Anthropic YouTube Channel', url: 'https://www.youtube.com/@anthropic-ai', type: 'video' }
+];
+
+function renderResources(c) {
+  const d = resourceData[c.id] || { docs: [], videos: [] };
+  const allDocs = d.docs.map(r => `
+    <div class="resource-item" onclick="openLink('${r.url}')">
+      <span class="resource-icon">📄</span>
+      <div class="resource-text">
+        <div class="resource-title">${r.title}</div>
+        <div class="resource-url">${r.url}</div>
+      </div>
+      <span class="resource-arrow">↗</span>
+    </div>`).join('');
+  const allVids = d.videos.map(r => `
+    <div class="resource-item" onclick="openLink('${r.url}')">
+      <span class="resource-icon">▶️</span>
+      <div class="resource-text">
+        <div class="resource-title">${r.title}</div>
+        <div class="resource-url">${r.url}</div>
+      </div>
+      <span class="resource-arrow">↗</span>
+    </div>`).join('');
+  const shared = sharedResources.map(r => `
+    <div class="resource-item" onclick="openLink('${r.url}')">
+      <span class="resource-icon">${r.type === 'video' ? '▶️' : r.type === 'github' ? '💻' : r.type === 'official' ? '🌐' : '📄'}</span>
+      <div class="resource-text">
+        <div class="resource-title">${r.title}</div>
+        <div class="resource-url">${r.url}</div>
+      </div>
+      <span class="resource-arrow">↗</span>
+    </div>`).join('');
+  return `
+    <div class="resource-vault">
+      <div class="resource-section-label">Documentation — ${c.title}</div>
+      <div class="resource-list">${allDocs}</div>
+      <div class="resource-section-label" style="margin-top:1.25rem;">Videos & Demos</div>
+      <div class="resource-list">${allVids}</div>
+      <div class="resource-section-label" style="margin-top:1.25rem;">General Claude Code Resources</div>
+      <div class="resource-list">${shared}</div>
+    </div>`;
 }
 
 // --- SIMULATORS ---

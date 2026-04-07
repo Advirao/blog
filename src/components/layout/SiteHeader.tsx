@@ -5,16 +5,17 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 const navItems = [
-  { href: '/',             label: 'All Topics' },
-  { href: '/oil-trading',  label: 'Oil Trading' },
-  { href: '/genai',        label: 'GenAI' },
+  { href: '/',              label: 'All Topics' },
+  { href: '/oil-trading',   label: 'Oil Trading' },
+  { href: '/genai',         label: 'GenAI' },
+  { href: '/claude-code',   label: 'Claude Code' },
 ]
 
 export function SiteHeader() {
   const pathname = usePathname()
 
   const isSimulatorPage =
-    pathname.includes('/oil-trading/') || pathname.includes('/genai/')
+    pathname.includes('/oil-trading/') || pathname.includes('/genai/') || pathname.includes('/claude-code/')
 
   return (
     <header
@@ -65,7 +66,7 @@ export function SiteHeader() {
         {/* Right side: module count */}
         <div className="hidden md:flex items-center gap-2">
           <span className="pill bg-surface2 text-ink2 border border-border text-[10px]">
-            6 Modules
+            7 Modules
           </span>
         </div>
       </div>

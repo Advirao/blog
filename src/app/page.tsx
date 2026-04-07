@@ -13,6 +13,7 @@ const postCounts = {
   all: allPosts.length,
   'oil-trading': allPosts.filter((p) => p.category === 'oil-trading').length,
   genai: allPosts.filter((p) => p.category === 'genai').length,
+  'claude-code': allPosts.filter((p) => p.category === 'claude-code').length,
 }
 
 export default function HomePage() {
@@ -43,7 +44,7 @@ export default function HomePage() {
           {[
             { label: 'Interactive Modules', value: `${allPosts.length}` },
             { label: 'Live Simulators',     value: '20+' },
-            { label: 'Topics Covered',      value: '2' },
+            { label: 'Topics Covered',      value: '3' },
           ].map((s) => (
             <div key={s.label} className="text-center">
               <div className="font-bebas text-4xl text-accent tracking-wide leading-none">
@@ -58,7 +59,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Category spotlights ───────────────────────────────────────────── */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-14">
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-14">
         {/* Oil Trading */}
         <Link
           href="/oil-trading"
@@ -100,6 +101,28 @@ export default function HomePage() {
           </div>
           <span className="absolute right-8 top-1/2 -translate-y-1/2 text-6xl opacity-25 select-none">
             🤖
+          </span>
+        </Link>
+
+        {/* Claude Code */}
+        <Link
+          href="/claude-code"
+          className="group relative overflow-hidden rounded-2xl p-8 flex items-end min-h-[160px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
+          style={{ background: '#E0DFF0' }}
+        >
+          <div className="relative z-10">
+            <div className="font-mono text-[10px] tracking-widest uppercase text-purple/80 mb-2">
+              Category
+            </div>
+            <h2 className="font-bebas text-3xl text-ink tracking-wide leading-tight">
+              Claude Code
+            </h2>
+            <p className="text-sm text-ink2 mt-1 leading-snug max-w-xs">
+              Agentic loop, tools, hooks, skills & CI/CD with Claude
+            </p>
+          </div>
+          <span className="absolute right-8 top-1/2 -translate-y-1/2 text-6xl opacity-25 select-none">
+            🖥️
           </span>
         </Link>
       </section>
