@@ -504,6 +504,24 @@
   .resource-arrow { font-size: 0.85rem; color: var(--accent); flex-shrink: 0; opacity: 0.6; }
   .resource-item:hover .resource-arrow { opacity: 1; }
 
+  /* --- DARK THEME --- */
+  html.dark {
+    --bg:       #16151C;
+    --surface:  #201F29;
+    --surface2: #1A1924;
+    --border:   #2E2D3C;
+    --ink:      #E8E3DC;
+    --ink2:     #9B9399;
+    --accent:   #7B6BBD;
+    --accent2:  #C48F2A;
+    --accent3:  #3D9A6C;
+    --accent4:  #D44848;
+    --blue:     #4872C4;
+    --text:     #E8E3DC;
+    --text2:    #9B9399;
+    --text3:    #9B9399;
+  }
+
   /* --- MOBILE SIDEBAR TOGGLE --- */
   .sidebar-toggle {
     display: none;
@@ -1257,6 +1275,13 @@ function openLink(url) {
   try { window.parent.postMessage({ type: 'open-url', url }, '*'); } catch(e) {}
   window.open(url, '_blank', 'noopener');
 }
+
+// --- THEME SYNC (receive dark/light from parent page) ---
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'theme') {
+    document.documentElement.classList.toggle('dark', !!e.data.dark);
+  }
+});
 
 // --- RENDER ELI10 (Explain Like I'm 10) ---
 const eli10Data = {

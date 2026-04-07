@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Maximize2, Minimize2, RefreshCw } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -14,10 +14,10 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
 
 export function SimulatorFrame({ src, title, className }: SimulatorFrameProps) {
   const [isFullscreen, setIsFullscreen] = useState(false)
-  const [key, setKey] = useState(0) // increment to reload iframe
+  const [key, setKey] = useState(0)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
 
   // Open URLs posted from inside the iframe (vault links) in the parent window
-  // so they bypass iframe sandbox restrictions entirely
   useEffect(() => {
     function handleMessage(e: MessageEvent) {
       if (e.data?.type === 'open-url' && typeof e.data.url === 'string') {
@@ -28,10 +28,31 @@ export function SimulatorFrame({ src, title, className }: SimulatorFrameProps) {
     return () => window.removeEventListener('message', handleMessage)
   }, [])
 
+  // Forward theme to the iframe — on load and whenever the toggle fires
+  useEffect(() => {
+    const iframe = iframeRef.current
+
+    function sendTheme() {
+      const dark = document.documentElement.classList.contains('dark')
+      iframe?.contentWindow?.postMessage({ type: 'theme', dark }, '*')
+    }
+
+    // Send current theme when iframe finishes loading
+    iframe?.addEventListener('load', sendTheme)
+
+    // Re-send whenever SiteHeader dispatches a theme change
+    window.addEventListener('kb-theme-change', sendTheme)
+
+    return () => {
+      iframe?.removeEventListener('load', sendTheme)
+      window.removeEventListener('kb-theme-change', sendTheme)
+    }
+  }, [key]) // re-register when iframe is reloaded (key increments)
+
   return (
     <div
       className={cn(
-        'flex flex-col rounded-xl border border-border overflow-hidden bg-[#0a0e14]',
+        'flex flex-col rounded-xl border border-border overflow-hidden bg-surface',
         isFullscreen
           ? 'fixed inset-0 z-50 rounded-none border-0'
           : 'relative',
@@ -71,6 +92,7 @@ export function SimulatorFrame({ src, title, className }: SimulatorFrameProps) {
 
       {/* The iframe */}
       <iframe
+        ref={iframeRef}
         key={key}
         src={`${basePath}${src}`}
         title={title}

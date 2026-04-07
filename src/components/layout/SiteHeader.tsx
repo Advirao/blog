@@ -27,6 +27,8 @@ export function SiteHeader() {
     const isDark = document.documentElement.classList.toggle('dark')
     setDark(isDark)
     localStorage.setItem('kb-theme', isDark ? 'dark' : 'light')
+    // Notify SimulatorFrame so it can forward the theme into the iframe
+    window.dispatchEvent(new Event('kb-theme-change'))
   }
 
   const isSimulatorPage =
