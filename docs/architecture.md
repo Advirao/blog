@@ -115,6 +115,8 @@ flowchart LR
 
 **Theme:** Each simulator HTML file carries its own internal `<style>` block with matching CSS variables (`--bg`, `--surface`, `--ink`, etc.) and Google Fonts imports. They cannot inherit the blog's Tailwind CSS. See `docs/design-system.md` for the color reference.
 
+**Responsive height:** The iframe height is CSS-driven via the `.sim-frame` class in `src/app/globals.css` — `85vh` on desktop, `60vh` on screens ≤ 768px. The `SimulatorFrame` component only overrides `minHeight` for fullscreen mode.
+
 ### External links inside simulators (Resource Vault)
 
 GitHub Pages sets `Cross-Origin-Opener-Policy` headers. When a sandboxed iframe opens a new tab, that tab inherits the security context and external sites (YouTube, docs, etc.) respond with `ERR_BLOCKED_BY_RESPONSE`.
@@ -137,6 +139,34 @@ document.querySelectorAll('.vault a').forEach(function(a) {
   });
 });
 ```
+
+---
+
+## Mobile Responsiveness
+
+The site is fully responsive from 375px (small phone) to widescreen desktop.
+
+### Navigation
+`SiteHeader` hides nav links on mobile (`hidden md:flex`) and shows a hamburger `☰` button. Tapping it reveals a full-width dropdown; selecting a link auto-closes it. Implemented with a single `useState` toggle — no external library.
+
+### Layout breakpoints
+| Element | Mobile | Desktop |
+|---|---|---|
+| Nav links | Hidden — hamburger dropdown | Inline row |
+| Simulator iframe | `60vh` min-height | `85vh` min-height |
+| Home stats gap | `gap-6` | `gap-12` |
+| Category spotlight cards | `p-5`, `min-h-[140px]` | `p-8`, `min-h-[160px]` |
+| Difficulty filter buttons | `flex-wrap` | Inline row |
+| Slug page meta: date | Hidden (`hidden sm:flex`) | Visible |
+| Post icon | `text-3xl` | `text-4xl` |
+
+### Simulator HTML (self-contained)
+Each HTML simulator has its own responsive block. For the Claude Code simulator:
+- **Sidebar** becomes a slide-in drawer on mobile (`position: fixed`, toggled by `toggleMobileSidebar()`)
+- **Dark overlay** (`sidebar-overlay`) closes the drawer on tap-outside
+- **Tabs** scroll horizontally (`overflow-x: auto`, `flex-wrap: nowrap`)
+- **Loop phases** shift from a 5-item row to a 2-column grid
+- **Simulator controls** stack vertically
 
 ---
 

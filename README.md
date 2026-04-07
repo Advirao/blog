@@ -46,6 +46,7 @@ Master the agentic CLI — from the core loop to hooks, skills, and CI/CD integr
 ## Features
 
 - **Live simulators** — every module has interactive sliders and real-time calculations
+- **Mobile-friendly** — fully responsive on phones, tablets, and desktops; hamburger nav on mobile, adaptive simulator heights
 - **Download for offline use** — grab any simulator as a standalone HTML file
 - **Fullscreen mode** — expand any simulator to fill your screen
 - **Search & filter** — find modules by topic, difficulty, or keyword

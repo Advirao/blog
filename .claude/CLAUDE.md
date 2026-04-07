@@ -61,6 +61,8 @@ See `docs/design-system.md` for the full plain-language design guide.
 - **Links** — Always use `<Link>` from `next/link` for internal navigation, never plain `<a>`. Plain `<a>` bypasses `basePath` and causes 404s on GitHub Pages.
 - **postMessage bridge** — Simulators with external vault links must use `window.parent.postMessage({ type: 'open-url', url })` to open links from the parent context. See `docs/architecture.md`.
 - **basePath** — Set only in CI via `NEXT_PUBLIC_BASE_PATH=/blog`. Local dev runs at `/`.
+- **Mobile-first** — All new UI must work at 375px. Use responsive padding (`p-4 md:p-8`), `flex-wrap`, and `hidden sm:flex` to hide non-critical elements on small screens. The SiteHeader uses a hamburger menu on mobile. The simulator iframe height is CSS-driven (60vh mobile / 85vh desktop via `.sim-frame` in globals.css).
+- **Simulator HTML mobile** — Any new simulator HTML must include a responsive `@media (max-width: 768px)` block. If it has a sidebar, implement a slide-in drawer pattern with overlay (see claude_code_interactive_simulator.html as reference).
 
 ---
 

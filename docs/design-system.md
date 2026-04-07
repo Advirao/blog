@@ -66,8 +66,10 @@ These are used for the hero banner on each category page and for card background
 |---|---|---|
 | Oil Trading hero banner | Sage green tint | `#DFF0E8` |
 | GenAI hero banner | Lavender tint | `#E0DFF0` |
+| Claude Code hero banner | Lavender tint | `#E0DFF0` |
 | Oil Trading post cards | Very light green | `#F2F8F4` |
 | GenAI post cards | Very light purple | `#F2F2F9` |
+| Claude Code post cards | Very light purple | `#F2F2F9` |
 
 ---
 
@@ -96,7 +98,7 @@ Everything else — text, borders, backgrounds — stays in the warm neutral ran
 
 ## Simulator HTML files
 
-The 6 standalone HTML simulator files (`public/simulations/*.html`) each have their own internal `<style>` block. They cannot inherit the blog's CSS — they are self-contained. They use the **same color palette and fonts** as the main site, defined as CSS custom properties inside each file:
+The 7 standalone HTML simulator files (`public/simulations/*.html`) each have their own internal `<style>` block. They cannot inherit the blog's CSS — they are self-contained. They use the **same color palette and fonts** as the main site, defined as CSS custom properties inside each file:
 
 ```css
 :root {
@@ -125,7 +127,8 @@ Fonts are loaded in each HTML file via a `<link>` to Google Fonts importing Lora
 5. **Subtle borders.** Borders are `#E5DDD5` — visible but not harsh.
 6. **No glow effects.** No `box-shadow` glow, no neon outlines. Hover states lift with a soft shadow, not a color glow.
 7. **No dark grid backgrounds.** The old theme used a dot-grid overlay. This has been removed everywhere.
-8. **Section color follows category.** Green (`#2A6E49`) = Oil Trading. Purple (`#5E4FA0`) = GenAI. Never swap these.
+8. **Section color follows category.** Green (`#2A6E49`) = Oil Trading. Purple (`#5E4FA0`) = GenAI and Claude Code. Never swap these.
+9. **Mobile-first responsive.** All layouts must work at 375px width. Use `flex-wrap`, responsive padding (`p-4 md:p-8`), and hide non-essential elements on mobile with `hidden sm:flex`.
 
 ---
 
@@ -137,5 +140,7 @@ Fonts are loaded in each HTML file via a `<link>` to Google Fonts importing Lora
 | Tailwind color + font + shadow config | `tailwind.config.ts` |
 | Lora font import (Next.js) | `src/app/layout.tsx` |
 | Category card background tints | `src/components/content/PostCard.tsx` |
-| Category hero banner colors | `src/app/oil-trading/page.tsx`, `src/app/genai/page.tsx` |
+| Category hero banner colors | `src/app/oil-trading/page.tsx`, `src/app/genai/page.tsx`, `src/app/claude-code/page.tsx` |
 | Simulator CSS variables | Each `public/simulations/*.html` file (inline `<style>` block) |
+| Mobile nav hamburger | `src/components/layout/SiteHeader.tsx` |
+| Simulator iframe height (responsive) | `src/app/globals.css` (`.sim-frame`) |

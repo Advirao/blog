@@ -128,6 +128,18 @@ Accent by category: Oil Trading → `#2A6E49`, GenAI → `#5E4FA0`, Claude Code 
 - ✅ Code, labels, tags, metadata → `font-family: 'IBM Plex Mono', monospace`
 - ✅ Hover states → use `shadow-card-hover` style lift, not color glow
 
+**Required mobile responsive block (add at the end of `<style>` if missing):**
+Every simulator HTML must have an `@media (max-width: 768px)` block. At minimum:
+```css
+@media (max-width: 768px) {
+  /* Reduce padding */
+  /* Stack any flex rows */
+  /* If there's a sidebar: convert to slide-in drawer (see claude_code_interactive_simulator.html) */
+  /* Make tabs horizontally scrollable if multi-tab layout */
+}
+```
+Use `claude_code_interactive_simulator.html` as the reference implementation for the slide-in sidebar pattern.
+
 **Header cleanup:**
 - Remove any personal edition labels (e.g. "— Advi Edition", "— John Edition", "v2 Personal")
 - If the header says "Interactive Simulator" as a subtype, change it to match the content (e.g. "Learning", "Explorer", "Walkthrough")
