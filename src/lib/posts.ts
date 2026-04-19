@@ -99,6 +99,23 @@ export const posts: Post[] = [
   },
   // ── GenAI Engineering ────────────────────────────────────────────────────────
   {
+    slug: 'model-context-protocol',
+    category: 'genai',
+    title: 'Model Context Protocol — The Universal Language for AI Tools',
+    subtitle: 'Architecture · History · Configuration · Real-World Examples',
+    description:
+      'A deep-dive into Model Context Protocol — the open standard that connects AI models to any tool, database, or service. Covers architecture, JSON-RPC internals, configuration, real-world examples, and CI/CD integration.',
+    tags: ['MCP', 'Model Context Protocol', 'JSON-RPC', 'Tool Use', 'AI Integration', 'Databases', 'CI/CD'],
+    simulationFile: '/simulations/mcp-blog.html',
+    difficulty: 'intermediate',
+    readTime: 60,
+    lastUpdated: '2026-04-18',
+    featured: true,
+    downloadable: true,
+    accentColor: 'purple',
+    icon: '🔌',
+  },
+  {
     slug: 'claude-code-interactive-simulator',
     category: 'claude-code',
     title: 'Claude Code Interactive Simulator',
