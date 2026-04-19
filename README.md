@@ -34,6 +34,7 @@ A complete curriculum from Python basics to building production AI agents.
 | **Phases 1–3** | Python fundamentals → LLM APIs → tokens → prompting → RAG → embeddings |
 | **Phases 4–6** | Tool calling → Model Context Protocol (MCP) → OpenAI Agents SDK → LangGraph |
 | **Model Context Protocol** | MCP architecture, JSON-RPC internals, configuration, real-world examples, and CI/CD integration |
+| **Ollama: Run AI Locally** | Run open-weight LLMs on your own hardware — no cloud, no API keys |
 
 ### 🖥️ Claude Code
 Master the agentic CLI — from the core loop to hooks, skills, and CI/CD integration.
@@ -68,7 +69,7 @@ Master the agentic CLI — from the core loop to hooks, skills, and CI/CD integr
 | Styling | [Tailwind CSS](https://tailwindcss.com) 3 + CSS custom properties — editorial light theme |
 | Fonts | [Lora](https://fonts.google.com/specimen/Lora) serif (headings) + IBM Plex Sans / Mono |
 | Icons | [lucide-react](https://lucide.dev) |
-| Testing | [Jest](https://jestjs.io) 29 + [React Testing Library](https://testing-library.com) 16 — 121 tests |
+| Testing | [Jest](https://jestjs.io) 29 + [React Testing Library](https://testing-library.com) 16 — 124 tests |
 | Package Manager | [pnpm](https://pnpm.io) 10 |
 | Hosting | [GitHub Pages](https://pages.github.com) via GitHub Actions |
 
@@ -104,7 +105,7 @@ pnpm lint           # ESLint
 ### Project structure
 
 ```
-├── public/simulations/       # Self-contained HTML simulator files (8 total)
+├── public/simulations/       # Self-contained HTML simulator files (9 total)
 ├── src/
 │   ├── app/                  # Pages (home, /oil-trading, /genai, /claude-code, + slug pages)
 │   ├── components/           # UI, layout, and content components
@@ -149,7 +150,7 @@ The easiest way is the `/publish` command inside Claude Code — drop your HTML 
 Hosted on **GitHub Pages**. Every push to `main` automatically:
 1. Installs dependencies
 2. Validates simulation files (`pnpm ingest`)
-3. Type-checks and runs all 121 tests
+3. Type-checks and runs all 124 tests
 4. Builds a static export
 5. Deploys to [advirao.github.io/blog](https://advirao.github.io/blog)
 
