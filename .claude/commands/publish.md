@@ -8,7 +8,8 @@ Full end-to-end, zero-interaction publish pipeline. Drop an HTML file in `public
 2. **Design Enforcer** — restyles HTML to match the blog design system
 3. **Content Wirer** — registers the post in `posts.ts`, wires category infrastructure if new
 4. **Test Guardian** — updates test counts, runs the suite, fixes failures
-5. **Deploy Agent** — runs quality gates, commits, and pushes to GitHub Pages
+5. **Docs Sync** — updates README.md and docs/, scans for orphaned/unnecessary files
+6. **Deploy Agent** — runs quality gates, commits, and pushes to GitHub Pages
 
 No user questions. Fully autonomous.
 
@@ -105,11 +106,39 @@ Run pnpm test. Fix any failures. Report TEST_GUARDIAN_RESULT when all tests pass
 
 Wait for `TEST_GUARDIAN_RESULT: DONE` before continuing.
 
-If Test Guardian reports `TEST_GUARDIAN_RESULT: FAILED`, stop and report the failure to the user. Do NOT proceed to Deploy.
+If Test Guardian reports `TEST_GUARDIAN_RESULT: FAILED`, stop and report the failure to the user. Do NOT proceed to Docs Sync or Deploy.
 
 ---
 
-### Phase 5 — Deploy Agent
+### Phase 5 — Docs Sync
+
+Spawn the **docs-sync** sub-agent with this prompt:
+
+```
+You are the Docs Sync agent. Follow your agent instructions exactly.
+
+Working directory: c:/Users/advir/Desktop/Coding/Blog
+
+Update documentation and scan for unnecessary files for the newly published post:
+- slug: <scout.slug>
+- category: <scout.category>
+- title: <scout.title>
+- description: <scout.description>
+- icon: <scout.icon>
+- isNewCategory: <scout.isNewCategory>
+- newCategoryLabel: <scout.newCategoryLabel if isNewCategory, else 'n/a'>
+- htmlFile: <scout.htmlFile>
+
+Update README.md and docs/architecture.md (if new category). Scan for orphaned or unnecessary files. Report DOCS_SYNC_RESULT when done.
+```
+
+Wait for `DOCS_SYNC_RESULT: DONE` before continuing.
+
+If Docs Sync reports `DOCS_SYNC_RESULT: FAILED`, stop and report the failure to the user. Do NOT proceed to Deploy.
+
+---
+
+### Phase 6 — Deploy Agent
 
 Spawn the **deploy-agent** sub-agent with this prompt:
 
@@ -124,6 +153,8 @@ Run quality gates then commit and push:
 - title: <scout.title>
 - isNewCategory: <scout.isNewCategory>
 - htmlFile: <scout.htmlFile>
+
+Note: README.md and docs/architecture.md may also have been updated by the Docs Sync agent — stage them too if modified.
 
 Run pnpm ingest, pnpm tsc --noEmit, pnpm test in sequence. Only commit and push if all pass. Report DEPLOY_AGENT_RESULT when done.
 ```
@@ -159,6 +190,7 @@ New category "<newCategoryLabel>" is live at /blog/<new-slug>
 | **design-enforcer** | Restyles HTML: fonts, CSS vars, dark mode, mobile, tabs | scout |
 | **content-wirer** | Registers post in posts.ts; builds category infra if new | design-enforcer |
 | **test-guardian** | Updates test counts, runs suite, fixes failures | content-wirer |
-| **deploy-agent** | pnpm ingest + tsc + test → git commit → git push | test-guardian |
+| **docs-sync** | Updates README.md + docs/; scans for orphaned/unnecessary files | test-guardian |
+| **deploy-agent** | pnpm ingest + tsc + test → git commit → git push | docs-sync |
 
 All agents are defined in `.claude/agents/`. They run sequentially — each waits for the previous to succeed before starting.

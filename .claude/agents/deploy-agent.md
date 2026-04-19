@@ -82,6 +82,8 @@ Collect all files that are:
   - `src/components/content/CategoryFilter.tsx` (if new category)
   - `src/components/content/PostCard.tsx` (if new category)
   - `tests/lib/posts.test.ts`
+  - `README.md` (updated by Docs Sync agent)
+  - `docs/architecture.md` (updated by Docs Sync agent, if new category)
 
 ## Step 3 — Stage files
 
@@ -91,8 +93,11 @@ Stage ONLY the relevant publish files (not all untracked files, to avoid acciden
 cd "c:/Users/advir/Desktop/Coding/Blog" && git add \
   public/simulations/<filename>.html \
   src/lib/posts.ts \
-  tests/lib/posts.test.ts
+  tests/lib/posts.test.ts \
+  README.md
 ```
+
+Also stage `docs/architecture.md` if it was modified (check git status output).
 
 If new category files were created, add them too:
 ```bash
