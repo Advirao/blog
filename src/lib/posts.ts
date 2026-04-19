@@ -166,6 +166,23 @@ export const posts: Post[] = [
     accentColor: 'purple',
     icon: '🤖',
   },
+  {
+    slug: 'ollama-run-ai-locally',
+    category: 'genai',
+    title: 'Ollama: Run AI Locally',
+    subtitle: 'Local LLMs · Installation · Model Catalog · Harness Tools · Codex CLI',
+    description:
+      'A complete beginner-friendly guide to Ollama — the open-source runtime that lets you run LLMs like Gemma, Llama, and Mistral entirely on your own hardware with no cloud, no API keys, and no data leaving your machine. Covers architecture, installation, Modelfiles, system requirements, pros and cons, and using Ollama as a backend for harness tools like Codex CLI and Continue.dev.',
+    tags: ['Ollama', 'Local LLMs', 'Open-Weight Models', 'Quantization', 'Codex CLI', 'On-Device Inference'],
+    simulationFile: '/simulations/local-llm with Harness-blog.html',
+    difficulty: 'beginner',
+    readTime: 40,
+    lastUpdated: '2026-04-19',
+    featured: false,
+    downloadable: true,
+    accentColor: 'purple',
+    icon: '🤖',
+  },
 ]
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

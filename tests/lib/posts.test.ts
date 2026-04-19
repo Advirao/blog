@@ -11,8 +11,8 @@ import {
 
 // ─── Registry shape ───────────────────────────────────────────────────────────
 describe('posts registry', () => {
-  it('contains 8 posts', () => {
-    expect(posts).toHaveLength(8)
+  it('contains 9 posts', () => {
+    expect(posts).toHaveLength(9)
   })
 
   it('every post has all required fields', () => {
@@ -61,8 +61,8 @@ describe('CATEGORIES', () => {
 
 // ─── getAllPosts() ─────────────────────────────────────────────────────────────
 describe('getAllPosts()', () => {
-  it('returns all 8 posts', () => {
-    expect(getAllPosts()).toHaveLength(8)
+  it('returns all 9 posts', () => {
+    expect(getAllPosts()).toHaveLength(9)
   })
 
   it('returns a new reference each call (not mutating)', () => {
@@ -93,8 +93,8 @@ describe('getPostsByCategory()', () => {
     expect(getPostsByCategory('oil-trading')).toHaveLength(4)
   })
 
-  it('returns 3 genai posts', () => {
-    expect(getPostsByCategory('genai')).toHaveLength(3)
+  it('returns 4 genai posts', () => {
+    expect(getPostsByCategory('genai')).toHaveLength(4)
   })
 
   it('returns 1 claude-code post', () => {
@@ -148,6 +148,16 @@ describe('getPostBySlug()', () => {
     const post = getPostBySlug('genai', 'model-context-protocol')
     expect(post).toBeDefined()
     expect(post?.category).toBe('genai')
+  })
+
+  it('finds the ollama-run-ai-locally post', () => {
+    const post = getPostBySlug('genai', 'ollama-run-ai-locally')
+    expect(post).toBeDefined()
+    expect(post?.title).toBeTruthy()
+  })
+
+  it('returns undefined for ollama-run-ai-locally under wrong category', () => {
+    expect(getPostBySlug('oil-trading', 'ollama-run-ai-locally')).toBeUndefined()
   })
 })
 

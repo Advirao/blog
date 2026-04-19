@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ollama: Run AI Locally — A Complete Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #FAF9F7;
+    --surface:  #FFFFFF;
+    --surface2: #F2EDE6;
+    --border:   #E5DDD5;
+    --ink:      #2D2926;
+    --ink2:     #7A6F68;
+    --accent:   #5E4FA0;
+  }
+
+  html.dark {
+    --bg:      #16151C;
+    --surface:  #201F29;
+    --surface2: #1A1924;
+    --border:   #2E2D3C;
+    --ink:      #E8E3DC;
+    --ink2:     #9B9399;
+    --accent:   #7B6BBD;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 16px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink2);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 80px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  .hero h1 {
+    font-family: 'Lora', serif;
+    font-size: clamp(52px, 8vw, 110px);
+    line-height: 0.95;
+    color: var(--ink);
+    margin-bottom: 32px;
+    max-width: 900px;
+  }
+
+  .hero h1 em {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    color: var(--ink2);
+    max-width: 560px;
+    line-height: 1.8;
+    margin-bottom: 48px;
+  }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    color: var(--ink2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .tag-accent { border-color: var(--accent); color: var(--accent); }
+
+  .terminal-window {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 40px;
+    max-width: 600px;
+  }
+
+  .terminal-bar {
+    background: var(--surface);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-red { background: #ff5f56; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green { background: #27c93f; }
+
+  .terminal-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink2);
+    margin-left: 8px;
+  }
+
+  .terminal-body {
+    padding: 20px 24px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    line-height: 2;
+  }
+
+  .t-prompt { color: var(--accent); }
+  .t-cmd { color: var(--ink); }
+  .t-output { color: var(--ink2); }
+  .t-cyan { color: var(--accent); }
+  .t-amber { color: var(--ink); }
+  .t-cursor { display: inline-block; width: 8px; height: 14px; background: var(--accent); animation: blink 1s infinite; vertical-align: middle; }
+
+  @keyframes blink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
+
+  /* MAIN LAYOUT */
+  main { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+
+  /* SECTIONS */
+  section { padding: 100px 0; border-bottom: 1px solid var(--border); }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink2);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--border);
+  }
+
+  h2 {
+    font-family: 'Lora', serif;
+    font-size: clamp(36px, 5vw, 60px);
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 32px;
+  }
+
+  h2 em { color: var(--accent); font-style: italic; }
+  h3 { font-family: 'Lora', serif; font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 16px; }
+
+  p { color: var(--ink); line-height: 1.8; margin-bottom: 16px; font-size: 16px; }
+
+  /* WHAT IS OLLAMA */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  /* HISTORY TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 40px;
+    margin-top: 40px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 48px;
+    animation: fadeInUp 0.6s ease both;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -38px;
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+  }
+
+  .timeline-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .timeline-title { font-family: 'Lora', serif; font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+  .timeline-desc { font-size: 14px; color: var(--ink2); line-height: 1.7; }
+
+  /* ELI CARDS */
+  .eli-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  .eli-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.15s;
+  }
+
+  .eli-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); transform: translateY(-1px); }
+
+  .eli-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  .eli-age {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .eli-emoji { font-size: 48px; margin-bottom: 16px; display: block; }
+
+  /* INFOGRAPHIC - HOW IT WORKS */
+  .infographic {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 48px;
+    margin: 40px 0;
+  }
+
+  .arch-diagram {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0;
+    margin: 32px 0;
+    flex-wrap: wrap;
+  }
+
+  .arch-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    min-width: 150px;
+    text-align: center;
+    position: relative;
+    flex: 1;
+  }
+
+  .arch-block:first-child { border-radius: 6px 0 0 6px; }
+  .arch-block:last-child { border-radius: 0 6px 6px 0; }
+
+  .arch-arrow {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    color: var(--accent);
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .arch-icon { font-size: 28px; margin-bottom: 8px; }
+  .arch-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+  .arch-desc { font-size: 12px; color: var(--ink2); line-height: 1.5; }
+
+  /* STEPS */
+  .steps {
+    counter-reset: step;
+    margin-top: 40px;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 32px;
+    margin-bottom: 48px;
+    align-items: start;
+  }
+
+  .step-num {
+    counter-increment: step;
+    width: 56px;
+    height: 56px;
+    border: 1px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .step-num::after {
+    content: counter(step, decimal-leading-zero);
+  }
+
+  .step-content h3 { margin-bottom: 12px; }
+
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    color: var(--accent);
+    border-radius: 2px;
+  }
+
+  pre {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    overflow-x: auto;
+    margin: 16px 0;
+    border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+  }
+
+  pre .c { color: var(--ink2); font-style: italic; }
+  pre .k { color: var(--accent); }
+  pre .s { color: var(--ink); }
+  pre .n { color: var(--ink2); }
+  pre .v { color: var(--accent); }
+
+  /* PROS / CONS */
+  .pros-cons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  .pros-block, .cons-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 32px;
+  }
+
+  .pros-block { border-top: 3px solid var(--accent); }
+  .cons-block { border-top: 3px solid var(--border); }
+
+  .pros-block h3 { color: var(--accent); }
+  .cons-block h3 { color: var(--ink2); }
+
+  .check-list { list-style: none; margin-top: 16px; }
+  .check-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 15px;
+    color: var(--ink);
+  }
+
+  .check-list li:last-child { border-bottom: none; }
+  .check-list li::before { flex-shrink: 0; margin-top: 3px; }
+  .pros-block .check-list li::before { content: '✓'; color: var(--accent); font-family: 'IBM Plex Mono', monospace; font-weight: 700; }
+  .cons-block .check-list li::before { content: '✗'; color: var(--ink2); font-family: 'IBM Plex Mono', monospace; font-weight: 700; }
+
+  /* CASE STUDY */
+  .case-study-header {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 40px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .case-study-header::after {
+    content: 'CASE STUDY';
+    position: absolute;
+    right: -30px; top: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 80px;
+    font-weight: 700;
+    color: var(--border);
+    letter-spacing: -4px;
+    white-space: nowrap;
+  }
+
+  .tool-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 32px 0;
+  }
+
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 28px;
+    transition: box-shadow 0.15s;
+    position: relative;
+  }
+
+  .tool-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transform: translateY(-1px);
+  }
+
+  .tool-card-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--surface);
+    background: var(--accent);
+    padding: 3px 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+
+  /* SYSTEM REQUIREMENTS INFOGRAPHIC */
+  .sys-infographic {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 40px;
+    margin: 40px 0;
+  }
+
+  .sys-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 24px;
+  }
+
+  .sys-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 24px;
+    text-align: center;
+    position: relative;
+  }
+
+  .sys-icon { font-size: 32px; margin-bottom: 12px; }
+  .sys-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--ink2); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; }
+  .sys-value { font-family: 'IBM Plex Mono', monospace; font-size: 16px; color: var(--accent); font-weight: 700; }
+  .sys-sub { font-size: 11px; color: var(--ink2); margin-top: 4px; }
+
+  .tier-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 14px;
+  }
+
+  .tier-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink2);
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tier-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink);
+    vertical-align: top;
+  }
+
+  .tier-table tr:last-child td { border-bottom: none; }
+
+  .tier-table tr:hover td { background: var(--surface2); }
+
+  .status-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  .status-green { background: var(--accent); }
+  .status-amber { background: var(--ink2); }
+  .status-red { background: var(--border); }
+
+  /* MODEL CARDS */
+  .model-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 32px 0;
+  }
+
+  .model-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+    transition: box-shadow 0.15s;
+  }
+
+  .model-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); transform: translateY(-1px); }
+  .model-name { font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+  .model-params { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink2); margin-bottom: 8px; }
+  .model-desc { font-size: 13px; color: var(--ink2); line-height: 1.6; }
+  .model-bar { margin-top: 12px; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .model-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; }
+
+  /* RESOURCES */
+  .resource-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 40px;
+  }
+
+  .resource-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+    text-decoration: none;
+    transition: box-shadow 0.15s;
+    display: block;
+  }
+
+  .resource-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transform: translateY(-1px);
+    background: var(--surface2);
+  }
+
+  .resource-icon { font-size: 24px; margin-bottom: 12px; }
+  .resource-type { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--ink2); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+  .resource-title { font-family: 'Lora', serif; font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+  .resource-url { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--accent); }
+
+  /* COMMAND REFERENCE */
+  .cmd-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+  }
+
+  .cmd-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    text-align: left;
+    background: var(--surface);
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .cmd-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-size: 14px;
+  }
+
+  .cmd-table td:first-child {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--accent);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .cmd-table td:last-child { color: var(--ink2); }
+
+  /* FLOW DIAGRAM */
+  .flow-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 40px 0;
+  }
+
+  .flow-box {
+    width: 100%;
+    max-width: 500px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px 24px;
+    text-align: center;
+    font-size: 15px;
+    color: var(--ink);
+    position: relative;
+  }
+
+  .flow-box.highlight { border-color: var(--accent); background: var(--surface2); }
+  .flow-box.highlight2 { border-color: var(--accent); background: var(--surface2); }
+
+  .flow-box-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--ink2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .flow-arrow-down {
+    color: var(--accent);
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  /* COMPARISON CHART */
+  .compare-infographic {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 40px;
+    margin: 40px 0;
+  }
+
+  .compare-bars {
+    margin-top: 32px;
+  }
+
+  .compare-row {
+    display: grid;
+    grid-template-columns: 180px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .compare-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink2);
+    text-align: right;
+  }
+
+  .compare-bar-track {
+    background: var(--surface2);
+    height: 28px;
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .compare-bar-fill {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    transition: width 1s ease;
+  }
+
+  .compare-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink2);
+    white-space: nowrap;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 60px 80px;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Lora', serif;
+    font-size: 32px;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+
+  .footer-logo em { color: var(--accent); }
+
+  .footer-note {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink2);
+    line-height: 2;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* CALLOUT */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--surface2);
+    padding: 20px 24px;
+    margin: 24px 0;
+  }
+
+  .callout-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .callout p { margin: 0; color: var(--ink); font-size: 15px; }
+
+  .callout.info { border-color: var(--accent); background: var(--surface2); }
+  .callout.info .callout-label { color: var(--accent); }
+
+  /* PILL */
+  .pill {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .pill-green { background: var(--surface2); color: var(--accent); border: 1px solid var(--border); }
+  .pill-red { background: var(--surface2); color: var(--ink2); border: 1px solid var(--border); }
+  .pill-amber { background: var(--surface2); color: var(--ink2); border: 1px solid var(--border); }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 32px;
+    margin: 32px 0;
+  }
+
+  /* SCROLL PROGRESS */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: var(--accent);
+    z-index: 200;
+    transition: width 0.1s;
+  }
+
+  @media (max-width: 768px) {
+    body { padding: 8px; }
+    .hero { padding: 80px 20px 40px; }
+    main { padding: 0 16px; }
+    nav { padding: 14px 16px; }
+    .nav-links { display: none; }
+    .two-col, .eli-grid, .pros-cons, .tool-grid, .model-grid, .resource-grid, .sys-grid { grid-template-columns: 1fr !important; }
+    .arch-diagram { flex-direction: column; align-items: stretch; }
+    .arch-arrow { transform: rotate(90deg); align-self: center; }
+    .compare-row { grid-template-columns: 1fr !important; }
+    .compare-label { text-align: left; }
+    footer { padding: 40px 16px; }
+    .infographic { padding: 20px; }
+    .sys-infographic { padding: 20px; }
+    .panel, .card, .section { padding: 12px !important; }
+    .tab-bar, .tabs, .nav-tabs { overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+    .sidebar { position: fixed; left: -280px; top: 0; height: 100vh; width: 260px; z-index: 200; transition: left 0.3s ease; background: var(--surface); overflow-y: auto; }
+    .sidebar.open { left: 0; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 199; }
+    .sidebar-overlay.visible { display: block; }
+    .menu-toggle { display: flex !important; }
+    .main-content { width: 100% !important; margin-left: 0 !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav>
+  <div class="nav-logo">&gt;_ ollama.guide</div>
+  <ul class="nav-links">
+    <li><a href="#what">What is it</a></li>
+    <li><a href="#history">History</a></li>
+    <li><a href="#eli">ELI5</a></li>
+    <li><a href="#install">Install</a></li>
+    <li><a href="#tools">Harness Tools</a></li>
+    <li><a href="#resources">Resources</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Complete Developer Guide · 2025</div>
+  <h1>Run AI <em>Locally.</em><br>Own Your Intelligence.</h1>
+  <p class="hero-sub">A complete, beginner-friendly guide to Ollama — from what it is, how to install it, to using it with harness tools like Codex CLI. No cloud, no API keys, no surveillance.</p>
+  <div class="hero-tags">
+    <span class="tag tag-accent">Open Source</span>
+    <span class="tag tag-accent">Local LLMs</span>
+    <span class="tag">CPU &amp; GPU</span>
+    <span class="tag">No Cloud Needed</span>
+  </div>
+  <div class="terminal-window">
+    <div class="terminal-bar">
+      <div class="dot dot-red"></div>
+      <div class="dot dot-yellow"></div>
+      <div class="dot dot-green"></div>
+      <span class="terminal-title">bash — ~/Desktop/ai-local</span>
+    </div>
+    <div class="terminal-body">
+      <div><span class="t-prompt">user@machine</span> <span class="t-cmd">$ ollama run gemma3</span></div>
+      <div class="t-output">&gt; pulling model... <span class="t-cyan">████████████ 100%</span></div>
+      <div class="t-output">&gt; model loaded. 0 cloud calls made.</div>
+      <div><span class="t-prompt">user@machine</span> <span class="t-cmd">$ ollama list</span></div>
+      <div class="t-output">NAME &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SIZE &nbsp;&nbsp;&nbsp; MODIFIED</div>
+      <div class="t-output"><span class="t-amber">gemma3:latest</span>&nbsp;&nbsp; 5.0 GB &nbsp; 2 hours ago</div>
+      <div><span class="t-prompt">user@machine</span> <span class="t-cursor"></span></div>
+    </div>
+  </div>
+</section>
+
+<main>
+
+<!-- WHAT IS OLLAMA -->
+<section id="what">
+  <div class="section-label">01 — What is Ollama</div>
+  <h2>Your laptop as an <em>AI server</em></h2>
+  <div class="two-col">
+    <div>
+      <p>Ollama is an open-source tool that lets you run large language models (LLMs) directly on your own computer — no internet required, no API keys, no subscription. Think of it as a download manager + inference engine for AI models, wrapped in a simple command-line interface.</p>
+      <p>When you run a model with Ollama, your CPU (and GPU if available) do all the heavy lifting. Your prompts never leave your machine. This is called <strong>on-device inference</strong>.</p>
+      <p>Ollama also exposes a local REST API on port 11434, meaning any tool that knows how to talk to an HTTP endpoint can use it — editors, scripts, harness tools like Codex CLI, and more.</p>
+      <div class="callout info">
+        <div class="callout-label">📡 Key Insight</div>
+        <p>Ollama is not an AI model itself. It's the <em>runtime</em> — the engine that loads, manages, and serves open-weight models like Gemma, Llama, Mistral, Phi, and others.</p>
+      </div>
+    </div>
+    <div>
+      <div class="infographic">
+        <div class="section-label">Architecture</div>
+        <div class="arch-diagram">
+          <div class="arch-block">
+            <div class="arch-icon">💻</div>
+            <div class="arch-label">Your App</div>
+            <div class="arch-desc">Terminal, editor, script, browser</div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-block" style="border-color: var(--accent);">
+            <div class="arch-icon">⚙️</div>
+            <div class="arch-label">Ollama</div>
+            <div class="arch-desc">REST API :11434 model manager</div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-block">
+            <div class="arch-icon">🧠</div>
+            <div class="arch-label">LLM Model</div>
+            <div class="arch-desc">Gemma, Llama, Mistral, Phi...</div>
+          </div>
+        </div>
+        <div style="text-align:center; margin-top:8px;">
+          <div class="arch-arrow" style="justify-content:center; font-size:16px; color:var(--ink2);">▼</div>
+          <div class="arch-block" style="max-width:200px; margin: 8px auto; border-color:var(--accent);">
+            <div class="arch-icon">🖥️</div>
+            <div class="arch-label">Your CPU/GPU</div>
+            <div class="arch-desc">100% local inference</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HISTORY -->
+<section id="history">
+  <div class="section-label">02 — History</div>
+  <h2>How we got <em>here</em></h2>
+  <p>The ability to run LLMs locally didn't happen overnight. It's the result of years of research breakthroughs, open-source activism, and clever engineering.</p>
+  <div class="timeline">
+    <div class="timeline-item fade-in">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2017</div>
+      <div class="timeline-title">Transformers Paper — "Attention Is All You Need"</div>
+      <div class="timeline-desc">Google researchers published the transformer architecture that would become the backbone of every modern LLM. GPT, BERT, Llama — they all descend from this paper.</div>
+    </div>
+    <div class="timeline-item fade-in">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2020–2022</div>
+      <div class="timeline-title">GPT-3 &amp; The Closed AI Era</div>
+      <div class="timeline-desc">OpenAI released GPT-3 — powerful, but locked behind an API. Running it locally was impossible. The community began pushing for open alternatives.</div>
+    </div>
+    <div class="timeline-item fade-in">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">Feb 2023</div>
+      <div class="timeline-title">Meta releases LLaMA — the turning point</div>
+      <div class="timeline-desc">Meta's LLaMA model weights leaked publicly. For the first time, researchers could run a powerful language model on consumer hardware. Llama.cpp followed days later — a pure C++ inference engine that ran on laptops.</div>
+    </div>
+    <div class="timeline-item fade-in">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">Mid 2023</div>
+      <div class="timeline-title">Quantization unlocks consumer hardware</div>
+      <div class="timeline-desc">GGUF quantization (4-bit, 5-bit) compressed models dramatically. A 7B parameter model that needed 14GB RAM now ran in under 5GB. Regular laptops could now run capable AI.</div>
+    </div>
+    <div class="timeline-item fade-in">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">July 2023</div>
+      <div class="timeline-title">🦙 Ollama launches (v0.1)</div>
+      <div class="timeline-desc">Built on top of llama.cpp, Ollama wrapped local model execution in a beautiful, Docker-inspired interface with simple commands (<code>ollama run</code>, <code>ollama pull</code>) and a REST API. It dramatically lowered the barrier to entry.</div>
+    </div>
+    <div class="timeline-item fade-in">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2024</div>
+      <div class="timeline-title">Ecosystem explodes — Gemma, Mistral, Phi, Qwen</div>
+      <div class="timeline-desc">Google (Gemma), Microsoft (Phi), Mistral AI, and Alibaba (Qwen) all released competitive open-weight models. Ollama's model library grew to 100+ models. GPU acceleration support expanded for NVIDIA, AMD, and Apple Silicon.</div>
+    </div>
+    <div class="timeline-item fade-in">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2025</div>
+      <div class="timeline-title">Harness tools proliferate — Codex CLI, Claude Code, Continue</div>
+      <div class="timeline-desc">AI coding assistants began supporting Ollama as a backend. You could now run a coding agent entirely offline, using your own hardware and models with zero cloud dependency.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ELI SECTION -->
+<section id="eli">
+  <div class="section-label">03 — Simple Explanations</div>
+  <h2>Breaking it <em>down</em></h2>
+  <p>Complex technology should be explainable at every level. Here's Ollama explained two ways:</p>
+  <div class="eli-grid">
+    <div class="eli-card age8 fade-in">
+      <div class="eli-age">🧒 Explain Like I'm 8 (ELI8)</div>
+      <span class="eli-emoji">🧸</span>
+      <h3>It's like downloading a smart toy to your room</h3>
+      <p>You know how Siri and Alexa live in the internet and need Wi-Fi to answer you? Ollama is like downloading a really smart robot <em>brain</em> onto your computer, so it lives in your bedroom.</p>
+      <p>Once it's there, you can talk to it and ask it questions — even if your Wi-Fi is off! It doesn't tell anyone what you said, because it never goes to the internet. It's your private robot helper.</p>
+      <p>Ollama is the tool that helps put those robot brains on your computer. The brains are called "models" — they're like different toys you can download, each one good at different things.</p>
+    </div>
+    <div class="eli-card age10 fade-in">
+      <div class="eli-age">👦 Explain Like I'm 10 (ELI10)</div>
+      <span class="eli-emoji">🔬</span>
+      <h3>Running AI like a local game server</h3>
+      <p>You know how in Minecraft you can play on a server with friends, but you can also start your own local server on your computer? Ollama is like setting up your own private AI server.</p>
+      <p>Big AI tools like ChatGPT run on huge computers in data centers — you're basically borrowing their power. With Ollama, you download the AI "brain" (called a model) to your own PC, and your computer does all the thinking.</p>
+      <p>The cool parts: it works offline, no one can see your chats, and you can try different models like Gemma or Llama — kind of like switching between different game characters, each with different abilities.</p>
+    </div>
+  </div>
+  <div class="highlight-box fade-in" style="margin-top: 32px;">
+    <h3 style="margin-bottom:12px;">🎓 Developer Definition</h3>
+    <p>Ollama is a locally-run model inference server built on llama.cpp, that provides a Docker-like CLI for pulling, running, and managing open-weight language models. It exposes an OpenAI-compatible REST API at <code>localhost:11434</code>, enabling drop-in replacement for cloud APIs in development workflows.</p>
+  </div>
+</section>
+
+<!-- INSTALL & CONFIGURATION -->
+<section id="install">
+  <div class="section-label">04 — Setup &amp; Configuration</div>
+  <h2>Step-by-step <em>installation</em></h2>
+
+  <!-- SYSTEM REQUIREMENTS INFOGRAPHIC -->
+  <div class="sys-infographic fade-in">
+    <div class="section-label" style="margin-bottom:8px;">System Requirements</div>
+    <p style="font-size:14px; color:var(--ink2); margin-bottom:0;">Generic recommended specs for running models locally</p>
+    <div class="sys-grid">
+      <div class="sys-card">
+        <div class="sys-icon">🖥️</div>
+        <div class="sys-label">CPU</div>
+        <div class="sys-value">8+ cores</div>
+        <div class="sys-sub">x86-64 or ARM (Apple Silicon)</div>
+      </div>
+      <div class="sys-card">
+        <div class="sys-icon">🧠</div>
+        <div class="sys-label">RAM</div>
+        <div class="sys-value">16 GB+</div>
+        <div class="sys-sub">More = bigger models</div>
+      </div>
+      <div class="sys-card">
+        <div class="sys-icon">💾</div>
+        <div class="sys-label">Disk</div>
+        <div class="sys-value">50 GB+</div>
+        <div class="sys-sub">Models range 2GB – 30GB+</div>
+      </div>
+      <div class="sys-card">
+        <div class="sys-icon">🎮</div>
+        <div class="sys-label">GPU (Optional)</div>
+        <div class="sys-value">4 GB+ VRAM</div>
+        <div class="sys-sub">NVIDIA/AMD/Intel Iris/Apple GPU</div>
+      </div>
+    </div>
+    <table class="tier-table" style="margin-top:32px;">
+      <thead>
+        <tr>
+          <th>Hardware Tier</th>
+          <th>RAM</th>
+          <th>Models You Can Run</th>
+          <th>Speed</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Budget Laptop</td>
+          <td>8 GB</td>
+          <td>gemma2:2b, phi3:mini, tinyllama</td>
+          <td>Slow (2–5 tok/s)</td>
+          <td><span class="status-dot status-amber"></span>Works with patience</td>
+        </tr>
+        <tr>
+          <td>Mid-range Laptop</td>
+          <td>16 GB</td>
+          <td>gemma3:4b, llama3.2:3b, mistral:7b</td>
+          <td>OK (5–15 tok/s)</td>
+          <td><span class="status-dot status-green"></span>Good daily driver</td>
+        </tr>
+        <tr>
+          <td>Gaming PC / M-series Mac</td>
+          <td>32 GB</td>
+          <td>llama3.1:8b, qwen2.5:14b, gemma3:12b</td>
+          <td>Fast (15–50 tok/s)</td>
+          <td><span class="status-dot status-green"></span>Excellent</td>
+        </tr>
+        <tr>
+          <td>Workstation / Mac Studio</td>
+          <td>64 GB+</td>
+          <td>llama3.1:70b, qwen2.5:72b, deepseek</td>
+          <td>Very fast</td>
+          <td><span class="status-dot status-green"></span>Production grade</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="steps">
+    <div class="step fade-in">
+      <div class="step-num"></div>
+      <div class="step-content">
+        <h3>Install Ollama</h3>
+        <p>Download and install Ollama for your platform.</p>
+        <pre><span class="c"># macOS / Linux — one-liner</span>
+<span class="k">curl</span> -fsSL https://ollama.com/install.sh | sh
+
+<span class="c"># Windows — Download installer from:</span>
+<span class="s">https://ollama.com/download/windows</span>
+
+<span class="c"># Verify installation</span>
+<span class="k">ollama</span> --version</pre>
+        <p>After install, Ollama runs as a background service and listens on <code>localhost:11434</code>.</p>
+      </div>
+    </div>
+
+    <div class="step fade-in">
+      <div class="step-num"></div>
+      <div class="step-content">
+        <h3>Pull your first model</h3>
+        <p>Choose a model from the Ollama library. For beginners, Gemma3 or Llama3.2 are excellent starting points.</p>
+        <pre><span class="c"># Pull a model (downloads to ~/.ollama/models)</span>
+<span class="k">ollama</span> pull gemma3
+
+<span class="c"># Or pull a specific size variant</span>
+<span class="k">ollama</span> pull gemma3:<span class="n">4b</span>
+<span class="k">ollama</span> pull llama3.2:<span class="n">3b</span>
+<span class="k">ollama</span> pull mistral:<span class="n">7b</span>
+
+<span class="c"># List all downloaded models</span>
+<span class="k">ollama</span> list</pre>
+      </div>
+    </div>
+
+    <div class="step fade-in">
+      <div class="step-num"></div>
+      <div class="step-content">
+        <h3>Run the model</h3>
+        <pre><span class="c"># Interactive chat mode</span>
+<span class="k">ollama</span> run gemma3
+
+<span class="c"># Single prompt mode</span>
+<span class="k">ollama</span> run gemma3 <span class="s">"Explain recursion in simple terms"</span>
+
+<span class="c"># Check what's running</span>
+<span class="k">ollama</span> ps
+
+<span class="c"># Stop a loaded model</span>
+<span class="k">ollama</span> stop gemma3</pre>
+      </div>
+    </div>
+
+    <div class="step fade-in">
+      <div class="step-num"></div>
+      <div class="step-content">
+        <h3>Use the API directly</h3>
+        <p>Ollama exposes an OpenAI-compatible REST API. Any tool that supports OpenAI can point to Ollama instead.</p>
+        <pre><span class="c"># Basic API call with curl</span>
+<span class="k">curl</span> http://localhost:11434/api/generate \
+  -d <span class="s">'{
+    "model": "gemma3",
+    "prompt": "What is Ollama?",
+    "stream": false
+  }'</span>
+
+<span class="c"># OpenAI-compatible endpoint</span>
+<span class="k">curl</span> http://localhost:11434/v1/chat/completions \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{
+    "model": "gemma3",
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'</span></pre>
+      </div>
+    </div>
+
+    <div class="step fade-in">
+      <div class="step-num"></div>
+      <div class="step-content">
+        <h3>Advanced: Create a custom Modelfile</h3>
+        <p>A Modelfile is like a Dockerfile for AI models — define a system prompt, temperature, and parameters.</p>
+        <pre><span class="c"># Create a file called "Modelfile"</span>
+<span class="k">FROM</span> gemma3
+
+<span class="c"># Set a system prompt</span>
+<span class="k">SYSTEM</span> <span class="s">"""
+You are a senior software engineer who gives
+concise, accurate code reviews. Use markdown.
+"""</span>
+
+<span class="c"># Tune parameters</span>
+<span class="k">PARAMETER</span> temperature <span class="n">0.3</span>
+<span class="k">PARAMETER</span> num_ctx <span class="n">8192</span>
+
+<span class="c"># Build and run your custom model</span>
+<span class="k">ollama</span> create myreviewer -f Modelfile
+<span class="k">ollama</span> run myreviewer</pre>
+      </div>
+    </div>
+
+    <div class="step fade-in">
+      <div class="step-num"></div>
+      <div class="step-content">
+        <h3>Environment variables &amp; configuration</h3>
+        <pre><span class="c"># Change model storage location (default: ~/.ollama)</span>
+<span class="k">export</span> OLLAMA_MODELS=<span class="s">/path/to/models</span>
+
+<span class="c"># Allow external access (LAN / other machines)</span>
+<span class="k">export</span> OLLAMA_HOST=<span class="n">0.0.0.0:11434</span>
+
+<span class="c"># Set GPU layers (tune for your VRAM)</span>
+<span class="k">export</span> OLLAMA_NUM_GPU=<span class="n">35</span>
+
+<span class="c"># Set number of parallel requests</span>
+<span class="k">export</span> OLLAMA_NUM_PARALLEL=<span class="n">2</span>
+
+<span class="c"># Keep model loaded in memory (seconds)</span>
+<span class="k">export</span> OLLAMA_KEEP_ALIVE=<span class="s">"10m"</span></pre>
+        <div class="callout">
+          <div class="callout-label">⚠️ Performance tip</div>
+          <p>Set <code>OLLAMA_KEEP_ALIVE="-1"</code> to keep the model permanently loaded. This eliminates the cold-start delay between prompts at the cost of persistent RAM usage.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POPULAR MODELS -->
+<section id="models">
+  <div class="section-label">05 — Model Catalog</div>
+  <h2>What models can you <em>run?</em></h2>
+  <p>Ollama's library hosts 100+ models. Here are the most popular for different use cases:</p>
+  <div class="model-grid">
+    <div class="model-card fade-in">
+      <div class="model-name">gemma3</div>
+      <div class="model-params">by Google · 1B / 4B / 12B / 27B</div>
+      <div class="model-desc">Excellent all-rounder. Great for coding, reasoning, and chat. Very efficient at smaller sizes.</div>
+      <div class="model-bar"><div class="model-bar-fill" style="width:85%"></div></div>
+    </div>
+    <div class="model-card fade-in">
+      <div class="model-name">llama3.2</div>
+      <div class="model-params">by Meta · 1B / 3B</div>
+      <div class="model-desc">Fast and lightweight. Best for constrained hardware. Ideal for quick tasks and embedding.</div>
+      <div class="model-bar"><div class="model-bar-fill" style="width:72%"></div></div>
+    </div>
+    <div class="model-card fade-in">
+      <div class="model-name">mistral</div>
+      <div class="model-params">by Mistral AI · 7B</div>
+      <div class="model-desc">Strong at instruction-following and reasoning. Great balance of size and capability.</div>
+      <div class="model-bar"><div class="model-bar-fill" style="width:80%"></div></div>
+    </div>
+    <div class="model-card fade-in">
+      <div class="model-name">qwen2.5-coder</div>
+      <div class="model-params">by Alibaba · 1.5B / 7B / 32B</div>
+      <div class="model-desc">Specialized for code. Excellent at completion, refactoring, and debugging tasks.</div>
+      <div class="model-bar"><div class="model-bar-fill" style="width:88%"></div></div>
+    </div>
+    <div class="model-card fade-in">
+      <div class="model-name">phi4</div>
+      <div class="model-params">by Microsoft · 14B</div>
+      <div class="model-desc">Punches above its weight. Excellent reasoning per GB of model size.</div>
+      <div class="model-bar"><div class="model-bar-fill" style="width:83%"></div></div>
+    </div>
+    <div class="model-card fade-in">
+      <div class="model-name">deepseek-r1</div>
+      <div class="model-params">by DeepSeek · 8B / 32B / 70B</div>
+      <div class="model-desc">Chain-of-thought reasoning model. Excellent for math, logic, and analytical tasks.</div>
+      <div class="model-bar"><div class="model-bar-fill" style="width:90%"></div></div>
+    </div>
+  </div>
+  <div class="callout info">
+    <div class="callout-label">💡 Pro tip</div>
+    <p>Use <code>ollama search &lt;keyword&gt;</code> to find models, or browse <strong>ollama.com/library</strong>. Model names with no tag default to <code>:latest</code>. Use specific tags like <code>gemma3:4b-it-q4_K_M</code> to control quantization level.</p>
+  </div>
+</section>
+
+<!-- PROS & CONS -->
+<section id="proscons">
+  <div class="section-label">06 — Evaluation</div>
+  <h2>The honest <em>trade-offs</em></h2>
+
+  <div class="compare-infographic fade-in">
+    <div class="section-label">Local vs Cloud AI — At a Glance</div>
+    <div class="compare-bars">
+      <div class="compare-row">
+        <div class="compare-label">Privacy</div>
+        <div class="compare-bar-track">
+          <div class="compare-bar-fill" style="width:100%; background:var(--accent);">
+            <span style="color:var(--surface); font-weight:700;">Local: 100% Private</span>
+          </div>
+        </div>
+        <div class="compare-value">Zero data leaving device</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-label">Speed (7B model)</div>
+        <div class="compare-bar-track">
+          <div class="compare-bar-fill" style="width:45%; background:var(--border);">
+            <span style="color:var(--ink); font-weight:700;">~10 tok/s CPU</span>
+          </div>
+        </div>
+        <div class="compare-value">Cloud: ~80 tok/s</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-label">Cost (ongoing)</div>
+        <div class="compare-bar-track">
+          <div class="compare-bar-fill" style="width:100%; background:var(--accent);">
+            <span style="color:var(--surface); font-weight:700;">$0 / month after setup</span>
+          </div>
+        </div>
+        <div class="compare-value">Cloud: $20–$200+/mo</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-label">Model Quality</div>
+        <div class="compare-bar-track">
+          <div class="compare-bar-fill" style="width:65%; background:var(--surface2); border: 1px solid var(--border);">
+            <span style="color:var(--ink); font-weight:700;">Good (smaller models)</span>
+          </div>
+        </div>
+        <div class="compare-value">Cloud: Best (GPT-4, Claude)</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-label">Offline Use</div>
+        <div class="compare-bar-track">
+          <div class="compare-bar-fill" style="width:100%; background:var(--accent);">
+            <span style="color:var(--surface); font-weight:700;">Yes — works anywhere</span>
+          </div>
+        </div>
+        <div class="compare-value">Cloud: Needs internet</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pros-cons fade-in">
+    <div class="pros-block">
+      <h3>Advantages</h3>
+      <ul class="check-list">
+        <li>Complete privacy — prompts never leave your machine</li>
+        <li>No recurring costs after hardware investment</li>
+        <li>Works offline — planes, remote locations, no Wi-Fi</li>
+        <li>No rate limits or context window throttling</li>
+        <li>Fully customizable via Modelfiles and system prompts</li>
+        <li>OpenAI-compatible API — drop-in for existing tools</li>
+        <li>Run multiple models simultaneously</li>
+        <li>No censorship or content filtering from providers</li>
+        <li>Educational — understand how LLMs actually work</li>
+      </ul>
+    </div>
+    <div class="cons-block">
+      <h3>Shortcomings</h3>
+      <ul class="check-list">
+        <li>Slower than cloud — CPU inference is notably slower than datacenter GPUs</li>
+        <li>Hardware ceiling — larger, smarter models need more RAM/VRAM</li>
+        <li>High RAM usage — a 7B model alone uses 5–8GB RAM</li>
+        <li>Model quality gap — local 7B models lag behind GPT-4 or Claude Opus</li>
+        <li>CPU heat and battery drain on laptops</li>
+        <li>Initial model downloads are large (2–30 GB per model)</li>
+        <li>No internet-connected tools (web search) without extra setup</li>
+        <li>Limited multimodal capability at smaller sizes</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- HARNESS TOOLS CASE STUDY -->
+<section id="tools">
+  <div class="section-label">07 — Harness Tools</div>
+  <h2>Ollama as an <em>AI backend</em></h2>
+  <p>Ollama's real superpower is acting as the engine for other tools. "Harness tools" are CLIs and editors that sit on top of a model API and give it agentic capabilities — like browsing files, writing code, and running commands.</p>
+
+  <div class="tool-grid fade-in">
+    <div class="tool-card">
+      <div class="tool-card-badge">OpenAI / Anthropic</div>
+      <h3>Codex CLI</h3>
+      <p>OpenAI's official CLI coding agent. Designed to work with GPT-4o, but supports any OpenAI-compatible endpoint — including Ollama. It scans your codebase, understands context, and can write, edit, and run code.</p>
+      <div style="margin-top: 16px;">
+        <span class="pill pill-green">Supports Ollama</span>
+        <span class="pill pill-amber" style="margin-left:8px;">CPU Intensive</span>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-card-badge">Anthropic</div>
+      <h3>Claude Code</h3>
+      <p>Anthropic's agentic coding tool. Primarily uses Claude API, but can be configured to point to local models via OpenAI-compatible endpoints. Excellent for large codebases with its extended thinking capability.</p>
+      <div style="margin-top: 16px;">
+        <span class="pill pill-amber">Experimental Local</span>
+        <span class="pill pill-green" style="margin-left:8px;">Best with Cloud</span>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-card-badge">Open Source</div>
+      <h3>Continue.dev</h3>
+      <p>VS Code / JetBrains extension for AI coding. First-class Ollama support. Provides autocomplete, chat, and edit modes, all powered by your local models.</p>
+      <div style="margin-top: 16px;">
+        <span class="pill pill-green">Native Ollama</span>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-card-badge">Community</div>
+      <h3>Open WebUI</h3>
+      <p>A ChatGPT-like browser interface that connects directly to Ollama. Run it locally and get a full-featured chat UI with history, RAG, and model switching — all offline.</p>
+      <div style="margin-top: 16px;">
+        <span class="pill pill-green">Native Ollama</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE STUDY: CODEX CLI + OLLAMA -->
+  <div class="case-study-header fade-in">
+    <div class="section-label">Case Study</div>
+    <h3 style="font-size: 28px; margin-bottom: 12px;">Using Codex CLI with Ollama + Gemma</h3>
+    <p style="max-width: 700px; color: var(--ink2);">Running an open-weight coding agent entirely on local hardware — zero cloud calls, full source-code privacy. Here's exactly what happens, step by step.</p>
+  </div>
+
+  <div class="flow-diagram fade-in">
+    <div class="flow-box">
+      <span class="flow-box-label">Step 1</span>
+      Start Ollama and load your model
+      <pre style="margin:8px 0 0; border:none; padding:4px 0; text-align:left; background:transparent; border-left:none;"><span style="color:var(--accent); font-family:'IBM Plex Mono',monospace; font-size:12px;">$</span> <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink);">ollama pull gemma3:4b</span></pre>
+    </div>
+    <div class="flow-arrow-down">↓</div>
+    <div class="flow-box highlight">
+      <span class="flow-box-label">Step 2</span>
+      Install Codex CLI and configure Ollama endpoint
+      <pre style="margin:8px 0 0; border:none; padding:4px 0; text-align:left; background:transparent; border-left:none;"><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink);">npm install -g @openai/codex
+ollama launch codex --model gemma3:4b</span></pre>
+    </div>
+    <div class="flow-arrow-down">↓</div>
+    <div class="flow-box">
+      <span class="flow-box-label">Step 3</span>
+      Navigate to your project directory and start Codex
+      <pre style="margin:8px 0 0; border:none; padding:4px 0; text-align:left; background:transparent; border-left:none;"><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink);">cd ~/Desktop/my-project
+codex</span></pre>
+    </div>
+    <div class="flow-arrow-down">↓</div>
+    <div class="flow-box highlight2">
+      <span class="flow-box-label">Step 4</span>
+      Codex scans your project, builds context map
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink2); display:block; margin-top:8px;">&gt; Working... analyzing file tree, reading imports, mapping dependencies</span>
+    </div>
+    <div class="flow-arrow-down">↓</div>
+    <div class="flow-box">
+      <span class="flow-box-label">Step 5 — You're live!</span>
+      Ask it anything about your codebase
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--accent); display:block; margin-top:8px;">&gt; "Find and fix the null pointer bug in auth.js"</span>
+    </div>
+  </div>
+
+  <div class="callout fade-in">
+    <div class="callout-label">🔍 Real-World Observation</div>
+    <p>Running Codex CLI with Gemma3:4b on a 16GB RAM laptop uses approximately 5-8GB of RAM for the model, and pushes CPU to 70–100% during inference. Responses arrive in 10–30 seconds per turn. It works — but requires patience and benefits enormously from GPU acceleration or higher-end hardware. For production use, 32GB RAM or an NVIDIA GPU with 8GB+ VRAM is recommended.</p>
+  </div>
+
+  <h3 style="margin-top:40px;">Quick Reference — Codex CLI Commands</h3>
+  <table class="cmd-table fade-in">
+    <thead>
+      <tr>
+        <th>Command</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ollama launch codex --model &lt;name&gt;</td>
+        <td>Start Codex CLI with a specific Ollama model as the backend</td>
+      </tr>
+      <tr>
+        <td>scan the project</td>
+        <td>Ask Codex to analyze your codebase and build understanding</td>
+      </tr>
+      <tr>
+        <td>find and fix a bug in @filename</td>
+        <td>Ask Codex to diagnose and patch bugs in a specific file</td>
+      </tr>
+      <tr>
+        <td>write tests for @filename</td>
+        <td>Generate unit tests for a given module</td>
+      </tr>
+      <tr>
+        <td>/model</td>
+        <td>Switch to a different Ollama model mid-session</td>
+      </tr>
+      <tr>
+        <td>Esc</td>
+        <td>Interrupt a running inference</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:40px;">Quick Reference — Ollama Commands</h3>
+  <table class="cmd-table fade-in">
+    <thead>
+      <tr>
+        <th>Command</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ollama run &lt;model&gt;</td>
+        <td>Start an interactive chat session with a model</td>
+      </tr>
+      <tr>
+        <td>ollama pull &lt;model&gt;</td>
+        <td>Download a model from the Ollama library</td>
+      </tr>
+      <tr>
+        <td>ollama list</td>
+        <td>Show all downloaded models</td>
+      </tr>
+      <tr>
+        <td>ollama ps</td>
+        <td>Show currently loaded models and resource usage</td>
+      </tr>
+      <tr>
+        <td>ollama rm &lt;model&gt;</td>
+        <td>Delete a model from local storage</td>
+      </tr>
+      <tr>
+        <td>ollama create &lt;name&gt; -f Modelfile</td>
+        <td>Create a custom model from a Modelfile</td>
+      </tr>
+      <tr>
+        <td>ollama show &lt;model&gt;</td>
+        <td>Display model metadata, parameters, and Modelfile</td>
+      </tr>
+      <tr>
+        <td>ollama serve</td>
+        <td>Start the Ollama server manually (usually auto-started)</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- RESOURCES -->
+<section id="resources">
+  <div class="section-label">08 — Further Learning</div>
+  <h2>Go <em>deeper</em></h2>
+  <p>The local AI ecosystem moves fast. Here are the best places to keep learning:</p>
+  <div class="resource-grid fade-in">
+    <div class="resource-card">
+      <div class="resource-icon">🦙</div>
+      <div class="resource-type">Official Docs</div>
+      <div class="resource-title">Ollama Documentation</div>
+      <p style="font-size:13px; color:var(--ink2); margin-bottom:12px;">Complete reference for commands, API, Modelfile format, and GPU setup guides.</p>
+      <div class="resource-url">ollama.com/docs</div>
+    </div>
+    <div class="resource-card">
+      <div class="resource-icon">🧪</div>
+      <div class="resource-type">Model Library</div>
+      <div class="resource-title">Ollama Model Hub</div>
+      <p style="font-size:13px; color:var(--ink2); margin-bottom:12px;">Browse and search 100+ models with sizes, benchmarks, and pull commands.</p>
+      <div class="resource-url">ollama.com/library</div>
+    </div>
+    <div class="resource-card">
+      <div class="resource-icon">🐙</div>
+      <div class="resource-type">Open Source</div>
+      <div class="resource-title">Ollama on GitHub</div>
+      <p style="font-size:13px; color:var(--ink2); margin-bottom:12px;">Source code, issues, community integrations, and contribution guides.</p>
+      <div class="resource-url">github.com/ollama/ollama</div>
+    </div>
+    <div class="resource-card">
+      <div class="resource-icon">🖥️</div>
+      <div class="resource-type">GUI Tool</div>
+      <div class="resource-title">Open WebUI</div>
+      <p style="font-size:13px; color:var(--ink2); margin-bottom:12px;">A beautiful ChatGPT-style interface that runs locally on top of Ollama.</p>
+      <div class="resource-url">github.com/open-webui/open-webui</div>
+    </div>
+    <div class="resource-card">
+      <div class="resource-icon">💻</div>
+      <div class="resource-type">VS Code Extension</div>
+      <div class="resource-title">Continue.dev</div>
+      <p style="font-size:13px; color:var(--ink2); margin-bottom:12px;">Integrate Ollama with VS Code or JetBrains for AI autocomplete and chat.</p>
+      <div class="resource-url">continue.dev</div>
+    </div>
+    <div class="resource-card">
+      <div class="resource-icon">📰</div>
+      <div class="resource-type">Community</div>
+      <div class="resource-title">r/LocalLLaMA</div>
+      <p style="font-size:13px; color:var(--ink2); margin-bottom:12px;">The most active community for local LLM enthusiasts. Tips, benchmarks, model comparisons.</p>
+      <div class="resource-url">reddit.com/r/LocalLLaMA</div>
+    </div>
+    <div class="resource-card">
+      <div class="resource-icon">📚</div>
+      <div class="resource-type">Research</div>
+      <div class="resource-title">Hugging Face</div>
+      <p style="font-size:13px; color:var(--ink2); margin-bottom:12px;">The home of open model weights, datasets, and leaderboards for model comparison.</p>
+      <div class="resource-url">huggingface.co</div>
+    </div>
+    <div class="resource-card">
+      <div class="resource-icon">⚡</div>
+      <div class="resource-type">Inference Engine</div>
+      <div class="resource-title">llama.cpp</div>
+      <p style="font-size:13px; color:var(--ink2); margin-bottom:12px;">The C++ engine that powers Ollama under the hood. For advanced users who want direct control.</p>
+      <div class="resource-url">github.com/ggerganov/llama.cpp</div>
+    </div>
+    <div class="resource-card">
+      <div class="resource-icon">🤖</div>
+      <div class="resource-type">Harness Tool</div>
+      <div class="resource-title">Codex CLI</div>
+      <p style="font-size:13px; color:var(--ink2); margin-bottom:12px;">OpenAI's terminal coding agent. Works with Ollama as an open-weight backend.</p>
+      <div class="resource-url">github.com/openai/codex</div>
+    </div>
+  </div>
+
+  <!-- GLOSSARY -->
+  <div class="infographic fade-in" style="margin-top:60px;">
+    <div class="section-label">Glossary — Quick Reference</div>
+    <table class="tier-table">
+      <thead>
+        <tr>
+          <th>Term</th>
+          <th>Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:var(--accent);">LLM</strong></td>
+          <td>Large Language Model — a neural network trained on text to predict and generate language (GPT, Gemma, Llama, etc.)</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--accent);">Inference</strong></td>
+          <td>Running a trained model to generate outputs. "Local inference" means your CPU/GPU does this, not a remote server.</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--accent);">Quantization</strong></td>
+          <td>Compressing model weights from 32-bit floats to 4-bit integers, reducing RAM requirements ~4–8x with minimal quality loss.</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--accent);">GGUF</strong></td>
+          <td>The file format Ollama uses to store quantized models. Designed for efficient CPU inference.</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--accent);">Context Window</strong></td>
+          <td>How many tokens (words) the model can "see" at once. Larger = more memory needed. Configured via <code>num_ctx</code>.</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--accent);">Modelfile</strong></td>
+          <td>A configuration file for customizing a model's behavior — like a Dockerfile for AI. Defines system prompt, parameters, etc.</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--accent);">Open-weight</strong></td>
+          <td>Models whose weights (parameters) are publicly released. "Open source AI" — you can download and run them yourself.</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--accent);">Harness tool</strong></td>
+          <td>A CLI or app that wraps a model API and gives it agentic capabilities (file access, code execution, tool calling).</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--accent);">tok/s</strong></td>
+          <td>Tokens per second — a measure of inference speed. 10 tok/s ≈ ~7 words/second. Cloud APIs do 50–100+ tok/s.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-logo">ollama.<em>guide</em></div>
+  <div class="footer-note">
+    Written for developers at every level · ELI8 to Production<br>
+    Ollama is open source · MIT License · ollama.com<br><br>
+    <span style="color: var(--ink2);">This guide is educational. Hardware performance varies. Always check official docs for latest commands.</span>
+  </div>
+</footer>
+
+<script>
+  // Scroll progress bar
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    document.getElementById('progress').style.width = (scrolled / total * 100) + '%';
+  });
+
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Typewriter effect on hero terminal
+  const lines = document.querySelectorAll('.terminal-body > div');
+  lines.forEach((line, i) => {
+    line.style.opacity = '0';
+    line.style.transition = 'opacity 0.3s';
+    setTimeout(() => line.style.opacity = '1', i * 400 + 300);
+  });
+
+  // Animate compare bars on scroll
+  const barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.compare-bar-fill').forEach(bar => {
+          const target = bar.style.width;
+          bar.style.width = '0';
+          setTimeout(() => bar.style.width = target, 100);
+        });
+        barObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.compare-infographic').forEach(el => barObserver.observe(el));
+
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'theme') {
+      document.documentElement.classList.toggle('dark', !!e.data.dark);
+    }
+  });
+</script>
+</body>
+</html>
