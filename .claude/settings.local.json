@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm ingest *)",
+      "Bash(pnpm tsc *)",
+      "Bash(pnpm test *)",
+      "Bash(npx jest *)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(node_modules/.bin/jest --testPathPattern=\"posts\" --no-coverage)",
+      "Bash(Start-Sleep -Seconds 20)",
+      "Bash(Get-Content \"C:\\\\Users\\\\advir\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-advir-Desktop-Coding-Blog\\\\33cdd273-5323-41d3-be31-1b4f59d42d08\\\\tasks\\\\btvjurtuc.output\")",
+      "Bash(node -e \"const {posts, getAllPosts, getPostsByCategory} = require\\('./src/lib/posts.ts'\\); console.log\\('posts:', posts.length\\)\")",
+      "Bash(node_modules/.bin/jest --testPathPattern=\"posts.test\" --no-coverage --forceExit --runInBand)",
+      "Bash(echo \"DONE_$?\")",
+      "Bash(Get-Content \"C:\\\\Users\\\\advir\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-advir-Desktop-Coding-Blog\\\\33cdd273-5323-41d3-be31-1b4f59d42d08\\\\tasks\\\\bdzwx7k9r.output\" -Wait -Tail 50)",
+      "Bash(Select-Object -First 80)",
+      "Bash(npx tsc *)",
+      "Bash(echo \"TSC_EXIT:$?\")"
+    ]
+  }
+}
