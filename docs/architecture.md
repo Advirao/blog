@@ -250,7 +250,7 @@ flowchart LR
     subgraph CI Pipeline
         I[pnpm install\nfrozen lockfile] --> V[pnpm ingest\nvalidate HTML files]
         V --> T[tsc --noEmit\ntype check]
-        T --> TS[pnpm test\n121 tests]
+        T --> TS[pnpm test\nJest suite]
         TS --> B[pnpm build\nNext.js static export]
     end
 
@@ -295,15 +295,19 @@ flowchart TD
 Blog/
 ├── .claude/                    # AI assistant context (Claude Code)
 │   ├── CLAUDE.md               # Project conventions and context
+│   ├── MEMORY.md               # Memory index for persistent context
+│   ├── agents/                 # Specialized sub-agent definitions
+│   ├── commands/               # Slash command definitions (e.g. /publish)
 │   └── skills/                 # Task-specific skill files
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml          # CI/CD: install → validate → test → build → deploy
 ├── docs/
-│   └── architecture.md         # This file
+│   ├── architecture.md         # This file
+│   └── design-system.md        # Color palette, fonts, and design rules
 ├── public/
 │   ├── .nojekyll               # Prevents GitHub Pages Jekyll processing
-│   └── simulations/            # HTML simulation files (7 total)
+│   └── simulations/            # HTML simulation files (8 total)
 ├── scripts/
 │   └── ingest-html.ts          # Validation script
 ├── src/

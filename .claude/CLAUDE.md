@@ -1,3 +1,7 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 # Project Context — KB Interactive Learning Platform
 
 Live site: **advirao.github.io/blog**
@@ -16,6 +20,44 @@ Live site: **advirao.github.io/blog**
 | Testing | Jest 29 + React Testing Library — 121 tests |
 | Package manager | pnpm 10 |
 | Hosting | GitHub Pages via GitHub Actions |
+
+---
+
+## Commands
+
+```bash
+pnpm dev           # Start local dev server (basePath not set — runs at /)
+pnpm build         # Static export (set NEXT_PUBLIC_BASE_PATH=/blog for prod)
+pnpm type-check    # TypeScript strict check without emitting
+pnpm test          # Run Jest suite
+pnpm test:watch    # Jest watch mode
+jest tests/lib/posts.test.ts  # Run a single test file
+pnpm ingest        # Validate posts.ts ↔ public/simulations/ HTML files are in sync
+pnpm lint          # ESLint via Next.js
+pnpm format        # Prettier write
+```
+
+---
+
+## Architecture
+
+The app is a **fully static Next.js 14 App Router** site. All pages use `generateStaticParams` and are exported at build time — there is no runtime server.
+
+**Routing pattern:** Each category has three files: `src/app/<category>/page.tsx` (index), `src/app/<category>/[slug]/page.tsx` (simulator detail), and all three category detail pages share identical structure — copy the genai one as a template.
+
+**Data flow:**
+1. `src/lib/posts.ts` → single source of truth for all `Post` objects
+2. Category pages call `getPostsByCategory(slug)` → render `PostCard` grid
+3. Slug pages call `getPostBySlug(category, slug)` → render `SimulatorFrame` + metadata
+4. `SimulatorFrame` (`src/components/content/SimulatorFrame.tsx`) wraps each HTML file in an iframe with a browser-chrome toolbar, forwards the current theme via `postMessage`, and opens external links via `postMessage` to escape the sandbox.
+
+**Filtering:** `useFilter` hook (`src/hooks/useFilter.ts`) drives the home page search/filter UI — filter state is local to `page.tsx` (`'use client'`), the hook returns a `filtered` array.
+
+**Simulator HTML files** (`public/simulations/*.html`) are completely standalone — they cannot import from the Next.js app. They must include their own CSS vars for theming and listen for `window.addEventListener('message', ...)` to receive `{ type: 'theme', dark }` from the parent.
+
+**Theme event:** `SiteHeader` dispatches `new CustomEvent('kb-theme-change')` on `window` when the user toggles. `SimulatorFrame` listens for this and re-sends `postMessage` to the iframe. The localStorage key is `'kb-theme'`.
+
+**`pnpm ingest`** parses `posts.ts` with a regex and cross-checks every `simulationFile` path against `public/simulations/`. Run it after adding any new post or HTML file — it is a pre-deploy gate.
 
 ---
 

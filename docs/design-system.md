@@ -110,7 +110,7 @@ Everything else — text, borders, backgrounds — stays in the warm neutral ran
 
 ## Simulator HTML files
 
-The 7 standalone HTML simulator files (`public/simulations/*.html`) each have their own internal `<style>` block. They cannot inherit the blog's CSS — they are self-contained. They use the **same color palette and fonts** as the main site, defined as CSS custom properties inside each file:
+The 8 standalone HTML simulator files (`public/simulations/*.html`) each have their own internal `<style>` block. They cannot inherit the blog's CSS — they are self-contained. They use the **same color palette and fonts** as the main site, defined as CSS custom properties inside each file:
 
 ```css
 :root {
