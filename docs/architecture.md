@@ -307,7 +307,7 @@ Blog/
 │   └── design-system.md        # Color palette, fonts, and design rules
 ├── public/
 │   ├── .nojekyll               # Prevents GitHub Pages Jekyll processing
-│   └── simulations/            # HTML simulation files (8 total)
+│   └── simulations/            # HTML simulation files (13 total)
 ├── scripts/
 │   └── ingest-html.ts          # Validation script
 ├── src/

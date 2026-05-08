@@ -35,6 +35,10 @@ A complete curriculum from Python basics to building production AI agents.
 | **Phases 4–6** | Tool calling → Model Context Protocol (MCP) → OpenAI Agents SDK → LangGraph |
 | **Model Context Protocol** | MCP architecture, JSON-RPC internals, configuration, real-world examples, and CI/CD integration |
 | **Ollama: Run AI Locally** | Run open-weight LLMs on your own hardware — no cloud, no API keys |
+| **Episode 1: The Espresso Apocalypse** | What breaks when you ship an LLM with no guardrails |
+| **Episode 2: The Napkin Sketch** | AI gateway concept explained through four coffee-shop analogies |
+| **Episode 3: The Whiteboard** | Eight pipeline stages and a YAML policy file from gateway concept |
+| **Episode 4: 15 Days Later** | Production metrics: 38% cache hit rate, costs down 32% |
 
 ### 🖥️ Claude Code
 Master the agentic CLI — from the core loop to hooks, skills, and CI/CD integration.
@@ -105,7 +109,7 @@ pnpm lint           # ESLint
 ### Project structure
 
 ```
-├── public/simulations/       # Self-contained HTML simulator files (9 total)
+├── public/simulations/       # Self-contained HTML simulator files (13 total)
 ├── src/
 │   ├── app/                  # Pages (home, /oil-trading, /genai, /claude-code, + slug pages)
 │   ├── components/           # UI, layout, and content components

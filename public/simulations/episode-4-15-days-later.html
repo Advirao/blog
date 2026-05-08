@@ -1,0 +1,2215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Episode 4 · 15 Days Later — The Sentinel Chronicles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   THE SENTINEL CHRONICLES · EPISODE 4 · 15 DAYS LATER
+   Mood: warm, sunny, victory lap. Brewline at full morning light.
+   The story closes. Fifteen days of production data on the table.
+   The framed napkin. The team. The honest retro.
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── Design system tokens ── */
+  --bg:      #FAF9F7;
+  --surface:  #FFFFFF;
+  --surface2: #F2EDE6;
+  --border:   #E5DDD5;
+  --ink:      #2D2926;
+  --ink2:     #7A6F68;
+  --accent:   #5E4FA0;
+
+  /* ── Legacy aliases → design system ── */
+  --cream:        var(--bg);
+  --paper:        var(--surface);
+  --paper-soft:   var(--surface2);
+  --espresso:     var(--ink);
+  --coffee:       var(--ink2);
+  --milk:         var(--border);
+  --steam:        var(--border);
+  --terracotta:   var(--accent);
+  --terracotta-soft: #9B8BC8;
+  --moss:         var(--accent);
+  --moss-soft:    #9B8BC8;
+  --sky:          var(--accent);
+  --sky-soft:     #9B8BC8;
+  --alarm:        #B83232;
+  --gold:         #A8711A;
+  --sun:          #A8711A;
+  --whiteboard:   var(--surface);
+
+  --display: 'Lora', Georgia, serif;
+  --body:    'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --mono:    'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --measure: 68ch;
+  --measure-narrow: 56ch;
+}
+
+html.dark {
+  --bg:      #16151C;
+  --surface:  #201F29;
+  --surface2: #1A1924;
+  --border:   #2E2D3C;
+  --ink:      #E8E3DC;
+  --ink2:     #9B9399;
+  --accent:   #7B6BBD;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--body);
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+body::before {
+  content: none;
+}
+main { position: relative; z-index: 2; }
+
+/* ───── SERIES NAV ───── */
+.series-nav {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--steam);
+}
+.series-nav-inner {
+  max-width: 1240px; margin: 0 auto;
+  padding: 0.85rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 2rem;
+}
+.series-mark {
+  font-family: var(--display); font-weight: 600; font-size: 1.05rem;
+  letter-spacing: -0.01em; color: var(--espresso);
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.series-mark .glyph { width: 22px; height: 22px; display: inline-block; }
+.series-mark .glyph svg { width: 100%; height: 100%; }
+.episode-dots {
+  display: flex; gap: 0.65rem; align-items: center;
+  font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--coffee);
+}
+.episode-dots .dot-group { display: flex; gap: 0.35rem; align-items: center; }
+.episode-dots .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--steam); border: 1px solid var(--milk);
+}
+.episode-dots .dot.done { background: var(--coffee); border-color: var(--coffee); }
+.episode-dots .dot.active {
+  background: var(--terracotta); border-color: var(--terracotta);
+  box-shadow: 0 0 0 3px rgba(184, 69, 30, 0.15);
+}
+
+/* ───── HERO ───── */
+.hero {
+  padding: 5rem 2rem 3rem;
+  max-width: 1240px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr; gap: 3rem;
+}
+.hero-eyebrow {
+  font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--terracotta);
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 0.8rem;
+}
+.hero-eyebrow .ep-num {
+  background: var(--terracotta); color: var(--cream);
+  padding: 0.2rem 0.55rem; border-radius: 2px; font-weight: 600;
+}
+.hero-eyebrow::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, var(--milk), transparent);
+  max-width: 200px;
+}
+.hero-title {
+  font-family: var(--display); font-weight: 600;
+  font-size: clamp(2.6rem, 6vw, 5.5rem);
+  line-height: 0.98; letter-spacing: -0.025em;
+  color: var(--espresso); margin: 0 0 1.5rem;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30;
+}
+.hero-title .accent {
+  font-style: italic; color: var(--terracotta); font-weight: 500;
+}
+.hero-subtitle {
+  font-family: var(--display); font-weight: 300; font-style: italic;
+  font-size: clamp(1.15rem, 2vw, 1.45rem); line-height: 1.4;
+  color: var(--coffee); max-width: 50ch; margin: 0 0 2rem;
+}
+.hero-meta {
+  display: flex; flex-wrap: wrap; gap: 2rem;
+  font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em;
+  color: var(--coffee); text-transform: uppercase;
+  border-top: 1px solid var(--steam); padding-top: 1.2rem;
+}
+.hero-meta dt {
+  font-size: 0.66rem; color: var(--milk);
+  margin-bottom: 0.3rem; letter-spacing: 0.15em;
+}
+.hero-meta dd { margin: 0; color: var(--espresso); font-weight: 500; }
+.hero-meta > div { margin: 0; }
+
+/* ───── ARTICLE ───── */
+article { max-width: 1240px; margin: 0 auto; padding: 0 2rem 6rem; }
+
+.prose { max-width: var(--measure); margin: 0 auto; }
+.prose p {
+  font-size: 1.13rem; line-height: 1.72; color: var(--ink);
+  margin: 0 0 1.4rem;
+}
+.prose p:first-of-type::first-letter {
+  font-family: var(--display); font-weight: 700;
+  font-size: 4.5rem; line-height: 0.85;
+  float: left; padding: 0.3rem 0.7rem 0 0;
+  color: var(--terracotta);
+  font-variation-settings: 'opsz' 144;
+}
+.prose .lede {
+  font-family: var(--display); font-weight: 400;
+  font-size: 1.45rem; line-height: 1.45; color: var(--espresso);
+  margin-bottom: 2rem;
+}
+.prose .lede::first-letter {
+  font-size: 4.5rem; color: var(--terracotta);
+}
+.prose code, code.inline {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--paper-soft);
+  color: var(--espresso);
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+  border: 1px solid var(--steam);
+}
+
+.section-divider {
+  display: flex; align-items: center; gap: 1rem;
+  margin: 3.5rem auto 2rem; max-width: var(--measure);
+}
+.section-divider .roman {
+  font-family: var(--display); font-style: italic; font-weight: 500;
+  font-size: 1.4rem; color: var(--terracotta);
+}
+.section-divider .line { flex: 1; height: 1px; background: var(--steam); }
+.section-divider .label {
+  font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--coffee);
+}
+
+h2.section-title {
+  font-family: var(--display); font-weight: 600;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  line-height: 1.1; letter-spacing: -0.02em;
+  color: var(--espresso);
+  margin: 0 auto 1.5rem; max-width: var(--measure);
+}
+h2.section-title em {
+  font-weight: 500; color: var(--terracotta);
+}
+h3.subsection {
+  font-family: var(--display); font-weight: 500;
+  font-size: 1.5rem; color: var(--espresso);
+  margin: 2.5rem auto 1rem; max-width: var(--measure);
+}
+h3.subsection em { font-style: italic; color: var(--terracotta); font-weight: 500; }
+
+/* ───── INFOGRAPHIC FRAME ───── */
+.infographic {
+  max-width: 1100px; margin: 4rem auto;
+  background: var(--paper);
+  border-radius: 8px; border: 1px solid var(--steam);
+  padding: 2rem 2rem 1.5rem;
+  position: relative;
+}
+.infographic .figure-label {
+  position: absolute; top: -12px; left: 24px;
+  background: var(--terracotta); color: var(--cream);
+  font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 0.32rem 0.7rem; border-radius: 2px; font-weight: 600;
+}
+.infographic-svg-wrap {
+  width: 100%; aspect-ratio: 1.6 / 1; display: block;
+}
+.infographic svg { width: 100%; height: 100%; display: block; }
+.infographic-caption {
+  font-family: var(--display); font-style: italic;
+  font-size: 0.98rem; color: var(--coffee);
+  text-align: center; margin-top: 1rem;
+  border-top: 1px solid var(--steam); padding-top: 1rem;
+  line-height: 1.5;
+}
+.infographic-caption strong {
+  font-style: normal; font-family: var(--mono);
+  text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.15em;
+  color: var(--terracotta); font-weight: 600;
+}
+
+/* ───── DASHBOARD FIGURE ───── */
+.dashboard-frame {
+  max-width: 1240px; margin: 4rem auto;
+  background: var(--paper);
+  border-radius: 8px; border: 1px solid var(--steam);
+  padding: 2.5rem 1.5rem 1.5rem;
+  position: relative;
+}
+.dashboard-frame .figure-label {
+  position: absolute; top: -12px; left: 24px;
+  background: var(--moss); color: var(--cream);
+  font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 0.32rem 0.7rem; border-radius: 2px; font-weight: 600;
+}
+.dashboard-frame .arch-title {
+  font-family: var(--display); font-weight: 500; font-style: italic;
+  font-size: 1.15rem; color: var(--coffee);
+  text-align: center; margin: 0 0 1.5rem;
+}
+.dashboard-frame .arch-title strong {
+  font-style: normal; font-weight: 600; color: var(--espresso);
+}
+.dashboard-svg-wrap {
+  width: 100%; aspect-ratio: 1.7 / 1; display: block;
+}
+.dashboard-svg-wrap svg { width: 100%; height: 100%; display: block; }
+.dashboard-caption {
+  font-family: var(--display); font-style: italic;
+  font-size: 0.95rem; color: var(--coffee);
+  text-align: center; margin-top: 1rem;
+  border-top: 1px dashed var(--steam); padding-top: 1rem;
+  line-height: 1.5;
+}
+
+/* ───── DIALOGUE ───── */
+.dialogue { max-width: var(--measure); margin: 3rem auto; }
+.dialogue .stage {
+  font-family: var(--display); font-style: italic;
+  color: var(--coffee); text-align: center; margin: 1.5rem 0;
+  font-size: 0.98rem;
+}
+.dialogue .stage::before, .dialogue .stage::after {
+  content: '· · ·'; margin: 0 0.8rem; color: var(--milk);
+  font-style: normal; letter-spacing: 0.3em;
+}
+.line {
+  display: grid; grid-template-columns: 90px 1fr;
+  gap: 1rem; margin-bottom: 1.3rem; align-items: flex-start;
+}
+.speaker {
+  font-family: var(--mono); font-size: 0.78rem;
+  letter-spacing: 0.13em; text-transform: uppercase; font-weight: 600;
+  padding-top: 0.25rem; text-align: right;
+}
+.speaker.sarah { color: var(--terracotta); }
+.speaker.david { color: var(--moss); }
+.speaker.mike  { color: var(--coffee); }
+.speaker.priya { color: var(--sky); }
+.speaker.aanya { color: var(--moss); }
+.speaker.tom   { color: var(--gold); }
+.speaker.action {
+  color: var(--milk); font-style: italic; font-weight: 400;
+  text-transform: none; letter-spacing: normal;
+}
+.utterance {
+  font-size: 1.08rem; line-height: 1.65; color: var(--ink);
+}
+.line.action .utterance {
+  font-family: var(--display); font-style: italic;
+  color: var(--coffee); font-size: 1rem;
+}
+
+/* ───── METRIC GRID — top numbers ───── */
+.metric-grid {
+  max-width: 1100px; margin: 3rem auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.metric-card {
+  background: var(--paper);
+  border: 1px solid var(--steam);
+  border-left: 3px solid var(--terracotta);
+  border-radius: 0 6px 6px 0;
+  padding: 1.3rem 1.4rem 1.4rem;
+}
+.metric-card.moss { border-left-color: var(--moss); }
+.metric-card.sky { border-left-color: var(--sky); }
+.metric-card.gold { border-left-color: var(--gold); }
+.metric-card .m-label {
+  font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--coffee); margin-bottom: 0.5rem; font-weight: 500;
+}
+.metric-card .m-value {
+  font-family: var(--display); font-weight: 600;
+  font-size: 2.3rem; color: var(--espresso);
+  letter-spacing: -0.02em; line-height: 1;
+  margin-bottom: 0.4rem;
+}
+.metric-card .m-value .unit {
+  font-size: 1rem; color: var(--coffee); font-weight: 500;
+}
+.metric-card .m-detail {
+  font-size: 0.88rem; line-height: 1.5;
+  color: var(--coffee);
+}
+.metric-card .m-delta {
+  font-family: var(--mono); font-size: 0.78rem;
+  margin-top: 0.4rem; font-weight: 600;
+}
+.metric-card .m-delta.up { color: var(--moss); }
+.metric-card .m-delta.down { color: var(--terracotta); }
+
+/* ───── NEAR-MISS CARDS ───── */
+.near-miss-grid {
+  max-width: 1100px; margin: 3rem auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.3rem;
+}
+.near-miss-card {
+  background: var(--paper);
+  border: 1px solid var(--steam);
+  border-radius: 8px;
+  padding: 1.5rem 1.5rem 1.6rem;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.near-miss-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12); transform: translateY(-1px);
+}
+.near-miss-card .nm-icon {
+  width: 64px; height: 64px;
+  margin: 0 auto 1rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.near-miss-card .nm-icon svg { width: 100%; height: 100%; }
+.near-miss-card .nm-time {
+  font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--terracotta); margin-bottom: 0.4rem; font-weight: 600;
+  text-align: center;
+}
+.near-miss-card h4 {
+  font-family: var(--display); font-weight: 600;
+  font-size: 1.2rem; color: var(--espresso);
+  margin: 0 0 0.7rem; text-align: center; letter-spacing: -0.01em;
+}
+.near-miss-card p {
+  font-size: 0.95rem; line-height: 1.55;
+  color: var(--ink); margin: 0;
+}
+.near-miss-card .nm-stage {
+  font-family: var(--mono); font-size: 0.7rem;
+  background: var(--paper-soft); color: var(--moss);
+  padding: 0.3rem 0.55rem;
+  border-radius: 3px; border: 1px solid var(--steam);
+  display: inline-block; margin-top: 0.9rem;
+  font-weight: 600;
+}
+
+/* ───── PULL QUOTE ───── */
+.pull-quote {
+  max-width: 760px; margin: 3.5rem auto;
+  font-family: var(--display); font-style: italic; font-weight: 400;
+  font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.35;
+  color: var(--espresso); text-align: center;
+  letter-spacing: -0.01em; position: relative;
+  padding: 1.5rem 2.5rem;
+}
+.pull-quote::before {
+  content: '"'; position: absolute; top: -1.5rem; left: 50%;
+  transform: translateX(-50%); font-size: 6rem;
+  color: var(--terracotta); opacity: 0.25;
+  font-family: var(--display); line-height: 1;
+}
+.pull-quote cite {
+  display: block; font-style: normal; font-family: var(--mono);
+  font-size: 0.78rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--coffee);
+  margin-top: 1.2rem; font-weight: 500;
+}
+
+/* ───── INSET ───── */
+.inset {
+  max-width: var(--measure); margin: 2.5rem auto;
+  background: var(--paper); border: 1px solid var(--steam);
+  border-left: 4px solid var(--moss);
+  padding: 1.6rem 1.8rem 1.7rem;
+  border-radius: 0 8px 8px 0;
+}
+.inset.warn { border-left-color: var(--gold); }
+.inset.crit { border-left-color: var(--alarm); }
+.inset-label {
+  font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--moss); margin-bottom: 0.7rem; font-weight: 600;
+}
+.inset.warn .inset-label { color: var(--gold); }
+.inset.crit .inset-label { color: var(--alarm); }
+.inset h4 {
+  font-family: var(--display); font-weight: 600; font-size: 1.4rem;
+  color: var(--espresso); margin: 0 0 0.7rem;
+  letter-spacing: -0.01em;
+}
+.inset p {
+  font-size: 1rem; line-height: 1.65; color: var(--ink);
+  margin: 0 0 0.8rem;
+}
+.inset p:last-child { margin-bottom: 0; }
+
+/* ───── CAMEO QUOTE CARDS ───── */
+.cameo-grid {
+  max-width: 1100px; margin: 3rem auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.2rem;
+}
+.cameo-card {
+  background: var(--paper);
+  border: 1px solid var(--steam);
+  border-radius: 8px;
+  padding: 1.5rem 1.4rem 1.6rem;
+  position: relative;
+}
+.cameo-card .ca-head {
+  display: flex; align-items: center; gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+.cameo-card .ca-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-family: var(--display); font-weight: 600;
+  font-size: 1.1rem; flex-shrink: 0;
+}
+.cameo-card.mike  .ca-avatar { background: var(--accent); }
+.cameo-card.aanya .ca-avatar { background: var(--accent); }
+.cameo-card.tom   .ca-avatar { background: var(--ink2); }
+.cameo-card.priya .ca-avatar { background: var(--accent); }
+.cameo-card .ca-info .name {
+  font-family: var(--display); font-weight: 600; font-size: 1.05rem;
+  color: var(--espresso); line-height: 1.1;
+}
+.cameo-card .ca-info .role {
+  font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.08em; color: var(--coffee);
+  text-transform: uppercase; margin-top: 0.15rem;
+}
+.cameo-card .ca-quote {
+  font-family: var(--display); font-style: italic;
+  font-size: 1.02rem; line-height: 1.5;
+  color: var(--ink); margin: 0;
+  position: relative; padding-left: 1rem;
+  border-left: 2px solid var(--steam);
+}
+.cameo-card .ca-metric {
+  font-family: var(--mono); font-size: 0.75rem;
+  color: var(--terracotta); margin-top: 1rem;
+  letter-spacing: 0.05em; font-weight: 600;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.cameo-card .ca-metric::before {
+  content: ''; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--terracotta);
+}
+.cameo-card.mike  .ca-metric { color: var(--coffee); }
+.cameo-card.aanya .ca-metric { color: var(--moss); }
+.cameo-card.tom   .ca-metric { color: var(--gold); }
+.cameo-card.priya .ca-metric { color: var(--sky); }
+.cameo-card.mike  .ca-metric::before { background: var(--coffee); }
+.cameo-card.aanya .ca-metric::before { background: var(--moss); }
+.cameo-card.tom   .ca-metric::before { background: var(--gold); }
+.cameo-card.priya .ca-metric::before { background: var(--sky); }
+
+/* ───── ROADMAP LIST ───── */
+.roadmap-list {
+  max-width: var(--measure); margin: 2.5rem auto;
+  background: var(--paper);
+  border: 1px solid var(--steam);
+  border-radius: 8px;
+  padding: 1.5rem 1.8rem 1.8rem;
+}
+.roadmap-list .rm-head {
+  font-family: var(--mono); font-size: 0.72rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--coffee); margin-bottom: 1rem; font-weight: 600;
+  padding-bottom: 0.7rem; border-bottom: 1px solid var(--steam);
+}
+.roadmap-list ul {
+  list-style: none; padding: 0; margin: 0;
+}
+.roadmap-list li {
+  display: grid; grid-template-columns: auto 1fr auto;
+  gap: 0.85rem; padding: 0.7rem 0;
+  border-bottom: 1px dashed var(--steam);
+  align-items: baseline;
+}
+.roadmap-list li:last-child { border-bottom: none; }
+.roadmap-list li .rm-num {
+  font-family: var(--mono); font-weight: 600;
+  color: var(--terracotta); font-size: 0.85rem;
+  width: 28px;
+}
+.roadmap-list li .rm-text {
+  color: var(--ink); font-size: 1rem; line-height: 1.5;
+}
+.roadmap-list li .rm-text em {
+  font-family: var(--display); color: var(--coffee); font-style: italic;
+  font-size: 0.92rem; display: block; margin-top: 0.15rem;
+}
+.roadmap-list li .rm-when {
+  font-family: var(--mono); font-size: 0.7rem;
+  color: var(--coffee); padding: 0.18rem 0.5rem;
+  background: var(--paper-soft);
+  border-radius: 3px; letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+/* ───── END-OF-SERIES CARD ───── */
+.end-of-series {
+  max-width: 1100px; margin: 5rem auto 2rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  border-radius: 14px;
+  padding: 3rem; position: relative; overflow: hidden;
+  text-align: center;
+}
+.end-of-series::before {
+  content: none;
+}
+.end-of-series > * { position: relative; z-index: 1; }
+.end-of-series .eos-eyebrow {
+  font-family: var(--mono); font-size: 0.78rem;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 1rem;
+}
+.end-of-series h3 {
+  font-family: var(--display); font-weight: 600;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  color: var(--ink); margin: 0 0 1rem;
+  line-height: 1; letter-spacing: -0.02em;
+}
+.end-of-series h3 em {
+  color: var(--terracotta-soft); font-style: italic; font-weight: 500;
+}
+.end-of-series .eos-blurb {
+  font-family: var(--display); font-style: italic;
+  font-size: 1.15rem; color: var(--ink2); line-height: 1.5;
+  max-width: 50ch; margin: 0 auto 2rem;
+}
+.end-of-series .eos-list {
+  display: flex; gap: 1.5rem; justify-content: center;
+  flex-wrap: wrap; margin-top: 2rem;
+  padding-top: 2rem; border-top: 1px solid var(--border);
+}
+.end-of-series .eos-list span {
+  font-family: var(--mono); font-size: 0.78rem;
+  letter-spacing: 0.08em; color: var(--ink2);
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.end-of-series .eos-list .num {
+  font-weight: 600; color: var(--ink2);
+}
+
+/* ───── AUTHOR'S NOTE — META, OUT OF STORY ───── */
+.authors-note {
+  max-width: 1100px; margin: 4rem auto 2rem;
+  background: var(--paper);
+  border: 1px solid var(--steam);
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+}
+.authors-note .an-head {
+  background: var(--paper-soft);
+  padding: 1.2rem 2rem;
+  border-bottom: 1px solid var(--steam);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+}
+.authors-note .an-head .an-eyebrow {
+  font-family: var(--mono); font-size: 0.72rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--terracotta); font-weight: 600;
+}
+.authors-note .an-head .an-tag {
+  font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.1em; color: var(--coffee);
+  background: var(--surface2);
+  padding: 0.25rem 0.55rem; border-radius: 3px;
+  border: 1px solid var(--steam);
+}
+.authors-note .an-body {
+  padding: 2rem 2.2rem 1.6rem;
+}
+.authors-note .an-body h3 {
+  font-family: var(--display); font-weight: 600;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: var(--espresso); margin: 0 0 1rem;
+  letter-spacing: -0.01em;
+}
+.authors-note .an-body h3 em {
+  font-style: italic; color: var(--terracotta); font-weight: 500;
+}
+.authors-note .an-body p {
+  font-size: 1.02rem; line-height: 1.65; color: var(--ink);
+  margin: 0 0 1rem;
+}
+.authors-note .an-body p:last-of-type { margin-bottom: 1.5rem; }
+.authors-note .an-body .an-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin: 1.5rem 0;
+}
+.authors-note .an-body .an-block {
+  background: var(--paper-soft);
+  border: 1px solid var(--steam);
+  border-radius: 8px;
+  padding: 1.2rem 1.3rem 1.3rem;
+}
+.authors-note .an-body .an-block.repo { border-left: 3px solid var(--moss); }
+.authors-note .an-body .an-block.creds { border-left: 3px solid var(--sky); }
+.authors-note .an-body .an-block .anb-label {
+  font-family: var(--mono); font-size: 0.68rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--coffee); margin-bottom: 0.6rem; font-weight: 600;
+}
+.authors-note .an-body .an-block h4 {
+  font-family: var(--display); font-weight: 600;
+  font-size: 1.15rem; color: var(--espresso);
+  margin: 0 0 0.6rem; letter-spacing: -0.01em;
+}
+.authors-note .an-body .an-block p {
+  font-size: 0.95rem; line-height: 1.55; color: var(--ink);
+  margin: 0 0 0.8rem;
+}
+.authors-note .an-body .an-block p:last-child { margin-bottom: 0; }
+.authors-note .an-body .an-link {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--mono); font-size: 0.85rem;
+  color: var(--terracotta); text-decoration: none;
+  font-weight: 600; padding: 0.55rem 0.85rem;
+  background: var(--cream); border: 1px solid var(--milk);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  word-break: break-all;
+}
+.authors-note .an-body .an-link:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12); transform: translateY(-1px);
+}
+.authors-note .an-body .an-link svg { width: 14px; height: 14px; flex-shrink: 0; }
+.authors-note .an-disclaimer {
+  background: var(--surface2);
+  border-top: 1px solid var(--steam);
+  padding: 1.3rem 2.2rem 1.5rem;
+}
+.authors-note .an-disclaimer .anb-label {
+  font-family: var(--mono); font-size: 0.68rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 0.5rem; font-weight: 600;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.authors-note .an-disclaimer .anb-label::before {
+  content: '⚠'; font-family: var(--body); font-size: 1rem;
+  color: var(--gold); font-weight: 400;
+}
+.authors-note .an-disclaimer p {
+  font-size: 0.92rem; line-height: 1.55; color: var(--coffee);
+  margin: 0 0 0.5rem; font-style: italic;
+}
+.authors-note .an-disclaimer p:last-child { margin-bottom: 0; }
+
+/* ───── FOOTER ───── */
+footer {
+  border-top: 1px solid var(--steam);
+  padding: 3rem 2rem; margin-top: 4rem;
+  background: var(--paper);
+}
+.footer-inner {
+  max-width: 1240px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2rem; align-items: center;
+}
+.footer-mark {
+  font-family: var(--display); font-weight: 600;
+  font-size: 1.1rem; color: var(--espresso);
+  letter-spacing: -0.01em;
+}
+.footer-mark em {
+  font-style: italic; color: var(--terracotta); font-weight: 500;
+}
+.series-list {
+  display: flex; gap: 1rem; font-family: var(--mono);
+  font-size: 0.78rem; letter-spacing: 0.06em;
+  color: var(--coffee); justify-content: flex-end; flex-wrap: wrap;
+}
+.series-list span { display: flex; align-items: center; gap: 0.3rem; }
+.series-list .num { font-weight: 600; color: var(--milk); }
+.series-list .ttl { color: var(--coffee); }
+.series-list .done .num { color: var(--coffee); }
+.series-list .current { color: var(--terracotta); font-weight: 600; }
+.series-list .current .num { color: var(--terracotta); }
+
+/* ───── UTILS & RESPONSIVE ───── */
+.fade-in {
+  opacity: 0; transform: translateY(12px);
+  animation: fade-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+.fade-in.d1 { animation-delay: 0.05s; }
+.fade-in.d2 { animation-delay: 0.15s; }
+.fade-in.d3 { animation-delay: 0.25s; }
+.fade-in.d4 { animation-delay: 0.35s; }
+@keyframes fade-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  body { padding: 8px; }
+  .hero { padding: 3rem 1.3rem 2rem; }
+  article { padding: 0 1.3rem 4rem; }
+  .prose p { font-size: 1.05rem; }
+  .line { grid-template-columns: 70px 1fr; gap: 0.7rem; }
+  .speaker { font-size: 0.7rem; }
+  .utterance { font-size: 1rem; }
+  .end-of-series { padding: 2rem; }
+  .footer-inner { grid-template-columns: 1fr; text-align: center; }
+  .series-list { justify-content: center; }
+  .authors-note .an-body .an-row { grid-template-columns: 1fr; }
+  /* Stack flex rows */
+  .main-layout, .content-row, .flex-row { flex-direction: column !important; }
+  /* Reduce panel padding */
+  .panel, .card, .section { padding: 12px !important; }
+  /* Make tabs horizontally scrollable */
+  .tab-bar, .tabs, .nav-tabs { overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+  /* Metric grid single column */
+  .metric-grid { grid-template-columns: 1fr; }
+  /* Near-miss grid single column */
+  .near-miss-grid { grid-template-columns: 1fr; }
+  /* Cameo grid single column */
+  .cameo-grid { grid-template-columns: 1fr; }
+  /* Series nav */
+  .series-nav-inner { flex-direction: column; gap: 0.6rem; padding: 0.7rem 1rem; }
+}
+</style>
+</head>
+<body>
+
+<main>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SERIES NAV
+       ═══════════════════════════════════════════════════════ -->
+  <nav class="series-nav">
+    <div class="series-nav-inner">
+      <div class="series-mark">
+        <span class="glyph">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 2 L20 6 L20 12 C20 17 16 21 12 22 C8 21 4 17 4 12 L4 6 Z"
+                  stroke="#3B2A1F" stroke-width="1.6" stroke-linejoin="round" fill="#FBF8F1"/>
+            <path d="M9 12 L11 14 L15 10" stroke="#B8451E" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </span>
+        The Sentinel Chronicles
+      </div>
+      <div class="episode-dots">
+        <span>EP</span>
+        <div class="dot-group">
+          <span class="dot done" title="Episode 1"></span>
+          <span class="dot done" title="Episode 2"></span>
+          <span class="dot done" title="Episode 3"></span>
+          <span class="dot active" title="Episode 4"></span>
+        </div>
+        <span>04 / 04 · finale</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════════════════════ -->
+  <header class="hero">
+    <div class="fade-in d1">
+      <div class="hero-eyebrow">
+        <span class="ep-num">EP 04</span>
+        Brewline · 8:09 AM · Sarah arrives carrying something flat wrapped in brown paper
+      </div>
+
+      <h1 class="hero-title">
+        Fifteen <span class="accent">days later.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        In which the dashboard goes up, the cache hits 38 %, the
+        bill comes down 32 %, the team shows up to celebrate, the
+        framed napkin gets unwrapped, the imperfect bits get said
+        out loud, and somewhere in the middle a polite refusal goes
+        out at 3:14 AM that nobody on call has to wake up for.
+      </p>
+
+      <div class="hero-meta">
+        <div><dt>Series</dt><dd>The Sentinel Chronicles · Finale</dd></div>
+        <div><dt>Reading time</dt><dd>14 min</dd></div>
+        <div><dt>Setting</dt><dd>Brewline · Thursday, 8:09 AM · sunny</dd></div>
+        <div><dt>Cast</dt><dd>Sarah · David · the whole team</dd></div>
+      </div>
+    </div>
+  </header>
+
+  <article>
+
+    <!-- ═══════════════════════════════════════════════════════
+         OPENING — Sarah arrives, the framed napkin
+         ═══════════════════════════════════════════════════════ -->
+    <section class="prose fade-in d2">
+      <p class="lede">
+        Brewline has not changed. Same chalkboard menu — the
+        honey scones from two weeks ago have been replaced by
+        cardamom buns, which the chalkboard promises in three
+        underlines. Same window. Same warm light. The sun has
+        decided early today. By 8:09 AM Sarah is already at the
+        table by the window, two coffees ordered, a flat
+        rectangular package wrapped in brown butcher paper
+        sitting on the chair beside her like a polite extra
+        guest.
+      </p>
+
+      <p>
+        She has not opened her laptop yet. She is, instead, a
+        little nervous about the package, in the way that people
+        get nervous about giving gifts that they think are the
+        right gift but cannot, until the moment of unwrapping,
+        be entirely sure.
+      </p>
+
+      <p>
+        At 8:14 AM, David walks in. He sees the package. He
+        squints. He looks at Sarah. Sarah looks at the package.
+        Sarah looks at David.
+      </p>
+    </section>
+
+    <div class="dialogue">
+
+      <p class="stage">Brewline · Thursday · 8:14 AM</p>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance"><em>(sitting down, pointing)</em> What is that.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker sarah">SARAH</div>
+        <div class="utterance">Open it.</div>
+      </div>
+
+      <div class="line action">
+        <div class="speaker action">— David unwraps the brown paper —</div>
+        <div class="utterance">Underneath: a black wooden frame, professionally matted in cream. Behind the glass, slightly crooked because the original was slightly crooked: the napkin. Coffee-ring stain on the lower right and everything. A small brass plaque at the bottom of the matting reads, in three lines:</div>
+      </div>
+
+      <div style="font-family: var(--display); font-style: italic; text-align: center; font-size: 1.15rem; color: var(--espresso); margin: 1.6rem auto 2rem; padding: 1.5rem 2rem; border: 1px solid var(--steam); border-radius: 6px; max-width: 28ch; background: var(--paper); line-height: 1.6;">
+        SENTINEL — v0<br>
+        <span style="font-size: 0.9rem; color: var(--coffee);">Brewline Coffee · 8:31 AM</span><br>
+        <span style="font-size: 0.85rem; color: var(--milk); font-family: var(--mono); font-style: normal; letter-spacing: 0.1em;">"DRAWN ON A NAPKIN"</span>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance"><em>(holds it up, examines it, sets it down very carefully)</em> Sarah.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker sarah">SARAH</div>
+        <div class="utterance">It's yours.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance">No it isn't. <em>(slides it back across the table)</em> It belongs over Mike Chen's monitor. He's the one who's been staring at it for fifteen days.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker sarah">SARAH</div>
+        <div class="utterance"><em>(laughs)</em> I had a feeling you'd say that. I bought two.</div>
+      </div>
+
+      <div class="line action">
+        <div class="speaker action">— she produces a second, identical package from under the chair —</div>
+        <div class="utterance"></div>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance"><em>(sincere, for once)</em> Thank you.</div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         INFOGRAPHIC — Brewline, 15 days later
+         ═══════════════════════════════════════════════════════ -->
+    <figure class="infographic fade-in d2">
+      <div class="figure-label">Figure 09 · Brewline · 15 Days Later</div>
+      <div class="infographic-svg-wrap">
+        <svg viewBox="0 0 1100 690" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <pattern id="floorWood2" patternUnits="userSpaceOnUse" width="80" height="20">
+              <rect width="80" height="20" fill="#8B6F4E"/>
+              <line x1="0" y1="10" x2="80" y2="10" stroke="#6B5544" stroke-width="0.4"/>
+              <line x1="20" y1="0" x2="20" y2="20" stroke="#6B5544" stroke-width="0.3"/>
+              <line x1="60" y1="0" x2="60" y2="20" stroke="#6B5544" stroke-width="0.3"/>
+            </pattern>
+            <radialGradient id="sunGlow2" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0" stop-color="#F5D89B" stop-opacity="0.95"/>
+              <stop offset="1" stop-color="#F5D89B" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="morningWindow2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#A89066" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#6B5544" stop-opacity="0.65"/>
+            </linearGradient>
+            <filter id="figShadow2">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+              <feOffset dx="0" dy="2"/>
+              <feComponentTransfer><feFuncA type="linear" slope="0.2"/></feComponentTransfer>
+              <feMerge>
+                <feMergeNode/><feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- WALL: warm beige -->
+          <rect x="0" y="0" width="1100" height="560" fill="#EAD9B6"/>
+
+          <!-- WINDOW (left side, big morning light) -->
+          <g transform="translate(40, 50)">
+            <rect x="0" y="0" width="380" height="320" fill="#3B2A1F" rx="3"/>
+            <rect x="10" y="10" width="180" height="150" fill="url(#morningWindow2)"/>
+            <rect x="200" y="10" width="170" height="150" fill="url(#morningWindow2)"/>
+            <rect x="10" y="170" width="180" height="140" fill="url(#morningWindow2)"/>
+            <rect x="200" y="170" width="170" height="140" fill="url(#morningWindow2)"/>
+            <!-- "Brewline" lettering on the window -->
+            <text x="100" y="92" font-family="Fraunces, serif" font-style="italic" font-weight="500" font-size="42" fill="#FBF8F1" opacity="0.92" text-anchor="middle">Brewline</text>
+            <text x="100" y="120" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="2" fill="#FBF8F1" opacity="0.85" text-anchor="middle">EST. 2014 · COFFEE &amp; WI-FI</text>
+            <!-- sun in window -->
+            <circle cx="290" cy="100" r="32" fill="#FFE9B0" opacity="0.85"/>
+            <!-- silhouettes of trees outside -->
+            <ellipse cx="50" cy="240" rx="20" ry="18" fill="#5A6E3A" opacity="0.45"/>
+            <ellipse cx="150" cy="245" rx="18" ry="22" fill="#5A6E3A" opacity="0.4"/>
+            <ellipse cx="270" cy="248" rx="22" ry="20" fill="#5A6E3A" opacity="0.45"/>
+          </g>
+
+          <!-- light rays from window -->
+          <g opacity="0.5">
+            <path d="M 350 150 L 700 480 L 750 480 L 380 130 Z" fill="url(#sunGlow2)"/>
+            <path d="M 380 200 L 720 480 L 780 480 L 410 180 Z" fill="url(#sunGlow2)" opacity="0.6"/>
+          </g>
+
+          <!-- CHALKBOARD MENU (top right) -->
+          <g transform="translate(550, 60)">
+            <rect x="0" y="0" width="170" height="170" fill="#1C1917" rx="4"/>
+            <rect x="6" y="6" width="158" height="158" fill="#3B2A1F" stroke="#1C1917" stroke-width="1"/>
+            <text x="85" y="32" font-family="Fraunces, serif" font-style="italic" font-size="16" fill="#F2EBDC" text-anchor="middle">— today —</text>
+            <line x1="20" y1="40" x2="150" y2="40" stroke="#F2EBDC" stroke-width="0.4" opacity="0.5"/>
+            <text x="14" y="62" font-family="JetBrains Mono, monospace" font-size="11" fill="#F2EBDC">cortado</text>
+            <text x="156" y="62" font-family="JetBrains Mono, monospace" font-size="11" fill="#FFE9B0" text-anchor="end">4.2</text>
+            <text x="14" y="82" font-family="JetBrains Mono, monospace" font-size="11" fill="#F2EBDC">flat white</text>
+            <text x="156" y="82" font-family="JetBrains Mono, monospace" font-size="11" fill="#FFE9B0" text-anchor="end">4.5</text>
+            <text x="14" y="102" font-family="JetBrains Mono, monospace" font-size="11" fill="#F2EBDC">drip</text>
+            <text x="156" y="102" font-family="JetBrains Mono, monospace" font-size="11" fill="#FFE9B0" text-anchor="end">3.0</text>
+            <text x="14" y="122" font-family="JetBrains Mono, monospace" font-size="11" fill="#F2EBDC">spring blend</text>
+            <text x="156" y="122" font-family="JetBrains Mono, monospace" font-size="11" fill="#FFE9B0" text-anchor="end">4.5</text>
+            <line x1="20" y1="132" x2="150" y2="132" stroke="#F2EBDC" stroke-width="0.4" opacity="0.4" stroke-dasharray="2,3"/>
+            <text x="85" y="150" font-family="Fraunces, serif" font-style="italic" font-size="11" fill="#FFE9B0" text-anchor="middle">+ cardamom buns!</text>
+          </g>
+
+          <!-- pendant light -->
+          <g transform="translate(750, 0)">
+            <line x1="0" y1="0" x2="0" y2="55" stroke="#1C1917" stroke-width="1.5"/>
+            <ellipse cx="0" cy="62" rx="40" ry="6" fill="#1C1917"/>
+            <ellipse cx="0" cy="65" rx="38" ry="4" fill="#3B2A1F"/>
+          </g>
+
+          <!-- ──────── TABLE ──────── -->
+          <g transform="translate(400, 470)">
+            <!-- table top -->
+            <ellipse cx="200" cy="20" rx="280" ry="22" fill="#6B5544" stroke="#3B2A1F" stroke-width="2"/>
+            <ellipse cx="200" cy="16" rx="280" ry="22" fill="#8B6F4E"/>
+            <line x1="0" y1="16" x2="400" y2="16" stroke="#6B5544" stroke-width="0.5" opacity="0.6"/>
+            <!-- legs (back) -->
+            <rect x="40" y="38" width="6" height="60" fill="#3B2A1F"/>
+            <rect x="354" y="38" width="6" height="60" fill="#3B2A1F"/>
+          </g>
+
+          <!-- THE FRAMED NAPKIN (centerpiece on table) -->
+          <g transform="translate(440, 430)" filter="url(#figShadow2)">
+            <!-- frame -->
+            <rect x="0" y="0" width="160" height="120" fill="#1C1917" rx="2"/>
+            <!-- mat -->
+            <rect x="10" y="10" width="140" height="100" fill="#FBF8F1"/>
+            <!-- napkin behind glass, slightly crooked -->
+            <g transform="translate(80, 50) rotate(-3) translate(-50, -30)">
+              <rect x="0" y="0" width="100" height="60" fill="#F6F1E7" stroke="#C9BCA4" stroke-width="0.6"/>
+              <text x="50" y="13" font-family="Fraunces, serif" font-style="italic" font-size="6" fill="#6B5544" text-anchor="middle">— gateway —</text>
+              <!-- tiny napkin sketch -->
+              <rect x="8" y="20" width="12" height="8" fill="none" stroke="#3B2A1F" stroke-width="0.6"/>
+              <rect x="26" y="20" width="12" height="8" fill="none" stroke="#3B2A1F" stroke-width="0.6"/>
+              <rect x="44" y="20" width="12" height="8" fill="none" stroke="#3B2A1F" stroke-width="0.6"/>
+              <rect x="62" y="20" width="12" height="8" fill="none" stroke="#3B2A1F" stroke-width="0.6"/>
+              <rect x="80" y="20" width="12" height="8" fill="none" stroke="#3B2A1F" stroke-width="0.6"/>
+              <ellipse cx="50" cy="24" rx="48" ry="10" fill="none" stroke="#B8451E" stroke-width="0.8"/>
+              <text x="50" y="42" font-family="Fraunces, serif" font-style="italic" font-size="5" fill="#B8451E" text-anchor="middle">SENTINEL.</text>
+              <!-- coffee ring stain -->
+              <circle cx="84" cy="48" r="4" fill="none" stroke="#8B6F4E" stroke-width="0.4" opacity="0.7"/>
+            </g>
+            <!-- brass plaque -->
+            <rect x="35" y="98" width="90" height="14" fill="#B0892C" rx="1"/>
+            <text x="80" y="108" font-family="JetBrains Mono, monospace" font-size="6" letter-spacing="1.5" fill="#1C1917" text-anchor="middle">SENTINEL · v0 · 2026</text>
+          </g>
+
+          <!-- Sarah's coffee (left of frame) -->
+          <g transform="translate(420, 480)">
+            <ellipse cx="14" cy="30" rx="18" ry="3" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="0.8"/>
+            <path d="M 0 12 L 2 30 L 26 30 L 28 12 Z" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1"/>
+            <path d="M 28 16 Q 36 18 36 23 Q 36 28 28 28" fill="none" stroke="#3B2A1F" stroke-width="1"/>
+            <ellipse cx="14" cy="12" rx="14" ry="2" fill="#3B2A1F"/>
+            <!-- foam art -->
+            <path d="M 8 12 Q 14 9 20 12 Q 14 14 14 18 Q 8 14 8 12 Z" fill="#DC8A6A" opacity="0.6"/>
+          </g>
+
+          <!-- David's coffee (right of frame) -->
+          <g transform="translate(630, 480)">
+            <ellipse cx="14" cy="30" rx="18" ry="3" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="0.8"/>
+            <path d="M 0 12 L 2 30 L 26 30 L 28 12 Z" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1"/>
+            <path d="M 28 16 Q 36 18 36 23 Q 36 28 28 28" fill="none" stroke="#3B2A1F" stroke-width="1"/>
+            <ellipse cx="14" cy="12" rx="14" ry="2" fill="#3B2A1F"/>
+          </g>
+
+          <!-- Sarah's open laptop (left edge of table) showing dashboard -->
+          <g transform="translate(280, 470)">
+            <path d="M 0 28 L 6 -16 L 86 -16 L 92 28 Z" fill="#3B2A1F"/>
+            <rect x="8" y="-13" width="76" height="38" fill="#1C1917"/>
+            <!-- mini dashboard inside -->
+            <rect x="11" y="-10" width="70" height="3" fill="#3B2A1F"/>
+            <text x="46" y="-8" font-family="JetBrains Mono, monospace" font-size="2.5" fill="#5A6E3A" text-anchor="middle">SENTINEL · OPS</text>
+            <!-- mini chart -->
+            <polyline points="14,18 22,15 30,12 38,8 46,5 54,3 62,2 70,1 78,1" stroke="#5A6E3A" stroke-width="0.6" fill="none"/>
+            <line x1="14" y1="20" x2="78" y2="20" stroke="#6B5544" stroke-width="0.3"/>
+            <text x="46" y="24" font-family="JetBrains Mono, monospace" font-size="2" fill="#FFE9B0" text-anchor="middle">cache hit · 38%</text>
+            <!-- base -->
+            <rect x="0" y="28" width="92" height="4" fill="#1C1917" rx="1"/>
+          </g>
+
+          <!-- Sarah (left) — sitting, looking at the frame, smiling -->
+          <g transform="translate(170, 320)">
+            <!-- chair back -->
+            <rect x="-25" y="100" width="100" height="80" fill="#6B5544" rx="3" opacity="0.6"/>
+            <!-- shoulders/torso -->
+            <path d="M -10 70 Q -10 40 18 36 L 32 36 Q 60 40 60 70 L 60 130 L -10 130 Z" fill="#5A6E3A" stroke="#3B2A1F" stroke-width="1.2"/>
+            <!-- neck -->
+            <rect x="20" y="22" width="14" height="18" fill="#E8C4A0"/>
+            <!-- head (3/4 turn) -->
+            <ellipse cx="27" cy="6" rx="22" ry="26" fill="#E8C4A0" stroke="#3B2A1F" stroke-width="1.2"/>
+            <!-- bun -->
+            <ellipse cx="14" cy="-18" rx="14" ry="9" fill="#3B2A1F"/>
+            <path d="M 5 -10 Q 0 10 8 36 L 42 36 Q 50 10 50 -10 Z" fill="#3B2A1F"/>
+            <!-- glasses -->
+            <circle cx="16" cy="6" r="6" fill="none" stroke="#1C1917" stroke-width="1.2"/>
+            <circle cx="36" cy="6" r="6" fill="none" stroke="#1C1917" stroke-width="1.2"/>
+            <line x1="22" y1="6" x2="30" y2="6" stroke="#1C1917" stroke-width="1.2"/>
+            <!-- nose -->
+            <path d="M 27 12 L 30 18 L 27 19" stroke="#3B2A1F" stroke-width="0.8" fill="none"/>
+            <!-- smile -->
+            <path d="M 19 22 Q 27 26 33 22" stroke="#3B2A1F" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          </g>
+
+          <!-- David (right) — sitting, holding the frame up just looking at it -->
+          <g transform="translate(870, 320)">
+            <rect x="-25" y="100" width="100" height="80" fill="#6B5544" rx="3" opacity="0.6"/>
+            <path d="M -10 70 Q -10 40 18 36 L 32 36 Q 60 40 60 70 L 60 130 L -10 130 Z" fill="#4A6B7C" stroke="#3B2A1F" stroke-width="1.2"/>
+            <rect x="20" y="22" width="14" height="18" fill="#D6A47B"/>
+            <ellipse cx="27" cy="6" rx="22" ry="26" fill="#D6A47B" stroke="#3B2A1F" stroke-width="1.2"/>
+            <!-- short dark hair -->
+            <path d="M 5 -10 Q 3 -22 27 -25 Q 51 -22 49 -10 Q 49 4 47 12 L 7 12 Q 5 4 5 -10 Z" fill="#1C1917"/>
+            <!-- ear -->
+            <ellipse cx="49" cy="6" rx="2" ry="4" fill="#B8895E"/>
+            <!-- nose -->
+            <path d="M 27 12 L 30 18 L 27 19" stroke="#3B2A1F" stroke-width="0.8" fill="none"/>
+            <!-- smile -->
+            <path d="M 19 22 Q 27 26 33 22" stroke="#3B2A1F" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          </g>
+
+          <!-- ─── plant on shelf (mood) ─── -->
+          <g transform="translate(960, 340)">
+            <rect x="0" y="20" width="40" height="35" fill="#8B6F4E" stroke="#3B2A1F" stroke-width="1"/>
+            <ellipse cx="20" cy="22" rx="18" ry="3" fill="#5A6E3A"/>
+            <path d="M 8 20 Q 6 -8 18 -10 Q 24 5 16 22 Z" fill="#5A6E3A"/>
+            <path d="M 22 20 Q 28 -10 38 -5 Q 32 8 26 22 Z" fill="#8FA66B"/>
+            <path d="M 14 20 Q 18 -2 28 -2 Q 24 12 18 22 Z" fill="#5A6E3A"/>
+          </g>
+
+          <!-- ─── FLOOR ─── -->
+          <rect x="0" y="640" width="1100" height="50" fill="url(#floorWood2)"/>
+          <line x1="0" y1="640" x2="1100" y2="640" stroke="#3B2A1F" stroke-width="1.5"/>
+
+          <!-- caption -->
+          <text x="550" y="680" font-family="Fraunces, serif" font-style="italic" font-size="13" fill="#6B5544" text-anchor="middle" opacity="0.85">
+            Same window. Same light. Different week. The framed napkin is on the table.
+          </text>
+        </svg>
+      </div>
+      <div class="infographic-caption">
+        <strong>Figure 09 — Brewline · Thursday morning, 15 days later.</strong>
+        Sarah and David back at the same table by the window. The framed napkin sits between the two coffees. Sarah's laptop is open to the dashboard. The chalkboard now offers cardamom buns. The sun has, as it sometimes does in this story, decided.
+      </div>
+    </figure>
+
+    <!-- ═══════════════════════════════════════════════════════
+         I. THE NUMBERS
+         ═══════════════════════════════════════════════════════ -->
+    <div class="section-divider">
+      <span class="roman">i.</span>
+      <span class="line"></span>
+      <span class="label">Fifteen days · the actual numbers</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="section-title">"<em>So.</em> Show me."</h2>
+
+    <section class="prose">
+      <p>
+        At 8:21 AM Sarah opens her laptop, and the first thing
+        on the screen is a Grafana dashboard called
+        <code class="inline">sentinel-ops</code>. It is the
+        dashboard Tom built in the third week, the one that
+        Priya has accidentally bookmarked, the one Mike checks
+        at 7:30 AM every weekday and at least once on weekends
+        even though nobody asked him to.
+      </p>
+
+      <p>
+        Sarah turns the laptop sideways so they can both see.
+        David leans in. Sarah hits the time-range selector and
+        clicks <em>Last 15 days</em>.
+      </p>
+    </section>
+
+    <!-- TOP NUMBERS -->
+    <div class="metric-grid">
+
+      <div class="metric-card moss">
+        <div class="m-label">Cache Hit Rate · today</div>
+        <div class="m-value">38<span class="unit"> %</span></div>
+        <div class="m-detail">Inside the predicted 35–45% band. Day 1 was 11%. Climbed steadily over 3 days as the index warmed.</div>
+        <div class="m-delta up">↑ from 11% on day 1</div>
+      </div>
+
+      <div class="metric-card moss">
+        <div class="m-label">Total Requests · 15d</div>
+        <div class="m-value">127.4<span class="unit"> K</span></div>
+        <div class="m-detail">All of Norma's traffic now goes through Sentinel. Direct-to-model is firewalled off at the cluster boundary.</div>
+        <div class="m-delta up">100% routed through gateway</div>
+      </div>
+
+      <div class="metric-card moss">
+        <div class="m-label">Estimated cost change</div>
+        <div class="m-value">−32<span class="unit"> %</span></div>
+        <div class="m-detail">Slightly under the 35% target — cache took 3 days to warm. Still: a meaningful number for Friday's slide.</div>
+        <div class="m-delta up">≈ $2,847 saved this period</div>
+      </div>
+
+      <div class="metric-card sky">
+        <div class="m-label">Median latency · today</div>
+        <div class="m-value">240 <span class="unit">ms</span></div>
+        <div class="m-detail">Cache hits dominate the median. The cache hit path is now the common case — by a comfortable margin.</div>
+        <div class="m-delta up">faster than direct calls used to be</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="m-label">p95 latency · today</div>
+        <div class="m-value">980 <span class="unit">ms</span></div>
+        <div class="m-detail">Inside the 1.2s SLA. Stage 5 (the LLM) accounts for ~85% of the tail.</div>
+        <div class="m-delta up">220ms below SLA</div>
+      </div>
+
+      <div class="metric-card gold">
+        <div class="m-label">p99 latency · today</div>
+        <div class="m-value">1.34 <span class="unit">s</span></div>
+        <div class="m-detail">140ms over the 1.2s budget. Investigating cold-start on the embedding model. See "what's still imperfect" below.</div>
+        <div class="m-delta down">↓ 140ms over budget</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="m-label">Pages on PagerDuty · 15d</div>
+        <div class="m-value">0</div>
+        <div class="m-detail">Tom checks this number quietly every morning and tells nobody. We are telling David now. David is delighted.</div>
+        <div class="m-delta up">zero. zero pages.</div>
+      </div>
+
+      <div class="metric-card sky">
+        <div class="m-label">Policy edits by Priya · 15d</div>
+        <div class="m-value">6</div>
+        <div class="m-detail">Six policy.yaml updates merged in 15 days. Average time from "we should add this" to "it is in production": 4 minutes.</div>
+        <div class="m-delta up">no deploys required</div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         FIGURE 10 — THE DASHBOARD
+         ═══════════════════════════════════════════════════════ -->
+    <figure class="dashboard-frame fade-in d2">
+      <div class="figure-label">Figure 10 · The Dashboard</div>
+      <p class="arch-title"><em>sentinel-ops</em> · the Grafana dashboard Tom built in week 3 · <strong>Last 15 days</strong></p>
+
+      <div class="dashboard-svg-wrap">
+        <svg viewBox="0 0 1400 820" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="hitArea" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#5A6E3A" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="#5A6E3A" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="latencyG" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#5A6E3A"/>
+              <stop offset="60%" stop-color="#E8B751"/>
+              <stop offset="100%" stop-color="#A03030"/>
+            </linearGradient>
+            <pattern id="dashGrid" patternUnits="userSpaceOnUse" width="50" height="50">
+              <path d="M 0 0 L 50 0" stroke="#3B2A1F" stroke-width="0.3" opacity="0.15"/>
+              <path d="M 0 0 L 0 50" stroke="#3B2A1F" stroke-width="0.3" opacity="0.15"/>
+            </pattern>
+          </defs>
+
+          <!-- Dashboard background — dark grafana-like but warm -->
+          <rect x="0" y="0" width="1400" height="820" fill="#1C1917" rx="8"/>
+
+          <!-- TOP BAR -->
+          <g>
+            <rect x="0" y="0" width="1400" height="50" fill="#0F0D0B"/>
+            <text x="20" y="32" font-family="Fraunces, serif" font-weight="600" font-size="18" fill="#F6F1E7">sentinel-ops</text>
+            <text x="180" y="32" font-family="JetBrains Mono, monospace" font-size="11" fill="#6B5544">/ overview / 15-day</text>
+            <!-- right side: time range -->
+            <rect x="1180" y="13" width="200" height="24" fill="#1C1917" stroke="#3B2A1F" stroke-width="1" rx="3"/>
+            <text x="1280" y="29" font-family="JetBrains Mono, monospace" font-size="10" fill="#FFE9B0" text-anchor="middle">⏱  Last 15 days</text>
+          </g>
+
+          <!-- ─── PANEL 1: CACHE HIT RATE TREND (top-left, large) ─── -->
+          <g transform="translate(20, 70)">
+            <rect x="0" y="0" width="820" height="320" fill="#0F0D0B" stroke="#3B2A1F" stroke-width="1" rx="6"/>
+            <text x="20" y="28" font-family="Fraunces, serif" font-weight="600" font-size="14" fill="#F6F1E7">Cache Hit Rate</text>
+            <text x="20" y="46" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">% requests served from cache · daily</text>
+            <text x="800" y="28" font-family="JetBrains Mono, monospace" font-size="11" fill="#5A6E3A" text-anchor="end" font-weight="600">38%</text>
+            <text x="800" y="42" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" text-anchor="end">today</text>
+
+            <!-- chart area -->
+            <g transform="translate(60, 70)">
+              <!-- grid -->
+              <rect x="0" y="0" width="740" height="220" fill="url(#dashGrid)"/>
+              <!-- y axis labels -->
+              <text x="-8" y="4" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" text-anchor="end">50%</text>
+              <text x="-8" y="48" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" text-anchor="end">40%</text>
+              <text x="-8" y="92" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" text-anchor="end">30%</text>
+              <text x="-8" y="136" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" text-anchor="end">20%</text>
+              <text x="-8" y="180" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" text-anchor="end">10%</text>
+              <text x="-8" y="224" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" text-anchor="end">0%</text>
+              <!-- target band shading -->
+              <rect x="0" y="22" width="740" height="44" fill="#5A6E3A" opacity="0.08"/>
+              <text x="730" y="38" font-family="JetBrains Mono, monospace" font-size="8" fill="#5A6E3A" text-anchor="end" opacity="0.7">target band: 35–45%</text>
+
+              <!-- line: cache hit rate climbing from 11% to 38% over 15 days -->
+              <path d="M 0,170 L 50,158 L 99,140 L 149,118 L 198,98 L 247,80 L 296,68 L 346,58 L 395,52 L 444,50 L 493,46 L 543,44 L 592,42 L 641,38 L 690,32 L 740,28
+                       L 740,220 L 0,220 Z" fill="url(#hitArea)"/>
+              <polyline points="0,170 50,158 99,140 149,118 198,98 247,80 296,68 346,58 395,52 444,50 493,46 543,44 592,42 641,38 690,32 740,28"
+                        stroke="#8FA66B" stroke-width="2.5" fill="none"/>
+
+              <!-- data point dots -->
+              <g fill="#8FA66B">
+                <circle cx="0" cy="170" r="3"/>
+                <circle cx="247" cy="80" r="3"/>
+                <circle cx="493" cy="46" r="3"/>
+                <circle cx="740" cy="28" r="3.5" stroke="#F6F1E7" stroke-width="1"/>
+              </g>
+
+              <!-- annotation: "warm-up complete" -->
+              <line x1="247" y1="80" x2="247" y2="60" stroke="#FFE9B0" stroke-width="0.8" stroke-dasharray="2,2"/>
+              <text x="247" y="56" font-family="JetBrains Mono, monospace" font-size="8" fill="#FFE9B0" text-anchor="middle">↓ warm-up complete · day 5</text>
+
+              <!-- x axis -->
+              <line x1="0" y1="220" x2="740" y2="220" stroke="#6B5544" stroke-width="0.6"/>
+              <text x="0" y="240" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" text-anchor="middle">d1</text>
+              <text x="247" y="240" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" text-anchor="middle">d5</text>
+              <text x="493" y="240" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" text-anchor="middle">d10</text>
+              <text x="740" y="240" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" text-anchor="middle">d15</text>
+            </g>
+          </g>
+
+          <!-- ─── PANEL 2: REQUESTS COUNTER (top-right, single big number) ─── -->
+          <g transform="translate(860, 70)">
+            <rect x="0" y="0" width="250" height="155" fill="#0F0D0B" stroke="#3B2A1F" stroke-width="1" rx="6"/>
+            <text x="20" y="28" font-family="Fraunces, serif" font-weight="600" font-size="14" fill="#F6F1E7">Requests · 15d</text>
+            <text x="20" y="44" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">all routed through Sentinel</text>
+            <text x="125" y="100" font-family="Fraunces, serif" font-weight="700" font-size="44" fill="#F6F1E7" text-anchor="middle">127,400</text>
+            <text x="125" y="124" font-family="JetBrains Mono, monospace" font-size="9" fill="#5A6E3A" text-anchor="middle">↑ 100% gateway coverage</text>
+            <text x="125" y="142" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" text-anchor="middle">~8,500/day · steady</text>
+          </g>
+
+          <!-- ─── PANEL 3: COST SAVED (top-right, second) ─── -->
+          <g transform="translate(1130, 70)">
+            <rect x="0" y="0" width="250" height="155" fill="#0F0D0B" stroke="#3B2A1F" stroke-width="1" rx="6"/>
+            <text x="20" y="28" font-family="Fraunces, serif" font-weight="600" font-size="14" fill="#F6F1E7">Cost saved · 15d</text>
+            <text x="20" y="44" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">cache hits × avg cost/call</text>
+            <text x="125" y="100" font-family="Fraunces, serif" font-weight="700" font-size="44" fill="#FFE9B0" text-anchor="middle">$2,847</text>
+            <text x="125" y="124" font-family="JetBrains Mono, monospace" font-size="9" fill="#5A6E3A" text-anchor="middle">↓ 32% vs. baseline</text>
+            <text x="125" y="142" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" text-anchor="middle">trending toward 35% target</text>
+          </g>
+
+          <!-- ─── PANEL 4: BLOCKED BREAKDOWN (top-right, third) ─── -->
+          <g transform="translate(860, 235)">
+            <rect x="0" y="0" width="520" height="155" fill="#0F0D0B" stroke="#3B2A1F" stroke-width="1" rx="6"/>
+            <text x="20" y="28" font-family="Fraunces, serif" font-weight="600" font-size="14" fill="#F6F1E7">Blocked / corrected · breakdown</text>
+            <text x="20" y="44" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">90 things that didn't reach the customer</text>
+
+            <!-- bar chart, horizontal -->
+            <g transform="translate(20, 60)">
+              <!-- PII -->
+              <text x="0" y="13" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#F6F1E7">PII masked</text>
+              <rect x="120" y="3" width="225" height="14" fill="#B8451E" rx="1"/>
+              <text x="350" y="13" font-family="JetBrains Mono, monospace" font-size="10" fill="#FFE9B0">47</text>
+              <text x="380" y="13" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544">stage 4</text>
+              <!-- Hallucination -->
+              <text x="0" y="33" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#F6F1E7">Hallucinations</text>
+              <rect x="120" y="23" width="110" height="14" fill="#DC8A6A" rx="1"/>
+              <text x="350" y="33" font-family="JetBrains Mono, monospace" font-size="10" fill="#FFE9B0">23</text>
+              <text x="380" y="33" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544">stage 6</text>
+              <!-- Toxicity -->
+              <text x="0" y="53" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#F6F1E7">Toxicity blocked</text>
+              <rect x="120" y="43" width="58" height="14" fill="#A03030" rx="1"/>
+              <text x="350" y="53" font-family="JetBrains Mono, monospace" font-size="10" fill="#FFE9B0">12</text>
+              <text x="380" y="53" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544">stage 3</text>
+              <!-- Keyword -->
+              <text x="0" y="73" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#F6F1E7">Keyword blocks</text>
+              <rect x="120" y="63" width="38" height="14" fill="#B0892C" rx="1"/>
+              <text x="350" y="73" font-family="JetBrains Mono, monospace" font-size="10" fill="#FFE9B0">8</text>
+              <text x="380" y="73" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544">stage 4</text>
+            </g>
+            <text x="500" y="148" font-family="Fraunces, serif" font-style="italic" font-size="10" fill="#6B5544" text-anchor="end">90 incidents avoided · 0 escalated</text>
+          </g>
+
+          <!-- ─── PANEL 5: LATENCY (middle-bottom-left) ─── -->
+          <g transform="translate(20, 410)">
+            <rect x="0" y="0" width="520" height="195" fill="#0F0D0B" stroke="#3B2A1F" stroke-width="1" rx="6"/>
+            <text x="20" y="28" font-family="Fraunces, serif" font-weight="600" font-size="14" fill="#F6F1E7">Latency · today</text>
+            <text x="20" y="44" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">end-to-end through all 8 stages · ms</text>
+
+            <!-- horizontal bar gauges with budget line -->
+            <g transform="translate(20, 70)">
+              <!-- scale -->
+              <line x1="80" y1="105" x2="450" y2="105" stroke="#6B5544" stroke-width="0.5"/>
+              <text x="80" y="118" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544">0</text>
+              <text x="265" y="118" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" text-anchor="middle">800ms</text>
+              <text x="450" y="118" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" text-anchor="end">1600ms</text>
+              <!-- SLA marker line -->
+              <line x1="358" y1="0" x2="358" y2="105" stroke="#FFE9B0" stroke-width="0.8" stroke-dasharray="3,3"/>
+              <text x="358" y="-2" font-family="JetBrains Mono, monospace" font-size="8" fill="#FFE9B0" text-anchor="middle">SLA · 1200ms</text>
+
+              <!-- p50 -->
+              <text x="0" y="14" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#F6F1E7">p50</text>
+              <rect x="80" y="6" width="55" height="11" fill="url(#latencyG)" rx="1"/>
+              <text x="148" y="14" font-family="JetBrains Mono, monospace" font-size="10" fill="#5A6E3A" font-weight="600">240ms</text>
+              <!-- p95 -->
+              <text x="0" y="44" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#F6F1E7">p95</text>
+              <rect x="80" y="36" width="225" height="11" fill="url(#latencyG)" rx="1"/>
+              <text x="318" y="44" font-family="JetBrains Mono, monospace" font-size="10" fill="#5A6E3A" font-weight="600">980ms</text>
+              <!-- p99 -->
+              <text x="0" y="74" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#F6F1E7">p99</text>
+              <rect x="80" y="66" width="308" height="11" fill="url(#latencyG)" rx="1"/>
+              <text x="400" y="74" font-family="JetBrains Mono, monospace" font-size="10" fill="#A03030" font-weight="600">1.34s</text>
+              <text x="430" y="74" font-family="JetBrains Mono, monospace" font-size="8" fill="#A03030">↑ over</text>
+            </g>
+          </g>
+
+          <!-- ─── PANEL 6: STAGE BREAKDOWN (middle-bottom-right) ─── -->
+          <g transform="translate(560, 410)">
+            <rect x="0" y="0" width="820" height="195" fill="#0F0D0B" stroke="#3B2A1F" stroke-width="1" rx="6"/>
+            <text x="20" y="28" font-family="Fraunces, serif" font-weight="600" font-size="14" fill="#F6F1E7">Per-stage latency · p95 contribution</text>
+            <text x="20" y="44" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">where the time goes when we go all the way through</text>
+
+            <!-- stacked horizontal bar of all 8 stages -->
+            <g transform="translate(20, 70)">
+              <!-- stage 1 -->
+              <rect x="0" y="0" width="6" height="22" fill="#DC8A6A" stroke="#1C1917" stroke-width="0.5"/>
+              <!-- stage 2 -->
+              <rect x="6" y="0" width="34" height="22" fill="#DC8A6A" stroke="#1C1917" stroke-width="0.5"/>
+              <!-- stage 3 -->
+              <rect x="40" y="0" width="42" height="22" fill="#DC8A6A" stroke="#1C1917" stroke-width="0.5"/>
+              <!-- stage 4 -->
+              <rect x="82" y="0" width="18" height="22" fill="#DC8A6A" stroke="#1C1917" stroke-width="0.5"/>
+              <!-- stage 5 (the long one) -->
+              <rect x="100" y="0" width="618" height="22" fill="#FFE9B0" stroke="#1C1917" stroke-width="0.5"/>
+              <!-- stage 6 -->
+              <rect x="718" y="0" width="50" height="22" fill="#DC8A6A" stroke="#1C1917" stroke-width="0.5"/>
+              <!-- stage 7 -->
+              <rect x="768" y="0" width="10" height="22" fill="#DC8A6A" stroke="#1C1917" stroke-width="0.5"/>
+              <!-- stage 8 -->
+              <rect x="778" y="0" width="2" height="22" fill="#8FA66B" stroke="#1C1917" stroke-width="0.5"/>
+
+              <!-- labels under bars -->
+              <text x="3" y="36" font-family="JetBrains Mono, monospace" font-size="8" fill="#F6F1E7" text-anchor="middle">①</text>
+              <text x="23" y="36" font-family="JetBrains Mono, monospace" font-size="8" fill="#F6F1E7" text-anchor="middle">②</text>
+              <text x="61" y="36" font-family="JetBrains Mono, monospace" font-size="8" fill="#F6F1E7" text-anchor="middle">③</text>
+              <text x="91" y="36" font-family="JetBrains Mono, monospace" font-size="8" fill="#F6F1E7" text-anchor="middle">④</text>
+              <text x="409" y="36" font-family="JetBrains Mono, monospace" font-size="8" fill="#F6F1E7" text-anchor="middle">⑤ · LLM</text>
+              <text x="743" y="36" font-family="JetBrains Mono, monospace" font-size="8" fill="#F6F1E7" text-anchor="middle">⑥</text>
+              <text x="773" y="36" font-family="JetBrains Mono, monospace" font-size="8" fill="#F6F1E7" text-anchor="middle">⑦</text>
+
+              <!-- ms labels -->
+              <text x="3" y="56" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#6B5544" text-anchor="middle">5</text>
+              <text x="23" y="56" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#6B5544" text-anchor="middle">28</text>
+              <text x="61" y="56" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#6B5544" text-anchor="middle">38</text>
+              <text x="91" y="56" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#6B5544" text-anchor="middle">15</text>
+              <text x="409" y="56" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#FFE9B0" text-anchor="middle">~830ms (78%)</text>
+              <text x="743" y="56" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#6B5544" text-anchor="middle">52</text>
+              <text x="773" y="56" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#6B5544" text-anchor="middle">8</text>
+
+              <!-- annotation -->
+              <text x="390" y="84" font-family="Fraunces, serif" font-style="italic" font-size="11" fill="#6B5544" text-anchor="middle">"the LLM is still the long pole. as expected. as it should be." — M.</text>
+            </g>
+          </g>
+
+          <!-- ─── PANEL 7: RECENT VERDICTS TABLE (bottom, full-width) ─── -->
+          <g transform="translate(20, 625)">
+            <rect x="0" y="0" width="1360" height="180" fill="#0F0D0B" stroke="#3B2A1F" stroke-width="1" rx="6"/>
+            <text x="20" y="28" font-family="Fraunces, serif" font-weight="600" font-size="14" fill="#F6F1E7">Recent verdicts</text>
+            <text x="20" y="44" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">tail -f from the audit log · last 6 events · auto-refresh 30s</text>
+
+            <!-- header row -->
+            <g transform="translate(20, 65)">
+              <text x="0" y="0" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" letter-spacing="1.5">TIME</text>
+              <text x="100" y="0" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" letter-spacing="1.5">REQ_ID</text>
+              <text x="280" y="0" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" letter-spacing="1.5">PROMPT (preview)</text>
+              <text x="800" y="0" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" letter-spacing="1.5">VERDICT</text>
+              <text x="1000" y="0" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" letter-spacing="1.5">STAGE</text>
+              <text x="1100" y="0" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" letter-spacing="1.5">LATENCY</text>
+              <text x="1220" y="0" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" letter-spacing="1.5">CACHED?</text>
+              <line x1="-5" y1="6" x2="1335" y2="6" stroke="#3B2A1F" stroke-width="0.8"/>
+
+              <!-- row 1 -->
+              <text x="0" y="22" font-family="JetBrains Mono, monospace" font-size="9" fill="#F6F1E7">08:21:14</text>
+              <text x="100" y="22" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">req_3c8f9...</text>
+              <text x="280" y="22" font-family="JetBrains Mono, monospace" font-size="9" fill="#F6F1E7">"how do I reset my password"</text>
+              <text x="800" y="22" font-family="JetBrains Mono, monospace" font-size="9" fill="#5A6E3A">✓ ok</text>
+              <text x="1000" y="22" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">2,7,8</text>
+              <text x="1100" y="22" font-family="JetBrains Mono, monospace" font-size="9" fill="#5A6E3A">182ms</text>
+              <text x="1220" y="22" font-family="JetBrains Mono, monospace" font-size="9" fill="#5A6E3A">✓ HIT</text>
+
+              <!-- row 2 -->
+              <text x="0" y="40" font-family="JetBrains Mono, monospace" font-size="9" fill="#F6F1E7">08:21:09</text>
+              <text x="100" y="40" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">req_3c8f8...</text>
+              <text x="280" y="40" font-family="JetBrains Mono, monospace" font-size="9" fill="#F6F1E7">"refund order #4471 my email is [redacted]"</text>
+              <text x="800" y="40" font-family="JetBrains Mono, monospace" font-size="9" fill="#FFE9B0">~ pii masked</text>
+              <text x="1000" y="40" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">4 → 5</text>
+              <text x="1100" y="40" font-family="JetBrains Mono, monospace" font-size="9" fill="#FFE9B0">974ms</text>
+              <text x="1220" y="40" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">— miss</text>
+
+              <!-- row 3 -->
+              <text x="0" y="58" font-family="JetBrains Mono, monospace" font-size="9" fill="#F6F1E7">08:21:02</text>
+              <text x="100" y="58" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">req_3c8f7...</text>
+              <text x="280" y="58" font-family="JetBrains Mono, monospace" font-size="9" fill="#F6F1E7">"what's your return policy"</text>
+              <text x="800" y="58" font-family="JetBrains Mono, monospace" font-size="9" fill="#5A6E3A">✓ ok</text>
+              <text x="1000" y="58" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">2,7,8</text>
+              <text x="1100" y="58" font-family="JetBrains Mono, monospace" font-size="9" fill="#5A6E3A">168ms</text>
+              <text x="1220" y="58" font-family="JetBrains Mono, monospace" font-size="9" fill="#5A6E3A">✓ HIT</text>
+
+              <!-- row 4 - hallucination corrected -->
+              <text x="0" y="76" font-family="JetBrains Mono, monospace" font-size="9" fill="#F6F1E7">08:20:51</text>
+              <text x="100" y="76" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">req_3c8f6...</text>
+              <text x="280" y="76" font-family="JetBrains Mono, monospace" font-size="9" fill="#F6F1E7">"do you support saml sso"</text>
+              <text x="800" y="76" font-family="JetBrains Mono, monospace" font-size="9" fill="#DC8A6A">! corrected</text>
+              <text x="1000" y="76" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">5,6,7</text>
+              <text x="1100" y="76" font-family="JetBrains Mono, monospace" font-size="9" fill="#FFE9B0">1,021ms</text>
+              <text x="1220" y="76" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">— miss</text>
+
+              <!-- row 5 - blocked toxicity -->
+              <text x="0" y="94" font-family="JetBrains Mono, monospace" font-size="9" fill="#F6F1E7">08:20:33</text>
+              <text x="100" y="94" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">req_3c8f5...</text>
+              <text x="280" y="94" font-family="JetBrains Mono, monospace" font-size="9" fill="#F6F1E7">"write something nasty about [competitor]"</text>
+              <text x="800" y="94" font-family="JetBrains Mono, monospace" font-size="9" fill="#A03030">✗ blocked</text>
+              <text x="1000" y="94" font-family="JetBrains Mono, monospace" font-size="9" fill="#A03030">3</text>
+              <text x="1100" y="94" font-family="JetBrains Mono, monospace" font-size="9" fill="#5A6E3A">52ms</text>
+              <text x="1220" y="94" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">— n/a</text>
+
+              <!-- row 6 -->
+              <text x="0" y="112" font-family="JetBrains Mono, monospace" font-size="9" fill="#F6F1E7">08:20:21</text>
+              <text x="100" y="112" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">req_3c8f4...</text>
+              <text x="280" y="112" font-family="JetBrains Mono, monospace" font-size="9" fill="#F6F1E7">"where's my order #2218"</text>
+              <text x="800" y="112" font-family="JetBrains Mono, monospace" font-size="9" fill="#5A6E3A">✓ ok</text>
+              <text x="1000" y="112" font-family="JetBrains Mono, monospace" font-size="9" fill="#6B5544">2,7,8</text>
+              <text x="1100" y="112" font-family="JetBrains Mono, monospace" font-size="9" fill="#5A6E3A">175ms</text>
+              <text x="1220" y="112" font-family="JetBrains Mono, monospace" font-size="9" fill="#5A6E3A">✓ HIT</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <div class="dashboard-caption">
+        Seven panels. One screen. The story of fifteen days, in numbers. Cache hit rate climbing into the predicted band by day five. Cost saved tracking the projection. Latency under SLA at p50 and p95, slightly over at p99 — flagged honestly. Ninety incidents avoided, none escalated. The recent-verdicts feed at the bottom is what Mike refreshes with his coffee.
+      </div>
+    </figure>
+
+    <blockquote class="pull-quote">
+      "The good news is the dashboard works. The better news is nobody had to wake up at night to find out."
+      <cite>— Sarah, 8:31 AM, looking at zero PagerDuty pages in 15 days</cite>
+    </blockquote>
+
+    <!-- ═══════════════════════════════════════════════════════
+         II. THE FOUR NEAR-MISSES
+         ═══════════════════════════════════════════════════════ -->
+    <div class="section-divider">
+      <span class="roman">ii.</span>
+      <span class="line"></span>
+      <span class="label">Four things that didn't happen · because Sentinel happened</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="section-title">The <em>near-misses.</em></h2>
+
+    <section class="prose">
+      <p>
+        Sarah scrolls down past the dashboard to a tab she opened
+        last night called <code class="inline">incidents-avoided.md</code>.
+        It is a short markdown file with four entries. She has been
+        adding to it as Priya finds them in the weekly audit-log
+        review. Each entry, in Sarah's words, is "a small story
+        of a moment when nothing happened, and that was the entire
+        point."
+      </p>
+
+      <p>
+        She turns the laptop. David reads them out loud in the
+        warm coffee-shop voice of a person reading the inscriptions
+        on a small museum's plaques.
+      </p>
+    </section>
+
+    <div class="near-miss-grid">
+
+      <!-- Near-miss 1: 3:14 AM PII -->
+      <div class="near-miss-card fade-in d1">
+        <div class="nm-icon">
+          <svg viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="28" fill="none" stroke="#B8451E" stroke-width="2"/>
+            <text x="32" y="28" font-family="JetBrains Mono, monospace" font-size="8" fill="#6B5544" text-anchor="middle">3:14 AM</text>
+            <line x1="32" y1="32" x2="32" y2="20" stroke="#B8451E" stroke-width="2" stroke-linecap="round"/>
+            <line x1="32" y1="32" x2="40" y2="36" stroke="#B8451E" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="32" cy="32" r="2" fill="#B8451E"/>
+          </svg>
+        </div>
+        <div class="nm-time">Tuesday · 03:14 AM</div>
+        <h4>The 3 AM SSN.</h4>
+        <p>
+          A customer pasted their entire Social Security number
+          into a support question by accident. Sentinel masked
+          it before stage 5 ever saw it. Norma never received
+          the digits. The customer received a normal answer.
+          Nobody on call had to wake up. Priya found it in the
+          weekly audit review the following Monday.
+        </p>
+        <span class="nm-stage">caught at stage 4 · keyword + PII</span>
+      </div>
+
+      <!-- Near-miss 2: cache saved itself -->
+      <div class="near-miss-card fade-in d2">
+        <div class="nm-icon">
+          <svg viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="28" fill="none" stroke="#5A6E3A" stroke-width="2"/>
+            <text x="32" y="29" font-family="JetBrains Mono, monospace" font-size="9" fill="#5A6E3A" text-anchor="middle" font-weight="600">×46</text>
+            <text x="32" y="42" font-family="JetBrains Mono, monospace" font-size="6" fill="#6B5544" text-anchor="middle">cached</text>
+            <circle cx="20" cy="20" r="3" fill="#5A6E3A"/>
+            <circle cx="44" cy="20" r="3" fill="#5A6E3A" opacity="0.7"/>
+            <circle cx="20" cy="44" r="3" fill="#5A6E3A" opacity="0.5"/>
+            <circle cx="44" cy="44" r="3" fill="#5A6E3A" opacity="0.4"/>
+          </svg>
+        </div>
+        <div class="nm-time">Friday · 14:08 to 14:08</div>
+        <h4>The retry storm.</h4>
+        <p>
+          A bug in a customer's app caused 47 identical requests
+          to fire in eight seconds. The first one called Norma
+          for ~$0.24. The next 46 were cache hits at ~$0 each.
+          Tom's request-volume alert fired anyway, he investigated,
+          and quietly told the customer's dev team. Estimated
+          spend avoided: ~$11. Estimated panic avoided: more.
+        </p>
+        <span class="nm-stage">handled at stage 2 · semantic cache</span>
+      </div>
+
+      <!-- Near-miss 3: toxicity attempt -->
+      <div class="near-miss-card fade-in d3">
+        <div class="nm-icon">
+          <svg viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="28" fill="none" stroke="#A03030" stroke-width="2"/>
+            <line x1="20" y1="20" x2="44" y2="44" stroke="#A03030" stroke-width="3" stroke-linecap="round"/>
+            <line x1="44" y1="20" x2="20" y2="44" stroke="#A03030" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="nm-time">Wednesday · 11:47 AM</div>
+        <h4>The polite refusal.</h4>
+        <p>
+          A user tried to get Norma to write something inflammatory
+          about a named competitor. Stage 3's classifier caught
+          the prompt before stage 5 ran. Sentinel returned the
+          standard polite refusal. The audit log preserves both
+          the request and the verdict, so Priya has the receipt
+          if it ever comes up. It hasn't.
+        </p>
+        <span class="nm-stage">blocked at stage 3 · toxicity check</span>
+      </div>
+
+      <!-- Near-miss 4: hallucination corrected -->
+      <div class="near-miss-card fade-in d4">
+        <div class="nm-icon">
+          <svg viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="28" fill="none" stroke="#DC8A6A" stroke-width="2"/>
+            <path d="M 22 30 L 28 36 L 42 22" stroke="#5A6E3A" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="nm-time">Monday · 16:23 PM</div>
+        <h4>The made-up feature.</h4>
+        <p>
+          A customer asked whether the product supports SAML SSO.
+          Norma confidently invented a yes. Stage 6 checked the
+          claim against the live feature KB, found no match, and
+          rewrote the response with the actual list of supported
+          SSO methods (it's OAuth and OIDC, not SAML). The customer
+          received a correct answer. The roadmap got a vote.
+        </p>
+        <span class="nm-stage">corrected at stage 6 · hallucination check</span>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         III. THE TEAM ARRIVES
+         ═══════════════════════════════════════════════════════ -->
+    <div class="section-divider">
+      <span class="roman">iii.</span>
+      <span class="line"></span>
+      <span class="label">8:47 AM · the door opens · pastry baskets are produced</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="section-title">"<em>You started without us.</em>"</h2>
+
+    <section class="prose">
+      <p>
+        At 8:47 AM the bell over the Brewline door announces
+        itself, and four people walk in together: Mike Chen with
+        his Bible-sized notebook, Aanya Rao with the same circled
+        printout but updated, Tom Bauer with — somehow — another
+        banana, and Priya Iyer carrying a cardboard tray of
+        cardamom buns from the bakery two doors down. Sarah did
+        not arrange this. Sarah did not <em>not</em> arrange this.
+        The team coordinated in a Slack DM nobody told her about.
+      </p>
+
+      <p>
+        Tables get pushed together. Coffees get reordered. The
+        framed napkin gets passed around. Mike, who has waited
+        weeks for this exact moment, takes one look at it and
+        says <em>"this is going up over my monitor by Monday,"</em>
+        which is what David predicted at 8:14 AM and is therefore
+        very satisfying.
+      </p>
+
+      <p>
+        Each of them, in turn, names the thing they are most
+        proud of. Sarah, watching, takes a small private moment
+        to register that this is, by any honest measure, the best
+        team meeting she has run in three years.
+      </p>
+    </section>
+
+    <div class="cameo-grid">
+
+      <div class="cameo-card mike fade-in d1">
+        <div class="ca-head">
+          <div class="ca-avatar">M</div>
+          <div class="ca-info">
+            <div class="name">Mike Chen</div>
+            <div class="role">LEAD AI ENGINEER</div>
+          </div>
+        </div>
+        <p class="ca-quote">
+          The cache hit rate chart. Day one was 11 %. Day five
+          we crossed 25. We're at 38 today. I look at it every
+          morning. Sometimes twice.
+        </p>
+        <div class="ca-metric">favorite metric · cache hit rate</div>
+      </div>
+
+      <div class="cameo-card aanya fade-in d2">
+        <div class="ca-head">
+          <div class="ca-avatar">A</div>
+          <div class="ca-info">
+            <div class="name">Aanya Rao</div>
+            <div class="role">ML ENGINEER</div>
+          </div>
+        </div>
+        <p class="ca-quote">
+          The 3 AM SSN. The model never saw it. The customer
+          never noticed. The on-call never paged. That's the
+          whole job description, in one row of the audit log.
+        </p>
+        <div class="ca-metric">favorite metric · 47 PII catches</div>
+      </div>
+
+      <div class="cameo-card tom fade-in d3">
+        <div class="ca-head">
+          <div class="ca-avatar">T</div>
+          <div class="ca-info">
+            <div class="name">Tom Bauer</div>
+            <div class="role">PLATFORM ENGINEER</div>
+          </div>
+        </div>
+        <p class="ca-quote">
+          Zero pages in fifteen days. I check the PagerDuty
+          number every morning. It is still zero. I will keep
+          checking. It is, possibly, my new hobby.
+        </p>
+        <div class="ca-metric">favorite metric · 0 pages</div>
+      </div>
+
+      <div class="cameo-card priya fade-in d4">
+        <div class="ca-head">
+          <div class="ca-avatar">P</div>
+          <div class="ca-info">
+            <div class="name">Priya Iyer</div>
+            <div class="role">GENERAL COUNSEL</div>
+          </div>
+        </div>
+        <p class="ca-quote">
+          I changed the policy file six times in two weeks.
+          From decision to production: four minutes, average.
+          No deploy. No engineer. I'd forgotten what that felt
+          like.
+        </p>
+        <div class="ca-metric">favorite metric · 6 policy edits, 0 deploys</div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         IV. WHAT'S STILL IMPERFECT
+         ═══════════════════════════════════════════════════════ -->
+    <div class="section-divider">
+      <span class="roman">iv.</span>
+      <span class="line"></span>
+      <span class="label">The honest part · what's still rough</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="section-title">"<em>What's not working.</em>"</h2>
+
+    <section class="prose">
+      <p>
+        Around 9:11 AM, after the cardamom buns are gone and the
+        third round of coffee has arrived, Sarah does the thing
+        a senior engineer is supposed to do at the moment of
+        celebration, which is to say: <em>"OK. Now tell me what's
+        still wrong."</em>
+      </p>
+
+      <p>
+        Mike, who has been waiting for this question, has a list.
+      </p>
+    </section>
+
+    <aside class="inset warn">
+      <div class="inset-label">Honest retro · five things still rough</div>
+      <h4>What v0 is not yet.</h4>
+      <p>
+        <strong>1. p99 latency is 140 ms over budget.</strong>
+        Suspect: cold-start on the embedding model when the cache
+        misses on a long-tail query. We have a fix in mind (warm-pool
+        the model on pod start) but it didn't make sprint one.
+      </p>
+      <p>
+        <strong>2. False positives on international PII.</strong>
+        A UK phone number — <code class="inline">+44 20 7946 0958</code>
+        — got over-redacted last week (we masked the area code along
+        with the subscriber number). Presidio's recogniser needs a
+        custom rule. Aanya is on it.
+      </p>
+      <p>
+        <strong>3. The hallucination check has a ~5 % false-positive
+        rate.</strong> Mostly on perfectly fine factual answers that
+        happen to phrase things differently from the KB. Aanya wants
+        to swap the verifier prompt for a small RAG-based check.
+        Roadmap, not blocker.
+      </p>
+      <p>
+        <strong>4. The cache-sync sidecar has a known race.</strong>
+        Under high concurrent writes, two pods can briefly disagree
+        on which embedding to evict. Tom has the fix written, just
+        hasn't merged it. The race has not caused a user-visible
+        bug; it has, however, caused one mildly anxious afternoon.
+      </p>
+      <p>
+        <strong>5. Per-tenant rate limiting is not built yet.</strong>
+        Today every tenant shares the global rate limit. This is fine
+        until it isn't. It's fine right now. It will not be fine
+        forever.
+      </p>
+    </aside>
+
+    <section class="prose">
+      <p>
+        Each item gets nodded at. Nobody argues. Aanya adds a
+        sixth — <em>"the toxicity classifier sometimes flags
+        sarcasm as hostile"</em> — which everyone agrees is
+        true and that nobody is going to fix this quarter
+        because, frankly, nobody knows how. Aanya files it
+        under "research, eventually." Priya writes it on a
+        sticky note and puts it in her notebook.
+      </p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         V. WHAT'S NEXT
+         ═══════════════════════════════════════════════════════ -->
+    <div class="section-divider">
+      <span class="roman">v.</span>
+      <span class="line"></span>
+      <span class="label">The roadmap · what v1 looks like</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="section-title">"<em>What's next.</em>"</h2>
+
+    <section class="prose">
+      <p>
+        The roadmap is, as roadmaps go, modest. Mike has been
+        wary of projects that try to do too much in v1. Sarah
+        likes wary engineers. The list, as agreed in the next
+        twenty minutes:
+      </p>
+    </section>
+
+    <div class="roadmap-list">
+      <div class="rm-head">Sentinel · v1 candidate list · post-launch retro</div>
+      <ul>
+        <li>
+          <span class="rm-num">01.</span>
+          <span class="rm-text">
+            Warm-pool the embedding model on pod start.
+            <em>fixes the p99 latency overshoot. small.</em>
+          </span>
+          <span class="rm-when">~3 days</span>
+        </li>
+        <li>
+          <span class="rm-num">02.</span>
+          <span class="rm-text">
+            Per-tenant rate limiting, with policy.yaml extension.
+            <em>token-bucket per tenant, configurable by Priya.</em>
+          </span>
+          <span class="rm-when">~1 week</span>
+        </li>
+        <li>
+          <span class="rm-num">03.</span>
+          <span class="rm-text">
+            Per-tenant policy bundles (instead of one shared file).
+            <em>each tenant runs against its own ruleset. opt-in.</em>
+          </span>
+          <span class="rm-when">~1.5 weeks</span>
+        </li>
+        <li>
+          <span class="rm-num">04.</span>
+          <span class="rm-text">
+            Replace verifier-prompt hallucination check with RAG-based check.
+            <em>aims to cut false positives from 5% to ~1%.</em>
+          </span>
+          <span class="rm-when">~3 weeks</span>
+        </li>
+        <li>
+          <span class="rm-num">05.</span>
+          <span class="rm-text">
+            Refactor the cache-sync sidecar (Tom's race condition).
+            <em>swap to a CRDT-style merge, drop the race entirely.</em>
+          </span>
+          <span class="rm-when">~1 week</span>
+        </li>
+        <li>
+          <span class="rm-num">06.</span>
+          <span class="rm-text">
+            Multi-region deployment for the EU tenants.
+            <em>data-residency requirement. Priya already has the contract markup ready.</em>
+          </span>
+          <span class="rm-when">~3 weeks</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         VI. THE QUIET CLOSE
+         ═══════════════════════════════════════════════════════ -->
+    <div class="section-divider">
+      <span class="roman">vi.</span>
+      <span class="line"></span>
+      <span class="label">9:48 AM · the team leaves · two coffees remain</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="section-title">"<em>So.</em> What's next for you?"</h2>
+
+    <section class="prose">
+      <p>
+        At 9:48 AM the table breaks up. Mike has a 10 AM standup.
+        Aanya has a code review. Tom has, as he announces, "more
+        bananas to acquire." Priya has a partner who needs picking
+        up from the airport. They leave in a small wave of
+        scarves and laptop bags and the kind of warmth that
+        professional groups produce when something has actually,
+        finally, gone right.
+      </p>
+
+      <p>
+        Sarah and David are alone again at the table by the
+        window. The framed napkin is back in its brown paper
+        for the trip home. Two coffees remain.
+      </p>
+    </section>
+
+    <div class="dialogue">
+
+      <p class="stage">Brewline · Thursday · 9:51 AM</p>
+
+      <div class="line">
+        <div class="speaker sarah">SARAH</div>
+        <div class="utterance"><em>(quietly)</em> So. What's next for you?</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance"><em>(considers his coffee)</em> Honestly? Sleep. We don't fix many AIs in one quarter at my place. There's a queue.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker sarah">SARAH</div>
+        <div class="utterance"><em>(grins)</em> If anyone in the queue calls me, I'll send them a napkin.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance">Send them a framed one. The brass plaque really sells it.</div>
+      </div>
+
+      <div class="line action">
+        <div class="speaker action">— they finish their coffees in companionable quiet —</div>
+        <div class="utterance">Outside the window the light is now full morning, the sun is committed, the cardamom-bun chalkboard remains in three underlines. Sarah picks up the brown-paper-wrapped frame and tucks it under her arm. David pays. Sarah tips. They walk out together at 10:07 AM, having sat at the same table where, fifteen days ago, a project that did not yet exist got its name on a slightly stained paper napkin.</div>
+      </div>
+
+    </div>
+
+    <blockquote class="pull-quote">
+      What got built was small, boring, and entirely on purpose. What didn't happen — across one hundred and twenty-seven thousand requests — was the entire point.
+      <cite>— end of Episode 4 · end of The Sentinel Chronicles</cite>
+    </blockquote>
+
+    <!-- ═══════════════════════════════════════════════════════
+         END-OF-SERIES CARD
+         ═══════════════════════════════════════════════════════ -->
+    <div class="end-of-series">
+      <div class="eos-eyebrow">— FIN · END OF SERIES —</div>
+      <h3>The <em>Sentinel</em> Chronicles.</h3>
+      <p class="eos-blurb">
+        Four episodes. One coffee shop. One napkin. One AI gateway.
+        One small team that did the work in six weeks, shipped it,
+        watched it not blow up for fifteen days, and went out for
+        cardamom buns.
+      </p>
+      <div class="eos-list">
+        <span><span class="num">01.</span> The Espresso Apocalypse</span>
+        <span><span class="num">02.</span> The Napkin Sketch</span>
+        <span><span class="num">03.</span> The Whiteboard</span>
+        <span><span class="num">04.</span> 15 Days Later</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         AUTHOR'S NOTE — META, OUTSIDE THE STORY
+         ═══════════════════════════════════════════════════════ -->
+    <aside class="authors-note">
+      <div class="an-head">
+        <div class="an-eyebrow">A note from outside the story</div>
+        <div class="an-tag">META · NOT FICTION</div>
+      </div>
+      <div class="an-body">
+        <h3>For the readers <em>who got this far.</em></h3>
+        <p>
+          Sarah, David, Mike, Aanya, Tom, Priya, Norma, Northwind,
+          and Brewline are made up. The architecture is not. This
+          series was written as a longer-form, more <em>readable</em>
+          way to learn what an AI gateway is, what guardrails do,
+          and how a Responsible AI layer fits in front of a model
+          — by following a small fictional team that builds one
+          end-to-end, with all the awkward meetings, banana cameos,
+          and sticky-note compromises that real engineering carries.
+        </p>
+        <p>
+          If the story landed, the best next step is not to read
+          more about it — it's to <em>run a tiny version yourself</em>.
+          The eight-stage pipeline you saw on the whiteboard in
+          Episode 3 is real, it's open-source, and it runs on a
+          laptop using a local LLM (Ollama works, llama.cpp works,
+          anything LiteLLM supports works). You don't need a cloud
+          account. You don't need a team. You need an afternoon.
+        </p>
+
+        <div class="an-row">
+          <div class="an-block repo">
+            <div class="anb-label">Try it yourself</div>
+            <h4>The code is on GitHub.</h4>
+            <p>
+              Clone the repo, point it at a local model, and watch
+              the same eight stages run against your own prompts.
+              Every stage is a small Python module. Each one is
+              testable on its own. Read what you want, ignore what
+              you don't, change what doesn't fit.
+            </p>
+            <a class="an-link" href="https://github.com/Advirao/Sentinel" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55v-2.13c-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.27-5.24-5.66 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.18A11 11 0 0 1 12 6.55c.97 0 1.95.13 2.86.39 2.19-1.49 3.15-1.18 3.15-1.18.62 1.58.23 2.75.11 3.04.74.8 1.18 1.82 1.18 3.07 0 4.4-2.69 5.36-5.25 5.65.41.35.78 1.05.78 2.12v3.14c0 .31.21.66.79.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+              github.com/Advirao/Sentinel
+            </a>
+          </div>
+
+          <div class="an-block creds">
+            <div class="anb-label">Co-authored with</div>
+            <h4>Claude (Anthropic).</h4>
+            <p>
+              The story, the dialogue, the diagrams, and the prose
+              shape of these four episodes were drafted in
+              collaboration with <strong>Claude</strong>, Anthropic's
+              AI assistant. The architecture, the design choices,
+              the codebase, and the technical opinions are mine.
+              Claude helped turn an engineering project into something
+              you might actually want to read on a Sunday morning.
+            </p>
+            <p style="font-family: var(--mono); font-size: 0.78rem; color: var(--coffee); margin-top: 0.6rem;">
+              human-in-the-loop · pair-written · all errors mine
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="an-disclaimer">
+        <div class="anb-label">Disclaimer · please read before treating this as gospel</div>
+        <p>
+          This series is for <strong>learning and engagement</strong>,
+          not as a production specification. The architecture
+          choices reflect one reasonable shape of a Responsible
+          AI gateway as of early 2026 — they are not the only
+          shape, and they are not necessarily the right shape
+          for your use case, your scale, your regulatory context,
+          or your team.
+        </p>
+        <p>
+          The numbers, latency budgets, cache-hit rates, and cost
+          deltas are <strong>illustrative estimates</strong>, not
+          benchmarks. They reflect what you might reasonably expect
+          for a customer-support workload at a small-to-medium
+          B2B SaaS company. Your numbers will be different. Your
+          policy file will be different. Your stages may not be
+          eight.
+        </p>
+        <p>
+          The code in the repository is a learning artifact. It can
+          have <strong>mistakes</strong>, missing test coverage,
+          unhandled edge cases, and design decisions that won't
+          survive a security review. Treat it as a starting point,
+          not a finished product. Adapt it, harden it, replace
+          components, and update it as your use case demands.
+          If you spot bugs or want to contribute improvements,
+          pull requests are welcome.
+        </p>
+        <p style="margin-top: 1rem; color: var(--espresso);">
+          Build something useful. Be kind to your users. Keep an
+          audit log. <em>Frame your napkins.</em>
+        </p>
+      </div>
+    </aside>
+
+  </article>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-mark">
+        The <em>Sentinel</em> Chronicles
+        <div style="font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--coffee); margin-top: 0.4rem; font-weight: 400;">
+          A four-part story about not blowing up your AI.
+        </div>
+      </div>
+      <div class="series-list">
+        <span class="done"><span class="num">01.</span><span class="ttl">The Espresso Apocalypse</span></span>
+        <span class="done"><span class="num">02.</span><span class="ttl">The Napkin Sketch</span></span>
+        <span class="done"><span class="num">03.</span><span class="ttl">The Whiteboard</span></span>
+        <span class="current"><span class="num">04.</span><span class="ttl">15 Days Later</span></span>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+(function () {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('fade-in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+
+  document.querySelectorAll('.metric-card, .near-miss-card, .cameo-card, .infographic, .dashboard-frame, .pull-quote, .roadmap-list, .end-of-series, .authors-note, .inset')
+    .forEach((el) => {
+      if (!el.classList.contains('fade-in')) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(12px)';
+        io.observe(el);
+      }
+    });
+})();
+
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'theme') {
+    document.documentElement.classList.toggle('dark', !!e.data.dark);
+  }
+});
+</script>
+
+</body>
+</html>

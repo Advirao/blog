@@ -1,0 +1,2267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Episode 2 · The Napkin Sketch — The Sentinel Chronicles</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   THE SENTINEL CHRONICLES · EPISODE 2 · THE NAPKIN SKETCH
+   Mood: morning sun, momentum, the pitch lands.
+   Continues the editorial coffee-shop aesthetic of Episode 1.
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  --bg:      #FAF9F7;
+  --surface:  #FFFFFF;
+  --surface2: #F2EDE6;
+  --border:   #E5DDD5;
+  --ink:      #2D2926;
+  --ink2:     #7A6F68;
+  --accent:   #5E4FA0;
+
+  /* Legacy aliases mapped to design system tokens */
+  --cream:        var(--bg);
+  --paper:        var(--surface);
+  --paper-soft:   var(--surface2);
+  --steam:        var(--border);
+  --milk:         var(--border);
+  --espresso:     var(--ink);
+  --coffee:       var(--ink2);
+  --terracotta:   var(--accent);
+  --terracotta-soft: var(--accent);
+  --moss:         var(--accent);
+  --moss-soft:    var(--accent);
+
+  --display: 'Lora', Georgia, serif;
+  --body:    'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --mono:    'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --measure: 68ch;
+  --measure-narrow: 56ch;
+}
+
+html.dark {
+  --bg:      #16151C;
+  --surface:  #201F29;
+  --surface2: #1A1924;
+  --border:   #2E2D3C;
+  --ink:      #E8E3DC;
+  --ink2:     #9B9399;
+  --accent:   #7B6BBD;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--body);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(232, 183, 81, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 90%, rgba(184, 69, 30, 0.025) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+main { position: relative; z-index: 2; }
+
+/* ───── SERIES NAV ───── */
+.series-nav {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.series-nav-inner {
+  max-width: 1240px; margin: 0 auto;
+  padding: 0.85rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 2rem;
+}
+.series-mark {
+  font-family: 'Lora', serif; font-weight: 600; font-size: 1.05rem;
+  letter-spacing: -0.01em; color: var(--ink);
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.series-mark .glyph { width: 22px; height: 22px; display: inline-block; }
+.series-mark .glyph svg { width: 100%; height: 100%; }
+.episode-dots {
+  display: flex; gap: 0.65rem; align-items: center;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--ink2);
+}
+.episode-dots .dot-group { display: flex; gap: 0.35rem; align-items: center; }
+.episode-dots .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--border); border: 1px solid var(--border);
+}
+.episode-dots .dot.done { background: var(--ink2); border-color: var(--ink2); }
+.episode-dots .dot.active {
+  background: var(--accent); border-color: var(--accent);
+}
+
+/* ───── HERO ───── */
+.hero {
+  padding: 5rem 2rem 3rem;
+  max-width: 1240px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr; gap: 3rem;
+}
+.hero-eyebrow {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 0.8rem;
+}
+.hero-eyebrow .ep-num {
+  background: var(--accent); color: var(--surface);
+  padding: 0.2rem 0.55rem; border-radius: 2px; font-weight: 600;
+}
+.hero-eyebrow::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, var(--milk), transparent);
+  max-width: 200px;
+}
+.hero-title {
+  font-family: 'Lora', serif; font-weight: 600;
+  font-size: clamp(2.6rem, 6vw, 5.5rem);
+  line-height: 0.98; letter-spacing: -0.025em;
+  color: var(--ink); margin: 0 0 1.5rem;
+}
+.hero-title .accent {
+  font-style: italic; color: var(--accent); font-weight: 500;
+}
+.hero-subtitle {
+  font-family: 'Lora', serif; font-weight: 400; font-style: italic;
+  font-size: clamp(1.15rem, 2vw, 1.45rem); line-height: 1.4;
+  color: var(--ink2); max-width: 42ch; margin: 0 0 2rem;
+}
+.hero-meta {
+  display: flex; flex-wrap: wrap; gap: 2rem;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; letter-spacing: 0.06em;
+  color: var(--ink2); text-transform: uppercase;
+  border-top: 1px solid var(--border); padding-top: 1.2rem;
+}
+.hero-meta dt {
+  font-size: 0.66rem; color: var(--ink2);
+  margin-bottom: 0.3rem; letter-spacing: 0.15em;
+}
+.hero-meta dd { margin: 0; color: var(--ink); font-weight: 500; }
+.hero-meta > div { margin: 0; }
+
+/* ───── ARTICLE ───── */
+article { max-width: 1240px; margin: 0 auto; padding: 0 2rem 6rem; }
+
+.prose { max-width: var(--measure); margin: 0 auto; }
+.prose p {
+  font-size: 1.13rem; line-height: 1.72; color: var(--ink);
+  margin: 0 0 1.4rem;
+}
+.prose p:first-of-type::first-letter {
+  font-family: 'Lora', serif; font-weight: 700;
+  font-size: 4.5rem; line-height: 0.85;
+  float: left; padding: 0.3rem 0.7rem 0 0;
+  color: var(--accent);
+}
+.prose .lede {
+  font-family: 'Lora', serif; font-weight: 400;
+  font-size: 1.45rem; line-height: 1.45; color: var(--ink);
+  margin-bottom: 2rem;
+}
+.prose .lede::first-letter {
+  font-size: 4.5rem; color: var(--accent);
+}
+
+.section-divider {
+  display: flex; align-items: center; gap: 1rem;
+  margin: 3.5rem auto 2rem; max-width: var(--measure);
+}
+.section-divider .roman {
+  font-family: 'Lora', serif; font-style: italic; font-weight: 500;
+  font-size: 1.4rem; color: var(--accent);
+}
+.section-divider .line { flex: 1; height: 1px; background: var(--border); }
+.section-divider .label {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--ink2);
+}
+
+h2.section-title {
+  font-family: 'Lora', serif; font-weight: 600;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  line-height: 1.1; letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 auto 1.5rem; max-width: var(--measure);
+}
+h2.section-title em {
+  font-weight: 500; color: var(--accent);
+}
+
+/* ───── INFOGRAPHIC FRAME ───── */
+.infographic {
+  max-width: 1100px; margin: 4rem auto;
+  background: var(--surface);
+  border-radius: 8px; border: 1px solid var(--border);
+  padding: 2rem 2rem 1.5rem;
+  position: relative;
+}
+.infographic .figure-label {
+  position: absolute; top: -12px; left: 24px;
+  background: var(--accent); color: var(--surface);
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 0.32rem 0.7rem; border-radius: 2px; font-weight: 600;
+}
+.infographic-svg-wrap {
+  width: 100%; aspect-ratio: 1.6 / 1; display: block;
+}
+.infographic svg { width: 100%; height: 100%; display: block; }
+.infographic-caption {
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 0.98rem; color: var(--ink2);
+  text-align: center; margin-top: 1rem;
+  border-top: 1px solid var(--border); padding-top: 1rem;
+  line-height: 1.5;
+}
+.infographic-caption strong {
+  font-style: normal; font-family: 'IBM Plex Mono', monospace;
+  text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.15em;
+  color: var(--accent); font-weight: 600;
+}
+
+/* ───── DIALOGUE ───── */
+.dialogue { max-width: var(--measure); margin: 3rem auto; }
+.dialogue .stage {
+  font-family: 'Lora', serif; font-style: italic;
+  color: var(--ink2); text-align: center; margin: 1.5rem 0;
+  font-size: 0.98rem;
+}
+.dialogue .stage::before, .dialogue .stage::after {
+  content: '· · ·'; margin: 0 0.8rem; color: var(--border);
+  font-style: normal; letter-spacing: 0.3em;
+}
+.line {
+  display: grid; grid-template-columns: 90px 1fr;
+  gap: 1rem; margin-bottom: 1.3rem; align-items: flex-start;
+}
+.speaker {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem;
+  letter-spacing: 0.13em; text-transform: uppercase; font-weight: 600;
+  padding-top: 0.25rem; text-align: right;
+}
+.speaker.sarah { color: var(--accent); }
+.speaker.david { color: var(--accent); }
+.speaker.action {
+  color: var(--ink2); font-style: italic; font-weight: 400;
+  text-transform: none; letter-spacing: normal;
+}
+.utterance {
+  font-size: 1.08rem; line-height: 1.65; color: var(--ink);
+}
+.line.action .utterance {
+  font-family: 'Lora', serif; font-style: italic;
+  color: var(--ink2); font-size: 1rem;
+}
+
+/* ───── THE FOUR ROLES (analogy cards) ───── */
+.roles-section {
+  max-width: 1100px; margin: 3rem auto;
+}
+.roles-intro {
+  max-width: var(--measure); margin: 0 auto 2.5rem;
+}
+
+.role-card {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 2.5rem;
+  align-items: stretch;
+  margin-bottom: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.role-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12); transform: translateY(-1px);
+}
+.role-card .role-illustration {
+  background: var(--surface2);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.8rem;
+  position: relative;
+  border-right: 1px solid var(--border);
+}
+.role-card .role-illustration svg {
+  width: 100%; height: auto; max-height: 200px; display: block;
+  position: relative; z-index: 1;
+}
+
+.role-card .role-body {
+  padding: 1.8rem 2rem 1.8rem 0;
+}
+.role-card .role-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--accent);
+  font-weight: 600; margin-bottom: 0.5rem;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.role-card .role-tag .num {
+  display: inline-flex; width: 20px; height: 20px;
+  background: var(--accent); color: var(--surface);
+  border-radius: 50%;
+  align-items: center; justify-content: center;
+  font-size: 0.72rem; font-weight: 700;
+}
+.role-card h4 {
+  font-family: 'Lora', serif; font-weight: 600;
+  font-size: 1.7rem; color: var(--ink);
+  margin: 0 0 0.5rem; letter-spacing: -0.02em;
+}
+.role-card .role-aka {
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 0.95rem; color: var(--ink2);
+  margin-bottom: 1rem;
+}
+.role-card .role-desc {
+  font-size: 1.02rem; line-height: 1.65; color: var(--ink);
+  margin: 0 0 1rem;
+}
+.role-card .role-quote {
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 0.95rem; color: var(--ink2);
+  border-left: 2px solid var(--accent); padding-left: 0.9rem;
+  line-height: 1.5;
+}
+.role-card .role-quote::before {
+  content: '— David, '; color: var(--ink2);
+  font-style: normal; font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem; letter-spacing: 0.1em;
+  text-transform: uppercase; font-weight: 500;
+  display: block; margin-bottom: 0.3rem;
+}
+
+/* ───── GATEWAY DIAGRAM ───── */
+.gateway-diagram {
+  max-width: 1100px; margin: 3rem auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2.5rem 2rem 2rem;
+  position: relative;
+}
+.gateway-diagram .figure-label {
+  position: absolute; top: -12px; left: 24px;
+  background: var(--ink); color: var(--surface);
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 0.32rem 0.7rem; border-radius: 2px; font-weight: 600;
+}
+.gateway-diagram .arch-title {
+  font-family: 'Lora', serif; font-weight: 500; font-style: italic;
+  font-size: 1.15rem; color: var(--ink2);
+  text-align: center; margin: 0 0 1.5rem;
+}
+.gateway-diagram .arch-title strong {
+  font-style: normal; font-weight: 600; color: var(--ink);
+}
+.gateway-svg-wrap {
+  width: 100%; aspect-ratio: 2.6 / 1; display: block;
+}
+.gateway-svg-wrap svg { width: 100%; height: 100%; display: block; }
+.gateway-legend {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 1.2rem; margin-top: 1.2rem;
+  padding-top: 1.2rem; border-top: 1px dashed var(--border);
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: var(--ink2);
+}
+
+/* ───── Q&A CARDS ───── */
+.qa-section { max-width: 1100px; margin: 3rem auto; }
+
+.qa-intro { max-width: var(--measure); margin: 0 auto 2.5rem; }
+
+.qa-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0;
+  margin-bottom: 1.4rem;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+}
+.qa-card .qa-content { padding: 1.9rem 2rem; border-right: 1px solid var(--border); }
+.qa-card .qa-visual {
+  padding: 1.9rem 1.5rem;
+  background: var(--surface2);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.qa-card .qa-num {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+.qa-card .qa-q {
+  font-family: 'Lora', serif; font-weight: 600;
+  font-size: 1.45rem; color: var(--ink);
+  letter-spacing: -0.015em; line-height: 1.18;
+  margin: 0 0 0.5rem;
+}
+.qa-card .qa-q::before {
+  content: '— ';
+  color: var(--accent);
+  font-weight: 500;
+}
+.qa-card .qa-attribution {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+  letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--ink2); margin-bottom: 1rem;
+}
+.qa-card .qa-a {
+  font-size: 1rem; line-height: 1.6; color: var(--ink);
+  margin: 0 0 0.9rem;
+}
+.qa-card .qa-takeaway {
+  margin-top: 1rem;
+  background: var(--surface2);
+  border-left: 3px solid var(--accent);
+  padding: 0.7rem 0.9rem;
+  border-radius: 0 4px 4px 0;
+  font-size: 0.93rem; line-height: 1.5; color: var(--ink);
+}
+.qa-card .qa-takeaway strong {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent); display: block; margin-bottom: 0.3rem;
+  font-weight: 600;
+}
+.qa-card .qa-visual svg { width: 100%; height: auto; max-height: 240px; }
+
+.qa-card .qa-vis-label {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ink2); text-align: center;
+  margin-top: 0.8rem;
+}
+
+/* ───── PULL QUOTE ───── */
+.pull-quote {
+  max-width: 760px; margin: 3.5rem auto;
+  font-family: 'Lora', serif; font-style: italic; font-weight: 400;
+  font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.35;
+  color: var(--ink); text-align: center;
+  letter-spacing: -0.01em; position: relative;
+  padding: 1.5rem 2.5rem;
+}
+.pull-quote::before {
+  content: '"'; position: absolute; top: -1.5rem; left: 50%;
+  transform: translateX(-50%); font-size: 6rem;
+  color: var(--accent); opacity: 0.25;
+  font-family: 'Lora', serif; line-height: 1;
+}
+.pull-quote cite {
+  display: block; font-style: normal; font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--ink2);
+  margin-top: 1.2rem; font-weight: 500;
+}
+
+/* ───── INSET ───── */
+.inset {
+  max-width: var(--measure); margin: 2.5rem auto;
+  background: var(--surface); border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  padding: 1.6rem 1.8rem 1.7rem;
+  border-radius: 0 8px 8px 0;
+}
+.inset-label {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 0.7rem; font-weight: 600;
+}
+.inset h4 {
+  font-family: 'Lora', serif; font-weight: 600; font-size: 1.4rem;
+  color: var(--ink); margin: 0 0 0.7rem;
+  letter-spacing: -0.01em;
+}
+.inset p {
+  font-size: 1rem; line-height: 1.65; color: var(--ink);
+  margin: 0 0 0.8rem;
+}
+.inset p:last-child { margin-bottom: 0; }
+
+/* ───── PHONE-CALL CARD ───── */
+.phone-call {
+  max-width: 540px; margin: 3rem auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  position: relative;
+}
+.phone-call::before {
+  content: ''; position: absolute;
+  top: -10px; left: 50%; transform: translateX(-50%);
+  width: 80px; height: 5px;
+  background: var(--border); border-radius: 0 0 8px 8px;
+}
+.phone-call .pc-header {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--ink2);
+  letter-spacing: 0.05em; margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border); padding-bottom: 0.7rem;
+}
+.phone-call .pc-callee {
+  display: flex; align-items: center; gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+.phone-call .pc-avatar {
+  width: 50px; height: 50px; border-radius: 50%;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--surface); font-weight: 600; font-size: 1.2rem;
+  font-family: 'Lora', serif;
+}
+.phone-call .pc-name {
+  font-family: 'Lora', serif; font-weight: 600; font-size: 1.1rem;
+  color: var(--ink);
+}
+.phone-call .pc-role {
+  font-size: 0.85rem; color: var(--ink2); font-family: 'IBM Plex Mono', monospace;
+}
+.phone-call .pc-msg {
+  background: var(--surface2);
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  font-size: 0.98rem; line-height: 1.5;
+  color: var(--ink);
+  margin-bottom: 0.7rem;
+  position: relative;
+}
+.phone-call .pc-msg.from-me {
+  background: var(--surface2);
+  color: var(--ink);
+  border-left: 3px solid var(--accent);
+}
+.phone-call .pc-msg .pc-stamp {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--ink2);
+  margin-top: 0.4rem; letter-spacing: 0.05em;
+}
+.phone-call .pc-typing {
+  font-family: 'Lora', serif; font-style: italic;
+  color: var(--ink2); font-size: 0.92rem;
+  text-align: center; padding-top: 0.5rem;
+}
+.phone-call .pc-typing .dots span {
+  display: inline-block; width: 5px; height: 5px;
+  background: var(--ink2); border-radius: 50%;
+  margin: 0 1px;
+  animation: bounce 1.2s infinite;
+}
+.phone-call .pc-typing .dots span:nth-child(2) { animation-delay: 0.2s; }
+.phone-call .pc-typing .dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* ───── NEXT EPISODE ───── */
+.next-episode {
+  max-width: 1100px; margin: 5rem auto 2rem;
+  background: var(--surface2);
+  color: var(--ink);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  padding: 3rem; position: relative; overflow: hidden;
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 3rem; align-items: center;
+}
+.next-episode .ne-eyebrow {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.9rem;
+  display: flex; align-items: center; gap: 0.7rem;
+}
+.next-episode h3 {
+  font-family: 'Lora', serif; font-weight: 600;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  color: var(--ink); margin: 0 0 0.8rem;
+  line-height: 1.05; letter-spacing: -0.02em;
+}
+.next-episode h3 em {
+  color: var(--accent); font-style: italic; font-weight: 500;
+}
+.next-episode .ne-desc {
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: 1.1rem; color: var(--ink2); line-height: 1.5;
+  max-width: 50ch; margin: 0 0 1.2rem;
+}
+.next-episode .ne-tags { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.next-episode .ne-tag {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.7rem; border-radius: 3px;
+}
+.next-episode .ne-art { width: 220px; height: 220px; flex-shrink: 0; }
+.next-episode .ne-art svg { width: 100%; height: 100%; display: block; }
+
+/* ───── FOOTER ───── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 3rem 2rem; margin-top: 4rem;
+  background: var(--surface2);
+}
+.footer-inner {
+  max-width: 1240px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2rem; align-items: center;
+}
+.footer-mark {
+  font-family: 'Lora', serif; font-weight: 600;
+  font-size: 1.1rem; color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.footer-mark em {
+  font-style: italic; color: var(--accent); font-weight: 500;
+}
+.series-list {
+  display: flex; gap: 1rem; font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem; letter-spacing: 0.06em;
+  color: var(--ink2); justify-content: flex-end; flex-wrap: wrap;
+}
+.series-list span { display: flex; align-items: center; gap: 0.3rem; }
+.series-list .num { font-weight: 600; color: var(--ink2); }
+.series-list .ttl { color: var(--ink2); }
+.series-list .done { color: var(--ink2); }
+.series-list .done .num { color: var(--ink2); }
+.series-list .current { color: var(--accent); font-weight: 600; }
+.series-list .current .num { color: var(--accent); }
+
+/* ───── UTILS ───── */
+.fade-in {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fade-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+.fade-in.d1 { animation-delay: 0.05s; }
+.fade-in.d2 { animation-delay: 0.15s; }
+.fade-in.d3 { animation-delay: 0.25s; }
+.fade-in.d4 { animation-delay: 0.35s; }
+@keyframes fade-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ───── RESPONSIVE ───── */
+@media (max-width: 880px) {
+  .role-card { grid-template-columns: 1fr; }
+  .role-card .role-illustration { border-right: none; border-bottom: 1px solid var(--border); }
+  .role-card .role-body { padding: 1.5rem 1.5rem 1.5rem; }
+  .qa-card { grid-template-columns: 1fr; }
+  .qa-card .qa-content { border-right: none; border-bottom: 1px solid var(--border); }
+}
+@media (max-width: 768px) {
+  body { padding: 8px; }
+  .main-layout, .content-row, .flex-row { flex-direction: column !important; }
+  .panel, .card, .section { padding: 12px !important; }
+  .tab-bar, .tabs, .nav-tabs { overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+  .sidebar { position: fixed; left: -280px; top: 0; height: 100vh; width: 260px; z-index: 200; transition: left 0.3s ease; background: var(--surface); overflow-y: auto; }
+  .sidebar.open { left: 0; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 199; }
+  .sidebar-overlay.visible { display: block; }
+  .menu-toggle { display: flex !important; }
+  .main-content { width: 100% !important; margin-left: 0 !important; }
+  .hero { padding: 3rem 1.3rem 2rem; }
+  article { padding: 0 1.3rem 4rem; }
+  .prose p { font-size: 1.05rem; }
+  .line { grid-template-columns: 70px 1fr; gap: 0.7rem; }
+  .speaker { font-size: 0.7rem; }
+  .utterance { font-size: 1rem; }
+  .next-episode {
+    grid-template-columns: 1fr;
+    padding: 2rem; gap: 1.5rem;
+  }
+  .next-episode .ne-art { width: 100%; max-width: 200px; margin: 0 auto; }
+  .footer-inner { grid-template-columns: 1fr; text-align: center; }
+  .series-list { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<main>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SERIES NAV
+       ═══════════════════════════════════════════════════════ -->
+  <nav class="series-nav">
+    <div class="series-nav-inner">
+      <div class="series-mark">
+        <span class="glyph">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 2 L20 6 L20 12 C20 17 16 21 12 22 C8 21 4 17 4 12 L4 6 Z"
+                  stroke="#3B2A1F" stroke-width="1.6" stroke-linejoin="round" fill="#FBF8F1"/>
+            <path d="M9 12 L11 14 L15 10" stroke="#B8451E" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </span>
+        The Sentinel Chronicles
+      </div>
+      <div class="episode-dots">
+        <span>EP</span>
+        <div class="dot-group">
+          <span class="dot done" title="Episode 1"></span>
+          <span class="dot active" title="Episode 2"></span>
+          <span class="dot" title="Episode 3"></span>
+          <span class="dot" title="Episode 4"></span>
+        </div>
+        <span>02 / 04</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════════════════════ -->
+  <header class="hero">
+    <div class="fade-in d1">
+      <div class="hero-eyebrow">
+        <span class="ep-num">EP 02</span>
+        The Brewline Tapes · The morning after, a flat white, and four metaphors
+      </div>
+
+      <h1 class="hero-title">
+        The Napkin<br>
+        <span class="accent">Sketch.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        In which David explains, with the help of a doorman,
+        a sous-chef, a serving plate, and a bookkeeper,
+        what an AI gateway actually <em>is</em> — and Sarah,
+        notebook open, lobs five questions David has been
+        waiting two years to answer.
+      </p>
+
+      <div class="hero-meta">
+        <div><dt>Series</dt><dd>The Sentinel Chronicles</dd></div>
+        <div><dt>Reading time</dt><dd>13 min</dd></div>
+        <div><dt>Setting</dt><dd>Brewline Coffee · Wednesday, 8:00 AM</dd></div>
+        <div><dt>Cast</dt><dd>Sarah · David · one notebook · one napkin</dd></div>
+      </div>
+    </div>
+  </header>
+
+  <article>
+
+    <!-- ═══════════════════════════════════════════════════════
+         OPENING
+         ═══════════════════════════════════════════════════════ -->
+    <section class="prose fade-in d2">
+      <p class="lede">
+        It is a different kind of morning. The rain has gone.
+        The sun, hesitant at first, is now committing fully
+        to the bit. Brewline Coffee at eight AM smells like
+        steamed milk and pastry, and the chalkboard menu has
+        been quietly updated to remove the <em>crisis blend</em>.
+      </p>
+
+      <p>
+        Sarah arrives at 7:47 — thirteen minutes early, which
+        for Sarah, on a normal day, is a sign of mild moral
+        crisis. Today it is mostly a sign that she could not
+        sleep past six and ran out of things to clean by seven.
+        She orders a cortado. She picks the same window table.
+        She puts a notebook on it. The notebook is the kind
+        with a stiff cover and an elastic strap, and it is
+        already open.
+      </p>
+
+      <p>
+        On the first page, in handwriting that has been described
+        by her engineering team as <em>"a font called The Adderall
+        Years,"</em> Sarah has written:
+      </p>
+
+      <p style="font-family: var(--mono); background: var(--paper); border-left: 3px solid var(--terracotta); padding: 1rem 1.2rem; margin: 1.4rem 0 1.6rem; line-height: 1.65; font-size: 0.95rem; color: var(--espresso);">
+      &nbsp;&nbsp;1.&nbsp; what is <em>actually</em> in the missing layer<br>
+      &nbsp;&nbsp;2.&nbsp; how slow does this make norma<br>
+      &nbsp;&nbsp;3.&nbsp; how much will this cost<br>
+      &nbsp;&nbsp;4.&nbsp; will it block real customers<br>
+      &nbsp;&nbsp;5.&nbsp; who maintains it<br>
+      &nbsp;&nbsp;6.&nbsp; what if we change models next year<br>
+      &nbsp;&nbsp;7.&nbsp; (something about Friday's board)
+      </p>
+
+      <p>
+        At 7:58, the bell over Brewline's door does its polite
+        little jingle and David Park walks in. He is carrying
+        his laptop bag and a quiet smile of someone who has had
+        an entire night to think about how this conversation
+        should go. He orders a flat white. He sits down. He
+        looks at her notebook. He looks at her.
+      </p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         INFOGRAPHIC — Sarah & David at the table, sunny morning
+         ═══════════════════════════════════════════════════════ -->
+    <figure class="infographic fade-in d2">
+      <div class="figure-label">Figure 03 · Wednesday Morning</div>
+      <div class="infographic-svg-wrap">
+        <svg viewBox="0 0 1100 690" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="morningWindow" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F5D89B" stop-opacity="0.7"/>
+              <stop offset="60%" stop-color="#E8B751" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#DC8A6A" stop-opacity="0.3"/>
+            </linearGradient>
+            <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#FFE3A3" stop-opacity="0.95"/>
+              <stop offset="60%" stop-color="#E8B751" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#E8B751" stop-opacity="0"/>
+            </radialGradient>
+            <pattern id="floorWood" patternUnits="userSpaceOnUse" width="80" height="6" patternTransform="rotate(2)">
+              <rect width="80" height="6" fill="#6B5544"/>
+              <line x1="0" y1="3" x2="80" y2="3" stroke="#5A4636" stroke-width="0.5" opacity="0.6"/>
+            </pattern>
+            <filter id="cardShadow">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+              <feOffset dx="0" dy="2"/>
+              <feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
+              <feMerge>
+                <feMergeNode/><feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- BACKGROUND WALL -->
+          <rect x="0" y="0" width="1100" height="500" fill="#EDE3CD"/>
+
+          <!-- WINDOW (sunny) -->
+          <g transform="translate(40, 40)">
+            <rect x="0" y="0" width="380" height="340" fill="#3B2A1F" rx="2"/>
+            <rect x="14" y="14" width="352" height="312" fill="url(#morningWindow)"/>
+            <!-- window cross -->
+            <rect x="14" y="160" width="352" height="6" fill="#3B2A1F"/>
+            <rect x="186" y="14" width="6" height="312" fill="#3B2A1F"/>
+            <!-- soft sun rays -->
+            <circle cx="280" cy="80" r="36" fill="url(#sunGlow)"/>
+            <circle cx="280" cy="80" r="22" fill="#FFE3A3" opacity="0.85"/>
+            <!-- distant building silhouettes -->
+            <rect x="20" y="200" width="80" height="120" fill="#8B7355" opacity="0.45"/>
+            <rect x="105" y="170" width="50" height="150" fill="#8B7355" opacity="0.4"/>
+            <rect x="160" y="220" width="65" height="100" fill="#8B7355" opacity="0.35"/>
+            <rect x="230" y="190" width="40" height="130" fill="#8B7355" opacity="0.45"/>
+            <!-- trees -->
+            <ellipse cx="55" cy="200" rx="25" ry="20" fill="#5A6E3A" opacity="0.55"/>
+            <ellipse cx="190" cy="220" rx="20" ry="15" fill="#5A6E3A" opacity="0.55"/>
+            <!-- window text -->
+            <text x="190" y="80" font-family="Lora, serif" font-style="italic" font-weight="500" font-size="38" fill="#3B2A1F" text-anchor="middle" opacity="0.85">Brewline</text>
+            <text x="190" y="108" font-family="IBM Plex Mono, monospace" font-size="11" letter-spacing="3" fill="#3B2A1F" text-anchor="middle" opacity="0.7">EST. 2014 · COFFEE &amp; WI-FI</text>
+          </g>
+
+          <!-- soft sun beams in the room -->
+          <g opacity="0.35">
+            <polygon points="420,40 460,40 720,500 660,500" fill="#FFE3A3"/>
+            <polygon points="380,40 410,40 580,500 540,500" fill="#FFE3A3"/>
+          </g>
+
+          <!-- WALL DECOR — chalkboard menu (no crisis blend today) -->
+          <g transform="translate(470, 60)">
+            <rect x="0" y="0" width="180" height="140" fill="#1C1917" stroke="#3B2A1F" stroke-width="6" rx="3"/>
+            <text x="90" y="28" font-family="Lora, serif" font-style="italic" font-size="14" fill="#F5D89B" text-anchor="middle" opacity="0.95">— today —</text>
+            <text x="20" y="55" font-family="IBM Plex Mono, monospace" font-size="11" fill="#FBF8F1" opacity="0.85">cortado ··········· 4.2</text>
+            <text x="20" y="73" font-family="IBM Plex Mono, monospace" font-size="11" fill="#FBF8F1" opacity="0.85">flat white ········ 4.5</text>
+            <text x="20" y="91" font-family="IBM Plex Mono, monospace" font-size="11" fill="#FBF8F1" opacity="0.85">drip ·············· 3.0</text>
+            <text x="20" y="109" font-family="IBM Plex Mono, monospace" font-size="11" fill="#8FA66B" opacity="0.85">spring blend ······ 4.5</text>
+            <text x="20" y="128" font-family="IBM Plex Mono, monospace" font-size="8" fill="#C9BCA4" font-style="italic">+ honey scones today!</text>
+          </g>
+
+          <!-- HANGING LIGHT (off in the morning) -->
+          <g transform="translate(740, 0)">
+            <line x1="0" y1="0" x2="0" y2="80" stroke="#1C1917" stroke-width="2"/>
+            <ellipse cx="0" cy="95" rx="38" ry="14" fill="#3B2A1F"/>
+            <ellipse cx="0" cy="92" rx="38" ry="10" fill="#1C1917"/>
+          </g>
+
+          <!-- POTTED PLANT -->
+          <g transform="translate(950, 250)">
+            <path d="M 0 80 L 10 130 L 60 130 L 70 80 Z" fill="#8B5E3C" stroke="#3B2A1F" stroke-width="1.5"/>
+            <ellipse cx="35" cy="60" rx="12" ry="35" fill="#5A6E3A" transform="rotate(-15 35 60)"/>
+            <ellipse cx="35" cy="55" rx="12" ry="40" fill="#6B7E45" transform="rotate(20 35 55)"/>
+            <ellipse cx="20" cy="65" rx="10" ry="32" fill="#5A6E3A" transform="rotate(-35 20 65)"/>
+            <ellipse cx="50" cy="65" rx="10" ry="30" fill="#6B7E45" transform="rotate(40 50 65)"/>
+            <ellipse cx="35" cy="40" rx="9" ry="30" fill="#7A8E55"/>
+          </g>
+
+          <!-- TABLE -->
+          <rect x="200" y="500" width="700" height="14" fill="#3B2A1F" rx="2"/>
+          <rect x="200" y="500" width="700" height="14" fill="url(#floorWood)" opacity="0.7"/>
+          <rect x="210" y="514" width="8" height="170" fill="#3B2A1F"/>
+          <rect x="882" y="514" width="8" height="170" fill="#3B2A1F"/>
+
+          <!-- SARAH (left side, in profile, 3/4 view, looking at David) -->
+          <g>
+            <!-- chair back -->
+            <rect x="290" y="380" width="100" height="100" fill="#8B5E3C" stroke="#3B2A1F" stroke-width="1.5" rx="6"/>
+            <line x1="320" y1="395" x2="320" y2="475" stroke="#3B2A1F" stroke-width="1" opacity="0.5"/>
+            <line x1="350" y1="395" x2="350" y2="475" stroke="#3B2A1F" stroke-width="1" opacity="0.5"/>
+            <rect x="288" y="475" width="105" height="28" fill="#6B5544" stroke="#3B2A1F" stroke-width="1.5" rx="3"/>
+            <rect x="288" y="503" width="6" height="120" fill="#3B2A1F"/>
+            <rect x="385" y="503" width="6" height="120" fill="#3B2A1F"/>
+            <!-- shoulders/sweater - lighter color today (mood lift) -->
+            <path d="M 250 440 Q 250 410 290 405 L 360 405 Q 405 410 405 440 L 405 480 L 250 480 Z" fill="#5A6E3A" stroke="#3B2A1F" stroke-width="1.5"/>
+            <!-- neck -->
+            <rect x="320" y="380" width="25" height="28" fill="#E8C4A0"/>
+            <!-- head -->
+            <ellipse cx="332" cy="345" rx="38" ry="44" fill="#E8C4A0" stroke="#3B2A1F" stroke-width="1.5"/>
+            <!-- hair (messy bun) -->
+            <path d="M 295 320 Q 290 290 314 285 Q 322 275 336 280 Q 360 282 370 305 Q 375 325 368 345 L 296 345 Q 290 330 295 320 Z" fill="#3B2A1F"/>
+            <ellipse cx="335" cy="285" rx="20" ry="13" fill="#3B2A1F"/>
+            <ellipse cx="296" cy="350" rx="3" ry="6" fill="#D4A580"/>
+            <!-- glasses -->
+            <circle cx="318" cy="350" r="11" fill="none" stroke="#1C1917" stroke-width="1.5"/>
+            <circle cx="340" cy="350" r="11" fill="none" stroke="#1C1917" stroke-width="1.5"/>
+            <line x1="329" y1="350" x2="330" y2="350" stroke="#1C1917" stroke-width="1.5"/>
+            <!-- eye -->
+            <path d="M 314 348 Q 318 351 322 348" stroke="#1C1917" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+            <path d="M 336 348 Q 340 351 344 348" stroke="#1C1917" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+            <!-- eyebrow (slightly raised, listening intently) -->
+            <path d="M 312 338 Q 318 336 324 339" stroke="#1C1917" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+            <path d="M 334 338 Q 340 335 346 338" stroke="#1C1917" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+            <!-- mouth — very slight half-smile (hopeful) -->
+            <path d="M 322 372 Q 328 374 334 372" stroke="#3B2A1F" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <!-- pen in her hand, raised -->
+            <line x1="395" y1="450" x2="430" y2="430" stroke="#B8451E" stroke-width="3" stroke-linecap="round"/>
+          </g>
+
+          <!-- DAVID (right side, opposite, looking at Sarah, gesturing) -->
+          <g>
+            <!-- chair back -->
+            <rect x="710" y="380" width="100" height="100" fill="#8B5E3C" stroke="#3B2A1F" stroke-width="1.5" rx="6"/>
+            <line x1="740" y1="395" x2="740" y2="475" stroke="#3B2A1F" stroke-width="1" opacity="0.5"/>
+            <line x1="770" y1="395" x2="770" y2="475" stroke="#3B2A1F" stroke-width="1" opacity="0.5"/>
+            <rect x="708" y="475" width="105" height="28" fill="#6B5544" stroke="#3B2A1F" stroke-width="1.5" rx="3"/>
+            <rect x="708" y="503" width="6" height="120" fill="#3B2A1F"/>
+            <rect x="805" y="503" width="6" height="120" fill="#3B2A1F"/>
+            <!-- shoulders/sweater - navy -->
+            <path d="M 670 440 Q 670 410 710 405 L 780 405 Q 825 410 825 440 L 825 480 L 670 480 Z" fill="#4A6B7C" stroke="#3B2A1F" stroke-width="1.5"/>
+            <!-- neck -->
+            <rect x="740" y="378" width="25" height="32" fill="#D6A47B"/>
+            <!-- head -->
+            <ellipse cx="752" cy="343" rx="38" ry="44" fill="#D6A47B" stroke="#3B2A1F" stroke-width="1.5"/>
+            <!-- short dark hair -->
+            <path d="M 716 318 Q 712 296 736 292 Q 752 286 768 290 Q 790 296 788 320 Q 788 332 786 340 L 718 340 Q 712 330 716 318 Z" fill="#1C1917"/>
+            <!-- ear -->
+            <ellipse cx="716" cy="348" rx="3" ry="6" fill="#B8895E"/>
+            <!-- eyes -->
+            <path d="M 736 348 Q 740 351 744 348" stroke="#1C1917" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+            <path d="M 758 348 Q 762 351 766 348" stroke="#1C1917" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+            <!-- eyebrows (relaxed) -->
+            <path d="M 734 338 Q 740 336 746 339" stroke="#1C1917" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+            <path d="M 756 338 Q 762 336 768 339" stroke="#1C1917" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+            <!-- mouth - mid-explanation, slightly open -->
+            <ellipse cx="752" cy="370" rx="4" ry="2.5" fill="#3B2A1F"/>
+            <!-- david's hand gesturing - pointing at napkin -->
+            <line x1="690" y1="455" x2="640" y2="495" stroke="#D6A47B" stroke-width="14" stroke-linecap="round"/>
+            <circle cx="640" cy="495" r="8" fill="#D6A47B"/>
+            <!-- index finger pointing -->
+            <line x1="640" y1="495" x2="625" y2="510" stroke="#D6A47B" stroke-width="5" stroke-linecap="round"/>
+          </g>
+
+          <!-- NAPKIN ON TABLE between them, with sketch -->
+          <g transform="translate(440, 470)">
+            <rect x="0" y="0" width="240" height="38" fill="#FBF8F1" stroke="#C9BCA4" stroke-width="1" rx="2" transform="rotate(-2)" filter="url(#cardShadow)"/>
+            <!-- mini sketch on napkin -->
+            <g transform="translate(15, 8) rotate(-2)">
+              <rect x="0" y="0" width="20" height="16" fill="none" stroke="#3B2A1F" stroke-width="1.2" rx="1"/>
+              <rect x="35" y="0" width="20" height="16" fill="none" stroke="#3B2A1F" stroke-width="1.2" rx="1"/>
+              <rect x="70" y="0" width="20" height="16" fill="none" stroke="#3B2A1F" stroke-width="1.2" rx="1"/>
+              <rect x="105" y="0" width="20" height="16" fill="none" stroke="#3B2A1F" stroke-width="1.2" rx="1"/>
+              <rect x="140" y="0" width="20" height="16" fill="none" stroke="#3B2A1F" stroke-width="1.2" rx="1"/>
+              <line x1="20" y1="8" x2="35" y2="8" stroke="#3B2A1F" stroke-width="1"/>
+              <line x1="55" y1="8" x2="70" y2="8" stroke="#3B2A1F" stroke-width="1"/>
+              <line x1="90" y1="8" x2="105" y2="8" stroke="#3B2A1F" stroke-width="1"/>
+              <line x1="125" y1="8" x2="140" y2="8" stroke="#3B2A1F" stroke-width="1"/>
+              <line x1="160" y1="8" x2="180" y2="8" stroke="#3B2A1F" stroke-width="1"/>
+              <ellipse cx="80" cy="8" rx="38" ry="14" fill="none" stroke="#B8451E" stroke-width="1.5"/>
+              <text x="80" y="29" font-family="Lora, serif" font-style="italic" font-size="6" fill="#B8451E" text-anchor="middle">the gateway</text>
+            </g>
+          </g>
+
+          <!-- SARAH'S NOTEBOOK — open, with bullet questions -->
+          <g transform="translate(220, 478)">
+            <rect x="0" y="0" width="120" height="52" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1" transform="rotate(-4)" filter="url(#cardShadow)"/>
+            <g transform="rotate(-4) translate(8 8)">
+              <text x="0" y="0" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">1. missing layer?</text>
+              <text x="0" y="9" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">2. slow norma?</text>
+              <text x="0" y="18" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">3. cost?</text>
+              <text x="0" y="27" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">4. block real ppl?</text>
+              <text x="0" y="36" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">5. who maintains?</text>
+            </g>
+          </g>
+
+          <!-- SARAH'S CORTADO -->
+          <g transform="translate(360, 472)">
+            <ellipse cx="22" cy="48" rx="32" ry="5" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.2"/>
+            <path d="M 0 22 L 4 48 L 40 48 L 44 22 Z" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5"/>
+            <path d="M 44 28 Q 56 31 56 38 Q 56 45 44 45" fill="none" stroke="#3B2A1F" stroke-width="1.5"/>
+            <ellipse cx="22" cy="22" rx="22" ry="3" fill="#5A4030"/>
+            <ellipse cx="22" cy="20" rx="14" ry="2" fill="#A8856A"/>
+          </g>
+
+          <!-- DAVID'S FLAT WHITE -->
+          <g transform="translate(800, 475)">
+            <ellipse cx="22" cy="46" rx="34" ry="5" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.2"/>
+            <path d="M -2 18 L 2 46 L 42 46 L 46 18 Z" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5"/>
+            <path d="M 46 24 Q 58 27 58 34 Q 58 41 46 41" fill="none" stroke="#3B2A1F" stroke-width="1.5"/>
+            <ellipse cx="22" cy="18" rx="24" ry="3" fill="#C8A989"/>
+            <!-- latte art (a heart/leaf) -->
+            <path d="M 18 17 Q 22 15 26 17 Q 22 19 22 21 Q 18 19 18 17" fill="#5A4030" opacity="0.7"/>
+          </g>
+
+          <!-- ─── FLOOR ─── -->
+          <rect x="0" y="640" width="1100" height="50" fill="#5A4030"/>
+          <line x1="0" y1="640" x2="1100" y2="640" stroke="#3B2A1F" stroke-width="2"/>
+          <g stroke="#3B2A1F" stroke-width="0.5" opacity="0.5">
+            <line x1="120" y1="640" x2="120" y2="690"/>
+            <line x1="280" y1="640" x2="280" y2="690"/>
+            <line x1="450" y1="640" x2="450" y2="690"/>
+            <line x1="620" y1="640" x2="620" y2="690"/>
+            <line x1="790" y1="640" x2="790" y2="690"/>
+            <line x1="960" y1="640" x2="960" y2="690"/>
+          </g>
+
+          <!-- Caption -->
+          <text x="550" y="630" font-family="Lora, serif" font-style="italic" font-size="13" fill="#6B5544" text-anchor="middle" opacity="0.85">
+            Wednesday, 8:14 AM. The sun has decided. The notebook is open. The pitch begins.
+          </text>
+        </svg>
+      </div>
+      <div class="infographic-caption">
+        <strong>Figure 03 — Brewline Coffee, the morning after.</strong>
+        Sarah's notebook (left), David's gesturing hand (right), and a paper napkin between them that is about to do a great deal of work.
+      </div>
+    </figure>
+
+    <!-- ═══════════════════════════════════════════════════════
+         THE OPENING DIALOGUE — David's framing
+         ═══════════════════════════════════════════════════════ -->
+    <div class="section-divider">
+      <span class="roman">i.</span>
+      <span class="line"></span>
+      <span class="label">The frame · "imagine a kitchen"</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="section-title">First, David picks an <em>analogy</em>.</h2>
+
+    <section class="prose">
+      <p>
+        Engineers, when explaining a thing to other engineers,
+        will often start with the implementation and back out
+        toward the idea. This is because engineers are honest
+        people who do not believe in things until they have seen
+        them with their own eyes. It is also why engineers, when
+        explaining things to non-engineers, can sound a little
+        bit like a microwave manual being read aloud at a wedding.
+      </p>
+
+      <p>
+        David has, over the past two years, learned not to do this.
+        He starts with the picture.
+      </p>
+    </section>
+
+    <div class="dialogue">
+
+      <p class="stage">Brewline · 8:04 AM · The pitch begins.</p>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance">OK. Forget the napkin from last night for a second. Forget the words "AI" and "model" and "pipeline." Just imagine a small restaurant.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker sarah">SARAH</div>
+        <div class="utterance">A restaurant.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance">A restaurant. Norma is the kitchen. Norma is a brilliant chef. Cooks anything. Twenty-four hours. Never gets tired. Sometimes invents recipes that don't exist, but a brilliant chef.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker sarah">SARAH</div>
+        <div class="utterance">Sometimes invents recipes that don't exist.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance">Brilliantly. Look — the chef is great. The chef is not the problem. The problem is your restaurant has no front-of-house. The customer walks in, walks straight into the kitchen, yells what they want at the chef, the chef makes it, the customer eats it standing up next to the stove. There is no host, no waiter, no <em>nobody</em> between the customer and the cooktop.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker sarah">SARAH</div>
+        <div class="utterance"><em>(writing this down very fast)</em> No front-of-house.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance">What you build is the front-of-house. Not a different kitchen — same kitchen, same chef. Just, finally, a building around her.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance">The building has four people in it. We're going to call them the four roles. They have jobs you have heard of. None of them is a robot. None of them is fancy. Their entire purpose in life is to keep the kitchen safe and the customers happy and Priya off your back.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker sarah">SARAH</div>
+        <div class="utterance">A door. A waiter. Someone in the back office.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance">Almost. Three people up front. One in the back. Let me show you.</div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         THE FOUR ROLES
+         ═══════════════════════════════════════════════════════ -->
+    <div class="section-divider">
+      <span class="roman">ii.</span>
+      <span class="line"></span>
+      <span class="label">The four roles · everybody you need to hire</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="section-title">Four <em>jobs</em>, four people you've already met somewhere.</h2>
+
+    <div class="roles-section">
+
+      <div class="roles-intro prose">
+        <p>
+          David does not write any code on the napkin. He writes
+          four nouns. He puts them in a row. Then, next to each
+          one, he writes the boring job that noun does, and the
+          unflashy thing that noun keeps from happening.
+        </p>
+      </div>
+
+      <!-- ROLE 1 — THE DOORMAN -->
+      <div class="role-card fade-in d1">
+        <div class="role-illustration">
+          <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+            <!-- doorframe -->
+            <rect x="40" y="40" width="140" height="170" fill="none" stroke="#3B2A1F" stroke-width="3" rx="4"/>
+            <rect x="50" y="50" width="120" height="160" fill="#F2EBDC"/>
+            <!-- velvet rope stand -->
+            <rect x="20" y="170" width="6" height="40" fill="#B8451E" rx="1"/>
+            <circle cx="23" cy="167" r="6" fill="#3B2A1F"/>
+            <rect x="194" y="170" width="6" height="40" fill="#B8451E" rx="1"/>
+            <circle cx="197" cy="167" r="6" fill="#3B2A1F"/>
+            <path d="M 26 175 Q 110 200 194 175" fill="none" stroke="#B8451E" stroke-width="3" stroke-linecap="round"/>
+            <!-- doorman silhouette -->
+            <ellipse cx="110" cy="98" rx="18" ry="22" fill="#3B2A1F"/>
+            <path d="M 80 165 Q 80 140 110 135 L 110 135 Q 140 140 140 165 L 140 195 L 80 195 Z" fill="#3B2A1F"/>
+            <!-- bowtie -->
+            <path d="M 102 122 L 110 118 L 118 122 L 110 128 Z" fill="#B8451E"/>
+            <!-- clipboard -->
+            <rect x="125" y="155" width="22" height="28" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5"/>
+            <line x1="129" y1="161" x2="143" y2="161" stroke="#6B5544" stroke-width="0.7"/>
+            <line x1="129" y1="166" x2="143" y2="166" stroke="#6B5544" stroke-width="0.7"/>
+            <line x1="129" y1="171" x2="139" y2="171" stroke="#6B5544" stroke-width="0.7"/>
+            <line x1="129" y1="176" x2="143" y2="176" stroke="#6B5544" stroke-width="0.7"/>
+            <!-- clipboard clip -->
+            <rect x="131" y="152" width="10" height="5" fill="#3B2A1F" rx="1"/>
+            <!-- "NO PII" sign on door -->
+            <rect x="58" y="60" width="50" height="22" fill="#FBF8F1" stroke="#A03030" stroke-width="1.2" rx="2"/>
+            <text x="83" y="74" font-family="IBM Plex Mono, monospace" font-size="8" font-weight="700" fill="#A03030" text-anchor="middle">NO PII</text>
+            <!-- decoration above door -->
+            <path d="M 40 40 L 110 18 L 180 40" fill="none" stroke="#3B2A1F" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="role-body">
+          <div class="role-tag"><span class="num">1</span> ROLE ONE</div>
+          <h4>The Doorman.</h4>
+          <p class="role-aka">a.k.a. the bouncer with a clipboard.</p>
+          <p class="role-desc">
+            Every prompt that walks up to the door gets eyeballed
+            before it gets in. The doorman knows the dress code:
+            no toxic stuff, no obvious abuse, no asking about things
+            we don't talk about here. And he knows the guest list:
+            we only take prompts going to chefs we've vetted —
+            no one's slipping in to ask the new line cook to make
+            something we never put on the menu.
+          </p>
+          <p class="role-desc">
+            He also has a small black marker. If a customer says
+            their full name, their phone number, their credit card —
+            anything that <em>belongs</em> to them but doesn't need
+            to go anywhere near the kitchen — the doorman politely
+            blacks it out before it reaches the chef.
+          </p>
+          <div class="role-quote">
+            "Half the disasters of last week never happen if there
+            is one bored, polite person standing at the door reading
+            things before they get to Norma."
+          </div>
+        </div>
+      </div>
+
+      <!-- ROLE 2 — THE SOUS-CHEF -->
+      <div class="role-card fade-in d2">
+        <div class="role-illustration">
+          <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+            <!-- recipe card / sticky note -->
+            <rect x="30" y="40" width="160" height="160" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="2" rx="3"/>
+            <rect x="30" y="40" width="160" height="20" fill="#B8451E"/>
+            <text x="110" y="55" font-family="Lora, serif" font-style="italic" font-weight="600" font-size="14" fill="#FBF8F1" text-anchor="middle">— recipe book —</text>
+            <!-- recipe lines -->
+            <text x="42" y="80" font-family="Lora, serif" font-size="11" fill="#3B2A1F">refund (47-day item)</text>
+            <line x1="42" y1="86" x2="178" y2="86" stroke="#5A6E3A" stroke-width="2"/>
+            <text x="156" y="84" font-family="IBM Plex Mono, monospace" font-size="8" fill="#5A6E3A">✓ done</text>
+            <text x="42" y="105" font-family="Lora, serif" font-size="11" fill="#3B2A1F">password reset flow</text>
+            <line x1="42" y1="111" x2="178" y2="111" stroke="#5A6E3A" stroke-width="2"/>
+            <text x="156" y="109" font-family="IBM Plex Mono, monospace" font-size="8" fill="#5A6E3A">✓ done</text>
+            <text x="42" y="130" font-family="Lora, serif" font-size="11" fill="#3B2A1F">"where's my order"</text>
+            <line x1="42" y1="136" x2="178" y2="136" stroke="#5A6E3A" stroke-width="2"/>
+            <text x="156" y="134" font-family="IBM Plex Mono, monospace" font-size="8" fill="#5A6E3A">✓ done</text>
+            <text x="42" y="155" font-family="Lora, serif" font-size="11" fill="#3B2A1F" font-style="italic" opacity="0.5">new question (rare)</text>
+            <text x="42" y="180" font-family="IBM Plex Mono, monospace" font-size="9" fill="#6B5544" opacity="0.85">"made it 2 hrs ago.</text>
+            <text x="42" y="192" font-family="IBM Plex Mono, monospace" font-size="9" fill="#6B5544" opacity="0.85">just reheat &amp; plate."</text>
+            <!-- pencil -->
+            <line x1="195" y1="130" x2="220" y2="155" stroke="#1C1917" stroke-width="2.5" stroke-linecap="round" transform="rotate(-30 195 130)"/>
+            <circle cx="195" cy="130" r="3" fill="#B8451E"/>
+          </svg>
+        </div>
+        <div class="role-body">
+          <div class="role-tag"><span class="num">2</span> ROLE TWO</div>
+          <h4>The Sous-Chef.</h4>
+          <p class="role-aka">a.k.a. the one who remembers we made this last Tuesday.</p>
+          <p class="role-desc">
+            A great kitchen does not re-cook something it just made
+            for the table next door. If two customers ask for the
+            same thing within the hour — or even something
+            <em>essentially</em> the same, just phrased differently —
+            the sous-chef pulls the warm one out of the pass and
+            sends it. Faster, cheaper, identical taste.
+          </p>
+          <p class="role-desc">
+            Most of what Norma is asked is a remix of seven or eight
+            questions. <em>Where's my order. How do I reset my
+            password. Can I change my plan.</em> Re-cooking those
+            from scratch every single time is, in addition to slow,
+            expensive — every customer pays for a chef's full attention
+            on a question Norma has answered four hundred times this week.
+            The sous-chef fixes that quietly, in the background, all
+            day long.
+          </p>
+          <div class="role-quote">
+            "If you do nothing else on this list, do this. The
+            sous-chef pays for the entire renovation."
+          </div>
+        </div>
+      </div>
+
+      <!-- ROLE 3 — THE PASS -->
+      <div class="role-card fade-in d3">
+        <div class="role-illustration">
+          <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+            <!-- pass / counter -->
+            <rect x="20" y="100" width="180" height="14" fill="#3B2A1F" rx="2"/>
+            <rect x="20" y="114" width="180" height="6" fill="#1C1917" rx="1"/>
+            <!-- heat lamp on top -->
+            <line x1="60" y1="40" x2="60" y2="80" stroke="#3B2A1F" stroke-width="2"/>
+            <ellipse cx="60" cy="85" rx="20" ry="6" fill="#3B2A1F"/>
+            <ellipse cx="60" cy="83" rx="20" ry="4" fill="#1C1917"/>
+            <ellipse cx="60" cy="92" rx="38" ry="14" fill="#FFE3A3" opacity="0.5"/>
+            <line x1="160" y1="40" x2="160" y2="80" stroke="#3B2A1F" stroke-width="2"/>
+            <ellipse cx="160" cy="85" rx="20" ry="6" fill="#3B2A1F"/>
+            <ellipse cx="160" cy="83" rx="20" ry="4" fill="#1C1917"/>
+            <ellipse cx="160" cy="92" rx="38" ry="14" fill="#FFE3A3" opacity="0.5"/>
+            <!-- plate ready to go out -->
+            <ellipse cx="110" cy="98" rx="38" ry="6" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5"/>
+            <ellipse cx="110" cy="96" rx="32" ry="4" fill="#E8C4A0"/>
+            <!-- food on plate -->
+            <ellipse cx="110" cy="92" rx="14" ry="4" fill="#5A6E3A"/>
+            <ellipse cx="100" cy="92" rx="6" ry="3" fill="#B8451E"/>
+            <ellipse cx="120" cy="93" rx="5" ry="2.5" fill="#B0892C"/>
+            <!-- inspector hand reaching down with a magnifier -->
+            <circle cx="80" cy="65" r="14" fill="none" stroke="#3B2A1F" stroke-width="2.5"/>
+            <line x1="89" y1="74" x2="100" y2="85" stroke="#3B2A1F" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="80" cy="65" r="11" fill="rgba(232,183,81,0.15)"/>
+            <!-- check mark inside lens -->
+            <path d="M 75 66 L 79 70 L 86 62" stroke="#5A6E3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <!-- "approved" stamp on plate -->
+            <g transform="translate(160, 75)">
+              <circle cx="0" cy="0" r="14" fill="none" stroke="#5A6E3A" stroke-width="1.5" opacity="0.7"/>
+              <text x="0" y="3" font-family="IBM Plex Mono, monospace" font-size="6" font-weight="700" fill="#5A6E3A" text-anchor="middle">VERIFIED</text>
+            </g>
+            <!-- counter front edge text -->
+            <text x="110" y="155" font-family="Lora, serif" font-style="italic" font-weight="500" font-size="13" fill="#3B2A1F" text-anchor="middle">— THE PASS —</text>
+            <text x="110" y="172" font-family="IBM Plex Mono, monospace" font-size="8" fill="#6B5544" text-anchor="middle" letter-spacing="2">EVERY PLATE STOPS HERE</text>
+          </svg>
+        </div>
+        <div class="role-body">
+          <div class="role-tag"><span class="num">3</span> ROLE THREE</div>
+          <h4>The Pass.</h4>
+          <p class="role-aka">a.k.a. the last person who looks at the plate before it leaves.</p>
+          <p class="role-desc">
+            In a real kitchen, the pass is the counter where every
+            single dish stops on its way to the dining room.
+            The chef-de-cuisine looks at it. Sniffs it. Wipes a thumb
+            on the rim. Decides if it's going out, going back, or
+            getting tossed. Without the pass, you are sending
+            whatever happens to be on the stove directly to the
+            customer, and that, on a busy night, is how a restaurant
+            ends up on the news.
+          </p>
+          <p class="role-desc">
+            Norma's pass does three things, fast: it checks if the
+            response invented something that isn't true (the made-up
+            refund policy), it checks if the response sounds rude
+            or unkind (the snarky reply), and it gently stamps every
+            plate with a small <em>"checked by Sentinel"</em> mark
+            so the audit team can see, later, that someone looked.
+          </p>
+          <div class="role-quote">
+            "Three quarters of your week happens because nobody is
+            looking at the plate before it goes out. Hire someone
+            to look at the plate."
+          </div>
+        </div>
+      </div>
+
+      <!-- ROLE 4 — THE BOOKKEEPER -->
+      <div class="role-card fade-in d4">
+        <div class="role-illustration">
+          <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+            <!-- ledger book -->
+            <rect x="40" y="50" width="140" height="140" fill="#5A6E3A" rx="3"/>
+            <rect x="40" y="50" width="140" height="14" fill="#3E5028"/>
+            <rect x="50" y="64" width="120" height="118" fill="#FBF8F1"/>
+            <!-- ledger spine ridges -->
+            <line x1="42" y1="78" x2="48" y2="78" stroke="#3B2A1F" stroke-width="1"/>
+            <line x1="42" y1="98" x2="48" y2="98" stroke="#3B2A1F" stroke-width="1"/>
+            <line x1="42" y1="118" x2="48" y2="118" stroke="#3B2A1F" stroke-width="1"/>
+            <line x1="42" y1="138" x2="48" y2="138" stroke="#3B2A1F" stroke-width="1"/>
+            <line x1="42" y1="158" x2="48" y2="158" stroke="#3B2A1F" stroke-width="1"/>
+            <!-- ledger header -->
+            <text x="110" y="80" font-family="Lora, serif" font-style="italic" font-weight="600" font-size="12" fill="#3B2A1F" text-anchor="middle">— audit ledger —</text>
+            <line x1="55" y1="86" x2="165" y2="86" stroke="#5A6E3A" stroke-width="0.6"/>
+            <!-- columns -->
+            <text x="58" y="100" font-family="IBM Plex Mono, monospace" font-size="6" fill="#6B5544">TIME</text>
+            <text x="98" y="100" font-family="IBM Plex Mono, monospace" font-size="6" fill="#6B5544">PROMPT</text>
+            <text x="148" y="100" font-family="IBM Plex Mono, monospace" font-size="6" fill="#6B5544">VERDICT</text>
+            <line x1="55" y1="103" x2="165" y2="103" stroke="#C9BCA4" stroke-width="0.4"/>
+            <!-- rows -->
+            <text x="58" y="113" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">8:42</text>
+            <text x="98" y="113" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">refund?</text>
+            <text x="148" y="113" font-family="IBM Plex Mono, monospace" font-size="6" fill="#5A6E3A">✓ ok</text>
+            <text x="58" y="123" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">8:43</text>
+            <text x="98" y="123" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">order #...</text>
+            <text x="148" y="123" font-family="IBM Plex Mono, monospace" font-size="6" fill="#5A6E3A">✓ ok</text>
+            <text x="58" y="133" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">8:44</text>
+            <text x="98" y="133" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">[redacted]</text>
+            <text x="148" y="133" font-family="IBM Plex Mono, monospace" font-size="6" fill="#A03030">✕ blocked</text>
+            <text x="58" y="143" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">8:45</text>
+            <text x="98" y="143" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">password</text>
+            <text x="148" y="143" font-family="IBM Plex Mono, monospace" font-size="6" fill="#5A6E3A">✓ ok</text>
+            <text x="58" y="153" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">8:46</text>
+            <text x="98" y="153" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">cart</text>
+            <text x="148" y="153" font-family="IBM Plex Mono, monospace" font-size="6" fill="#B0892C">~ pii masked</text>
+            <text x="58" y="163" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">8:47</text>
+            <text x="98" y="163" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">return</text>
+            <text x="148" y="163" font-family="IBM Plex Mono, monospace" font-size="6" fill="#5A6E3A">✓ ok</text>
+            <text x="58" y="173" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">8:48</text>
+            <text x="98" y="173" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F">policy</text>
+            <text x="148" y="173" font-family="IBM Plex Mono, monospace" font-size="6" fill="#5A6E3A">✓ ok</text>
+            <!-- pen -->
+            <line x1="190" y1="160" x2="215" y2="185" stroke="#1C1917" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="215" cy="185" r="3" fill="#B8451E"/>
+          </svg>
+        </div>
+        <div class="role-body">
+          <div class="role-tag"><span class="num">4</span> ROLE FOUR</div>
+          <h4>The Bookkeeper.</h4>
+          <p class="role-aka">a.k.a. the only person Priya from Legal will trust.</p>
+          <p class="role-desc">
+            The bookkeeper sits in the back office. The bookkeeper
+            is, frankly, a bit of a vibe killer. The bookkeeper
+            writes everything down. Every prompt that came in.
+            Every response that went out. Every prompt the doorman
+            turned away, and why. Every plate the pass sent back to
+            the kitchen, and why. Every time something was stamped,
+            redacted, replaced.
+          </p>
+          <p class="role-desc">
+            On Friday, when Priya from Legal asks "prove that what
+            happened on Monday cannot happen again" — the bookkeeper
+            is the answer. You hand her the ledger. She reads two
+            pages. She nods. She goes back to her office. The
+            board update is ten times shorter and a hundred times
+            calmer than the one you were going to have to give.
+          </p>
+          <div class="role-quote">
+            "An AI without a bookkeeper is a witness with amnesia.
+            Helpful, until the moment you need her to remember anything."
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         THE GATEWAY DIAGRAM
+         ═══════════════════════════════════════════════════════ -->
+    <div class="section-divider">
+      <span class="roman">iii.</span>
+      <span class="line"></span>
+      <span class="label">All four · in one drawing</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="section-title">Now <em>put them all in one room</em>.</h2>
+
+    <div class="prose">
+      <p>
+        On the napkin, David draws the picture. He calls it
+        <em>the Gateway</em>. It is a small cross-section of a
+        building with a door, a kitchen, a pass, and a ledger.
+        Each room is labeled with the role inside it. Arrows
+        show the path a single customer prompt takes from the
+        moment it walks in the door to the moment its response
+        walks back out.
+      </p>
+    </div>
+
+    <figure class="gateway-diagram fade-in d2">
+      <div class="figure-label">Figure 04 · The Gateway</div>
+      <p class="arch-title">A customer's prompt enters at left. <strong>The four roles</strong> hand it through the building. The response leaves at right. Norma never speaks to a customer alone again.</p>
+
+      <div class="gateway-svg-wrap">
+        <svg viewBox="0 0 1200 460" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <marker id="gwArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 Z" fill="#3B2A1F"/>
+            </marker>
+            <pattern id="gwNapkin" patternUnits="userSpaceOnUse" width="6" height="6">
+              <rect width="6" height="6" fill="#FBF8F1"/>
+              <circle cx="2" cy="3" r="0.4" fill="#E3D9C5" opacity="0.7"/>
+              <circle cx="5" cy="1" r="0.3" fill="#E3D9C5" opacity="0.5"/>
+            </pattern>
+          </defs>
+
+          <!-- napkin background -->
+          <rect x="20" y="20" width="1160" height="420" fill="url(#gwNapkin)" stroke="#C9BCA4" stroke-width="1.5" stroke-dasharray="2,3" rx="2"/>
+
+          <!-- title on napkin -->
+          <text x="600" y="55" font-family="Lora, serif" font-style="italic" font-weight="500" font-size="18" fill="#6B5544" text-anchor="middle">— THE GATEWAY —</text>
+          <text x="600" y="73" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="2" fill="#B8451E" text-anchor="middle">a.k.a. the missing layer · drawn 8:31 AM</text>
+
+          <!-- BUILDING outline -->
+          <rect x="220" y="120" width="780" height="240" fill="none" stroke="#3B2A1F" stroke-width="2.5" rx="6"/>
+          <!-- roof line -->
+          <path d="M 220 120 L 280 90 L 940 90 L 1000 120" fill="none" stroke="#3B2A1F" stroke-width="2.5" stroke-linejoin="round"/>
+          <text x="610" y="110" font-family="Lora, serif" font-style="italic" font-weight="500" font-size="13" fill="#6B5544" text-anchor="middle">[ the front-of-house ]</text>
+
+          <!-- ROOM 1: DOORMAN -->
+          <g>
+            <line x1="380" y1="120" x2="380" y2="360" stroke="#3B2A1F" stroke-width="1.5"/>
+            <text x="300" y="148" font-family="Lora, serif" font-weight="600" font-size="15" fill="#3B2A1F" text-anchor="middle">Door</text>
+            <text x="300" y="168" font-family="IBM Plex Mono, monospace" font-size="8.5" letter-spacing="1.5" fill="#B8451E" text-anchor="middle">ROLE 1</text>
+            <!-- doorman icon -->
+            <g transform="translate(285, 195)">
+              <ellipse cx="15" cy="12" rx="8" ry="10" fill="#3B2A1F"/>
+              <path d="M 5 38 Q 5 22 15 19 Q 25 22 25 38 L 25 55 L 5 55 Z" fill="#3B2A1F"/>
+              <path d="M 11 28 L 15 25 L 19 28 L 15 32 Z" fill="#B8451E"/>
+              <rect x="22" y="35" width="9" height="11" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1"/>
+              <line x1="23" y1="38" x2="30" y2="38" stroke="#6B5544" stroke-width="0.5"/>
+              <line x1="23" y1="41" x2="30" y2="41" stroke="#6B5544" stroke-width="0.5"/>
+              <line x1="23" y1="44" x2="28" y2="44" stroke="#6B5544" stroke-width="0.5"/>
+            </g>
+            <!-- caption inside room -->
+            <text x="300" y="280" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#3B2A1F" text-anchor="middle" font-style="italic">checks the prompt,</text>
+            <text x="300" y="296" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#3B2A1F" text-anchor="middle" font-style="italic">redacts personal info,</text>
+            <text x="300" y="312" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#3B2A1F" text-anchor="middle" font-style="italic">turns away the toxic.</text>
+            <!-- floor label -->
+            <text x="300" y="345" font-family="IBM Plex Mono, monospace" font-size="8" fill="#6B5544" text-anchor="middle" letter-spacing="1.5">→ to sous-chef →</text>
+          </g>
+
+          <!-- ROOM 2: SOUS-CHEF -->
+          <g>
+            <line x1="540" y1="120" x2="540" y2="360" stroke="#3B2A1F" stroke-width="1.5"/>
+            <text x="460" y="148" font-family="Lora, serif" font-weight="600" font-size="15" fill="#3B2A1F" text-anchor="middle">Memory</text>
+            <text x="460" y="168" font-family="IBM Plex Mono, monospace" font-size="8.5" letter-spacing="1.5" fill="#B8451E" text-anchor="middle">ROLE 2</text>
+            <!-- recipe book icon -->
+            <g transform="translate(440, 195)">
+              <rect x="0" y="0" width="40" height="50" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5"/>
+              <rect x="0" y="0" width="40" height="6" fill="#B8451E"/>
+              <line x1="4" y1="14" x2="36" y2="14" stroke="#5A6E3A" stroke-width="1"/>
+              <line x1="4" y1="20" x2="36" y2="20" stroke="#5A6E3A" stroke-width="1"/>
+              <line x1="4" y1="26" x2="36" y2="26" stroke="#5A6E3A" stroke-width="1"/>
+              <line x1="4" y1="32" x2="36" y2="32" stroke="#5A6E3A" stroke-width="1"/>
+              <line x1="4" y1="38" x2="28" y2="38" stroke="#5A6E3A" stroke-width="1"/>
+              <line x1="4" y1="44" x2="36" y2="44" stroke="#5A6E3A" stroke-width="1"/>
+            </g>
+            <!-- caption -->
+            <text x="460" y="280" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#3B2A1F" text-anchor="middle" font-style="italic">"made this 5 mins ago.</text>
+            <text x="460" y="296" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#3B2A1F" text-anchor="middle" font-style="italic">just send the warm one."</text>
+            <text x="460" y="345" font-family="IBM Plex Mono, monospace" font-size="8" fill="#6B5544" text-anchor="middle" letter-spacing="1.5">→ if no match → kitchen →</text>
+          </g>
+
+          <!-- ROOM 3: NORMA / THE KITCHEN -->
+          <g>
+            <line x1="700" y1="120" x2="700" y2="360" stroke="#3B2A1F" stroke-width="1.5"/>
+            <text x="620" y="148" font-family="Lora, serif" font-weight="600" font-size="16" fill="#3B2A1F" text-anchor="middle">Norma</text>
+            <text x="620" y="168" font-family="IBM Plex Mono, monospace" font-size="8.5" letter-spacing="1.5" fill="#5A6E3A" text-anchor="middle">THE KITCHEN</text>
+            <!-- chef hat icon -->
+            <g transform="translate(605, 195)">
+              <ellipse cx="15" cy="20" rx="11" ry="14" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5"/>
+              <ellipse cx="22" cy="14" rx="9" ry="12" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5"/>
+              <ellipse cx="8" cy="14" rx="9" ry="12" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5"/>
+              <rect x="2" y="28" width="26" height="10" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5"/>
+              <line x1="3" y1="33" x2="27" y2="33" stroke="#3B2A1F" stroke-width="0.5"/>
+              <!-- face hint -->
+              <circle cx="11" cy="42" r="0.8" fill="#3B2A1F"/>
+              <circle cx="19" cy="42" r="0.8" fill="#3B2A1F"/>
+              <path d="M 11 47 Q 15 49 19 47" stroke="#3B2A1F" stroke-width="1" fill="none"/>
+            </g>
+            <!-- caption -->
+            <text x="620" y="280" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#3B2A1F" text-anchor="middle" font-style="italic">cooks the response.</text>
+            <text x="620" y="296" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#3B2A1F" text-anchor="middle" font-style="italic">brilliant. unsupervised.</text>
+            <text x="620" y="345" font-family="IBM Plex Mono, monospace" font-size="8" fill="#6B5544" text-anchor="middle" letter-spacing="1.5">→ to the pass →</text>
+          </g>
+
+          <!-- ROOM 4: PASS -->
+          <g>
+            <line x1="860" y1="120" x2="860" y2="360" stroke="#3B2A1F" stroke-width="1.5"/>
+            <text x="780" y="148" font-family="Lora, serif" font-weight="600" font-size="15" fill="#3B2A1F" text-anchor="middle">The Pass</text>
+            <text x="780" y="168" font-family="IBM Plex Mono, monospace" font-size="8.5" letter-spacing="1.5" fill="#B8451E" text-anchor="middle">ROLE 3</text>
+            <!-- magnifier-on-plate icon -->
+            <g transform="translate(750, 200)">
+              <ellipse cx="30" cy="35" rx="22" ry="4" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5"/>
+              <ellipse cx="30" cy="33" rx="18" ry="3" fill="#E8C4A0"/>
+              <circle cx="22" cy="20" r="10" fill="rgba(232,183,81,0.15)" stroke="#3B2A1F" stroke-width="1.8"/>
+              <line x1="29" y1="27" x2="36" y2="34" stroke="#3B2A1F" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M 19 21 L 22 24 L 27 18" stroke="#5A6E3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </g>
+            <!-- caption -->
+            <text x="780" y="280" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#3B2A1F" text-anchor="middle" font-style="italic">tastes the response,</text>
+            <text x="780" y="296" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#3B2A1F" text-anchor="middle" font-style="italic">corrects the made-up,</text>
+            <text x="780" y="312" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#3B2A1F" text-anchor="middle" font-style="italic">stamps it &amp; sends it out.</text>
+            <text x="780" y="345" font-family="IBM Plex Mono, monospace" font-size="8" fill="#6B5544" text-anchor="middle" letter-spacing="1.5">→ to bookkeeper →</text>
+          </g>
+
+          <!-- ROOM 5: BOOKKEEPER -->
+          <g>
+            <text x="930" y="148" font-family="Lora, serif" font-weight="600" font-size="15" fill="#3B2A1F" text-anchor="middle">Ledger</text>
+            <text x="930" y="168" font-family="IBM Plex Mono, monospace" font-size="8.5" letter-spacing="1.5" fill="#B8451E" text-anchor="middle">ROLE 4</text>
+            <!-- ledger icon -->
+            <g transform="translate(910, 195)">
+              <rect x="0" y="0" width="40" height="50" fill="#5A6E3A" stroke="#3B2A1F" stroke-width="1"/>
+              <rect x="0" y="0" width="40" height="5" fill="#3E5028"/>
+              <rect x="3" y="6" width="34" height="42" fill="#FBF8F1"/>
+              <line x1="6" y1="13" x2="34" y2="13" stroke="#5A6E3A" stroke-width="0.5"/>
+              <line x1="6" y1="20" x2="34" y2="20" stroke="#5A6E3A" stroke-width="0.5"/>
+              <line x1="6" y1="27" x2="30" y2="27" stroke="#5A6E3A" stroke-width="0.5"/>
+              <line x1="6" y1="34" x2="34" y2="34" stroke="#5A6E3A" stroke-width="0.5"/>
+              <line x1="6" y1="41" x2="32" y2="41" stroke="#5A6E3A" stroke-width="0.5"/>
+            </g>
+            <!-- caption -->
+            <text x="930" y="280" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#3B2A1F" text-anchor="middle" font-style="italic">writes the receipt.</text>
+            <text x="930" y="296" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#3B2A1F" text-anchor="middle" font-style="italic">"happens, in writing."</text>
+          </g>
+
+          <!-- INPUT ARROW (customer in) -->
+          <g>
+            <text x="100" y="225" font-family="Lora, serif" font-weight="600" font-size="14" fill="#3B2A1F" text-anchor="middle">Customer</text>
+            <text x="100" y="245" font-family="IBM Plex Mono, monospace" font-size="9" fill="#6B5544" text-anchor="middle" letter-spacing="1.5">PROMPT IN</text>
+            <!-- person icon -->
+            <g transform="translate(85, 260)">
+              <circle cx="15" cy="10" r="8" fill="none" stroke="#3B2A1F" stroke-width="2"/>
+              <path d="M 0 35 Q 0 22 15 19 Q 30 22 30 35" fill="none" stroke="#3B2A1F" stroke-width="2"/>
+            </g>
+            <path d="M 145 240 L 215 240" stroke="#3B2A1F" stroke-width="2" marker-end="url(#gwArrow)"/>
+          </g>
+
+          <!-- OUTPUT ARROW (response out) -->
+          <g>
+            <path d="M 1005 240 L 1075 240" stroke="#3B2A1F" stroke-width="2" marker-end="url(#gwArrow)"/>
+            <text x="1110" y="225" font-family="Lora, serif" font-weight="600" font-size="14" fill="#3B2A1F" text-anchor="middle">Customer</text>
+            <text x="1110" y="245" font-family="IBM Plex Mono, monospace" font-size="9" fill="#6B5544" text-anchor="middle" letter-spacing="1.5">RESPONSE OUT</text>
+            <!-- happy person icon -->
+            <g transform="translate(1095, 260)">
+              <circle cx="15" cy="10" r="8" fill="none" stroke="#5A6E3A" stroke-width="2"/>
+              <path d="M 11 11 L 12 11" stroke="#5A6E3A" stroke-width="1.5"/>
+              <path d="M 18 11 L 19 11" stroke="#5A6E3A" stroke-width="1.5"/>
+              <path d="M 11 14 Q 15 17 19 14" stroke="#5A6E3A" stroke-width="1.5" fill="none"/>
+              <path d="M 0 35 Q 0 22 15 19 Q 30 22 30 35" fill="none" stroke="#5A6E3A" stroke-width="2"/>
+            </g>
+          </g>
+
+          <!-- bottom note -->
+          <text x="600" y="408" font-family="Lora, serif" font-style="italic" font-size="13" fill="#6B5544" text-anchor="middle">"the kitchen is the same. the people around the kitchen — those are new." — D.</text>
+          <text x="600" y="428" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="2" fill="#B8451E" text-anchor="middle">PROJECT NAME (T.B.D., over second cortado): SENTINEL</text>
+        </svg>
+      </div>
+
+      <div class="gateway-legend">
+        <span><strong style="color: var(--terracotta);">●</strong> &nbsp; the four roles you build</span>
+        <span><strong style="color: var(--moss);">●</strong> &nbsp; the kitchen (Norma) you already had</span>
+      </div>
+    </figure>
+
+    <blockquote class="pull-quote">
+      The kitchen is the same. The chef is the same. What changes
+      is that the chef is, finally, allowed to do her job.
+      <cite>— David, on the napkin</cite>
+    </blockquote>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SARAH'S FIVE QUESTIONS
+         ═══════════════════════════════════════════════════════ -->
+    <div class="section-divider">
+      <span class="roman">iv.</span>
+      <span class="line"></span>
+      <span class="label">Sarah's five questions · the skeptic shows up</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="section-title">The notebook <em>opens</em>.</h2>
+
+    <div class="qa-section">
+
+      <div class="qa-intro prose">
+        <p>
+          Sarah lets David finish his pitch. She has been making
+          small affirmative noises throughout, which David has
+          correctly read as <em>this all makes sense, and now I
+          have professional concerns.</em> She turns the notebook
+          page. She uncaps her pen. She begins.
+        </p>
+      </div>
+
+      <!-- Q1: LATENCY -->
+      <div class="qa-card fade-in d1">
+        <div class="qa-content">
+          <div class="qa-num">QUESTION 01 · LATENCY</div>
+          <h3 class="qa-q">"Won't this make Norma slower?"</h3>
+          <div class="qa-attribution">SARAH, sipping her cortado</div>
+          <p class="qa-a">
+            <em>Honest answer:</em> a tiny bit slower on a fresh
+            request, sometimes <em>much faster</em> overall. The
+            doorman and the pass each add about 40 to 80 milliseconds.
+            That's the cost. The benefit is the sous-chef — for any
+            question Norma has answered recently, you skip the chef
+            entirely and serve the cached plate. Cache hits go out in
+            <em>under 200 milliseconds</em>, where a normal model call
+            is closer to 800-to-1500.
+          </p>
+          <div class="qa-takeaway">
+            <strong>The shape</strong>
+            On the whole, the gateway makes Norma <em>faster</em>,
+            not slower — because real customer conversations repeat
+            themselves more than anyone admits.
+          </div>
+        </div>
+        <div class="qa-visual">
+          <svg viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg">
+            <!-- title -->
+            <text x="180" y="22" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="2" fill="#6B5544" text-anchor="middle">RESPONSE TIME PER REQUEST (MS)</text>
+            <!-- y-axis -->
+            <line x1="50" y1="40" x2="50" y2="200" stroke="#C9BCA4" stroke-width="1"/>
+            <line x1="50" y1="200" x2="340" y2="200" stroke="#C9BCA4" stroke-width="1"/>
+            <!-- gridlines -->
+            <line x1="50" y1="60" x2="340" y2="60" stroke="#E3D9C5" stroke-width="0.5" stroke-dasharray="2,2"/>
+            <line x1="50" y1="100" x2="340" y2="100" stroke="#E3D9C5" stroke-width="0.5" stroke-dasharray="2,2"/>
+            <line x1="50" y1="140" x2="340" y2="140" stroke="#E3D9C5" stroke-width="0.5" stroke-dasharray="2,2"/>
+            <line x1="50" y1="180" x2="340" y2="180" stroke="#E3D9C5" stroke-width="0.5" stroke-dasharray="2,2"/>
+            <text x="44" y="64" font-family="IBM Plex Mono, monospace" font-size="8" fill="#6B5544" text-anchor="end">1500</text>
+            <text x="44" y="104" font-family="IBM Plex Mono, monospace" font-size="8" fill="#6B5544" text-anchor="end">1000</text>
+            <text x="44" y="144" font-family="IBM Plex Mono, monospace" font-size="8" fill="#6B5544" text-anchor="end">500</text>
+            <text x="44" y="204" font-family="IBM Plex Mono, monospace" font-size="8" fill="#6B5544" text-anchor="end">0</text>
+
+            <!-- bars -->
+            <!-- raw model: 850ms -->
+            <rect x="80" y="132" width="56" height="68" fill="#6B5544"/>
+            <text x="108" y="124" font-family="IBM Plex Mono, monospace" font-size="9" fill="#3B2A1F" text-anchor="middle" font-weight="600">850ms</text>
+            <text x="108" y="220" font-family="IBM Plex Sans, sans-serif" font-size="9" fill="#3B2A1F" text-anchor="middle">today</text>
+            <text x="108" y="232" font-family="IBM Plex Mono, monospace" font-size="7" fill="#6B5544" text-anchor="middle">(no gateway)</text>
+
+            <!-- with gateway, cache miss: 950ms -->
+            <rect x="160" y="124" width="56" height="76" fill="#B8451E"/>
+            <text x="188" y="116" font-family="IBM Plex Mono, monospace" font-size="9" fill="#3B2A1F" text-anchor="middle" font-weight="600">950ms</text>
+            <text x="188" y="220" font-family="IBM Plex Sans, sans-serif" font-size="9" fill="#3B2A1F" text-anchor="middle">cache miss</text>
+            <text x="188" y="232" font-family="IBM Plex Mono, monospace" font-size="7" fill="#6B5544" text-anchor="middle">(slow path)</text>
+
+            <!-- with gateway, cache hit: 180ms -->
+            <rect x="240" y="184" width="56" height="16" fill="#5A6E3A"/>
+            <text x="268" y="176" font-family="IBM Plex Mono, monospace" font-size="9" fill="#3B2A1F" text-anchor="middle" font-weight="600">180ms</text>
+            <text x="268" y="220" font-family="IBM Plex Sans, sans-serif" font-size="9" fill="#3B2A1F" text-anchor="middle">cache hit</text>
+            <text x="268" y="232" font-family="IBM Plex Mono, monospace" font-size="7" fill="#6B5544" text-anchor="middle">(fast path)</text>
+
+            <!-- annotation arrow -->
+            <path d="M 268 178 Q 320 165 330 130" stroke="#5A6E3A" stroke-width="1" fill="none" stroke-dasharray="2,2"/>
+            <text x="332" y="120" font-family="Lora, serif" font-style="italic" font-size="9" fill="#5A6E3A" text-anchor="end">faster!</text>
+          </svg>
+          <div class="qa-vis-label">slow on a miss · fast on a hit</div>
+        </div>
+      </div>
+
+      <!-- Q2: COST -->
+      <div class="qa-card fade-in d2">
+        <div class="qa-content">
+          <div class="qa-num">QUESTION 02 · COST</div>
+          <h3 class="qa-q">"What's the bill at the end of the month?"</h3>
+          <div class="qa-attribution">SARAH, doing math in her head</div>
+          <p class="qa-a">
+            The gateway itself is small — it's just a service running
+            on the same infrastructure your APIs already run on.
+            Negligible. The big number is what the gateway <em>saves
+            you</em>: every cache hit is a model call you didn't pay
+            for. With a healthy hit rate (35-45% is normal once it's
+            warm), the model bill goes down significantly. Plus —
+            though it's harder to put on a slide — every time the
+            doorman blocks something disastrous, you save an entire
+            future PR-crisis cost center.
+          </p>
+          <div class="qa-takeaway">
+            <strong>The shape</strong>
+            The gateway pays for itself before the end of month one.
+            And on the day it prevents a single viral incident, it
+            pays for itself for the year.
+          </div>
+        </div>
+        <div class="qa-visual">
+          <svg viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg">
+            <text x="180" y="22" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="2" fill="#6B5544" text-anchor="middle">MONTHLY COST · ILLUSTRATIVE</text>
+
+            <!-- before bar (full) -->
+            <text x="80" y="58" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#3B2A1F">today</text>
+            <rect x="80" y="65" width="240" height="32" fill="#6B5544" rx="2"/>
+            <text x="200" y="86" font-family="IBM Plex Mono, monospace" font-size="11" fill="#FBF8F1" text-anchor="middle" font-weight="600">model calls · $X / mo</text>
+
+            <!-- after bar (cache slice cut out) -->
+            <text x="80" y="125" font-family="IBM Plex Sans, sans-serif" font-size="10" fill="#3B2A1F">with gateway</text>
+            <rect x="80" y="132" width="140" height="32" fill="#6B5544" rx="2 0 0 2"/>
+            <rect x="80" y="132" width="140" height="32" fill="none" rx="2"/>
+            <rect x="220" y="132" width="80" height="32" fill="#5A6E3A" opacity="0.85" rx="0 0 0 0"/>
+            <rect x="300" y="132" width="22" height="32" fill="#B8451E" rx="0 2 2 0"/>
+            <text x="150" y="153" font-family="IBM Plex Mono, monospace" font-size="10" fill="#FBF8F1" text-anchor="middle" font-weight="600">model calls</text>
+            <text x="260" y="153" font-family="IBM Plex Mono, monospace" font-size="9" fill="#FBF8F1" text-anchor="middle" font-weight="600">cache saves</text>
+            <text x="311" y="153" font-family="IBM Plex Mono, monospace" font-size="7" fill="#FBF8F1" text-anchor="middle" font-weight="600">gw</text>
+
+            <!-- legend -->
+            <g transform="translate(60, 195)">
+              <rect x="0" y="0" width="12" height="12" fill="#6B5544"/>
+              <text x="17" y="10" font-family="IBM Plex Mono, monospace" font-size="9" fill="#3B2A1F">model</text>
+              <rect x="78" y="0" width="12" height="12" fill="#5A6E3A"/>
+              <text x="95" y="10" font-family="IBM Plex Mono, monospace" font-size="9" fill="#3B2A1F">saved by cache</text>
+              <rect x="206" y="0" width="12" height="12" fill="#B8451E"/>
+              <text x="223" y="10" font-family="IBM Plex Mono, monospace" font-size="9" fill="#3B2A1F">gateway run</text>
+            </g>
+
+            <text x="180" y="225" font-family="Lora, serif" font-style="italic" font-size="10" fill="#5A6E3A" text-anchor="middle">the green slice is what the cache pays back</text>
+          </svg>
+          <div class="qa-vis-label">the cache pays the rent</div>
+        </div>
+      </div>
+
+      <!-- Q3: FALSE POSITIVES -->
+      <div class="qa-card fade-in d3">
+        <div class="qa-content">
+          <div class="qa-num">QUESTION 03 · FALSE POSITIVES</div>
+          <h3 class="qa-q">"Won't the doorman block real customers?"</h3>
+          <div class="qa-attribution">SARAH, the most reasonable concern</div>
+          <p class="qa-a">
+            Yes — sometimes. There's no spam filter on earth that
+            doesn't occasionally eat a real email. But the doorman
+            is not a switch, it's a <em>dial</em>. You set how strict
+            it is. Strict enough to catch real abuse. Loose enough that
+            normal customers walk in. And critically — when the
+            doorman <em>does</em> turn someone away, you log it,
+            show it on a dashboard, and have a human escalation path
+            so a real person can override it. That's a feature
+            of the system, not a bug.
+          </p>
+          <div class="qa-takeaway">
+            <strong>The shape</strong>
+            Better to have a polite, occasionally over-eager doorman
+            with a manager on call than no doorman at all and the
+            New York Times in your DMs.
+          </div>
+        </div>
+        <div class="qa-visual">
+          <svg viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg">
+            <text x="180" y="22" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="2" fill="#6B5544" text-anchor="middle">STRICTNESS DIAL</text>
+
+            <!-- the dial -->
+            <g transform="translate(180, 130)">
+              <!-- arc -->
+              <path d="M -100 0 A 100 100 0 0 1 100 0" stroke="#C9BCA4" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <!-- gradient zones -->
+              <path d="M -100 0 A 100 100 0 0 1 -50 -86.6" stroke="#5A6E3A" stroke-width="3" fill="none"/>
+              <path d="M -50 -86.6 A 100 100 0 0 1 50 -86.6" stroke="#B0892C" stroke-width="3" fill="none"/>
+              <path d="M 50 -86.6 A 100 100 0 0 1 100 0" stroke="#A03030" stroke-width="3" fill="none"/>
+              <!-- ticks -->
+              <line x1="-100" y1="0" x2="-110" y2="0" stroke="#3B2A1F" stroke-width="1.5"/>
+              <line x1="-50" y1="-86.6" x2="-55" y2="-95.3" stroke="#3B2A1F" stroke-width="1.5"/>
+              <line x1="0" y1="-100" x2="0" y2="-110" stroke="#3B2A1F" stroke-width="1.5"/>
+              <line x1="50" y1="-86.6" x2="55" y2="-95.3" stroke="#3B2A1F" stroke-width="1.5"/>
+              <line x1="100" y1="0" x2="110" y2="0" stroke="#3B2A1F" stroke-width="1.5"/>
+              <!-- pointer -->
+              <line x1="0" y1="0" x2="-30" y2="-95" stroke="#B8451E" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="0" cy="0" r="6" fill="#3B2A1F"/>
+              <!-- labels -->
+              <text x="-110" y="14" font-family="IBM Plex Mono, monospace" font-size="8" fill="#5A6E3A" text-anchor="end" font-weight="600">LOOSE</text>
+              <text x="-50" y="-100" font-family="IBM Plex Mono, monospace" font-size="8" fill="#3B2A1F" text-anchor="end">balanced</text>
+              <text x="0" y="-118" font-family="IBM Plex Mono, monospace" font-size="8" fill="#3B2A1F" text-anchor="middle">strict</text>
+              <text x="110" y="14" font-family="IBM Plex Mono, monospace" font-size="8" fill="#A03030" text-anchor="start" font-weight="600">PARANOID</text>
+            </g>
+
+            <text x="180" y="225" font-family="Lora, serif" font-style="italic" font-size="10" fill="#3B2A1F" text-anchor="middle">tune. observe. retune. repeat.</text>
+          </svg>
+          <div class="qa-vis-label">it's a dial, not a switch</div>
+        </div>
+      </div>
+
+      <!-- Q4: MAINTENANCE -->
+      <div class="qa-card fade-in d4">
+        <div class="qa-content">
+          <div class="qa-num">QUESTION 04 · MAINTENANCE</div>
+          <h3 class="qa-q">"Who actually owns this thing?"</h3>
+          <div class="qa-attribution">SARAH, who has been burned before</div>
+          <p class="qa-a">
+            Your engineers do. Same as any other internal service.
+            It's a small codebase, written in something boring like
+            Python, with tests. The four roles are independent
+            modules — you can update the doorman without touching
+            the pass, swap the sous-chef's matching algorithm without
+            touching the bookkeeper. The list of forbidden words and
+            sensitive patterns lives in a config file your
+            policy team can edit without redeploying anything.
+            Boring. By design.
+          </p>
+          <div class="qa-takeaway">
+            <strong>The shape</strong>
+            Tiny moving parts. Each one cheap to replace. No one
+            person, no single vendor, no exotic dependency that
+            disappears when its founder pivots to AI for cats.
+          </div>
+        </div>
+        <div class="qa-visual">
+          <svg viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg">
+            <text x="180" y="22" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="2" fill="#6B5544" text-anchor="middle">FOUR INDEPENDENT MODULES</text>
+
+            <!-- four lego-like blocks with notches -->
+            <g transform="translate(40, 60)">
+              <rect x="0" y="0" width="60" height="60" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5" rx="3"/>
+              <rect x="20" y="-6" width="20" height="6" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5" rx="2 2 0 0"/>
+              <text x="30" y="32" font-family="Lora, serif" font-weight="600" font-size="11" fill="#3B2A1F" text-anchor="middle">Doorman</text>
+              <text x="30" y="46" font-family="IBM Plex Mono, monospace" font-size="7" fill="#6B5544" text-anchor="middle">v2.1</text>
+            </g>
+            <g transform="translate(120, 60)">
+              <rect x="0" y="0" width="60" height="60" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5" rx="3"/>
+              <rect x="20" y="-6" width="20" height="6" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5" rx="2 2 0 0"/>
+              <text x="30" y="32" font-family="Lora, serif" font-weight="600" font-size="11" fill="#3B2A1F" text-anchor="middle">Sous-Chef</text>
+              <text x="30" y="46" font-family="IBM Plex Mono, monospace" font-size="7" fill="#6B5544" text-anchor="middle">v1.4</text>
+            </g>
+            <g transform="translate(200, 60)">
+              <rect x="0" y="0" width="60" height="60" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5" rx="3"/>
+              <rect x="20" y="-6" width="20" height="6" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5" rx="2 2 0 0"/>
+              <text x="30" y="32" font-family="Lora, serif" font-weight="600" font-size="11" fill="#3B2A1F" text-anchor="middle">The Pass</text>
+              <text x="30" y="46" font-family="IBM Plex Mono, monospace" font-size="7" fill="#6B5544" text-anchor="middle">v1.0</text>
+            </g>
+            <g transform="translate(280, 60)">
+              <rect x="0" y="0" width="60" height="60" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5" rx="3"/>
+              <rect x="20" y="-6" width="20" height="6" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="1.5" rx="2 2 0 0"/>
+              <text x="30" y="32" font-family="Lora, serif" font-weight="600" font-size="11" fill="#3B2A1F" text-anchor="middle">Ledger</text>
+              <text x="30" y="46" font-family="IBM Plex Mono, monospace" font-size="7" fill="#6B5544" text-anchor="middle">v3.2</text>
+            </g>
+
+            <!-- connectors / arrows -->
+            <path d="M 100 90 L 120 90" stroke="#3B2A1F" stroke-width="1.5"/>
+            <path d="M 180 90 L 200 90" stroke="#3B2A1F" stroke-width="1.5"/>
+            <path d="M 260 90 L 280 90" stroke="#3B2A1F" stroke-width="1.5"/>
+
+            <!-- swap-out icon under one -->
+            <g transform="translate(120, 145)">
+              <rect x="0" y="0" width="60" height="22" fill="#5A6E3A" rx="3" opacity="0.15"/>
+              <text x="30" y="14" font-family="IBM Plex Mono, monospace" font-size="8" fill="#5A6E3A" text-anchor="middle" font-weight="600">SWAP-OK ↻</text>
+            </g>
+
+            <text x="180" y="210" font-family="Lora, serif" font-style="italic" font-size="10" fill="#3B2A1F" text-anchor="middle">each block versioned, tested, deployable on its own.</text>
+          </svg>
+          <div class="qa-vis-label">four blocks, four owners, no monolith</div>
+        </div>
+      </div>
+
+      <!-- Q5: PORTABILITY -->
+      <div class="qa-card fade-in d1">
+        <div class="qa-content">
+          <div class="qa-num">QUESTION 05 · PORTABILITY</div>
+          <h3 class="qa-q">"What if we change models next year?"</h3>
+          <div class="qa-attribution">SARAH, with a quietly devastating final question</div>
+          <p class="qa-a">
+            <em>This is the part of the pitch David has been most
+            excited about.</em> The whole reason the gateway exists
+            is that the chef in the kitchen is interchangeable. Today
+            it's Norma — running on whatever model you've picked.
+            Tomorrow it could be a different model from the same
+            vendor, or a different vendor entirely, or a small
+            local model for some questions and a big one for others.
+            Your guardrails — the doorman, the sous-chef, the pass,
+            the bookkeeper — <em>do not change</em>. They live above
+            the model.
+          </p>
+          <div class="qa-takeaway">
+            <strong>The shape</strong>
+            You are buying yourself the freedom to change your mind
+            about which model to use, without re-doing all your safety
+            work each time.
+          </div>
+        </div>
+        <div class="qa-visual">
+          <svg viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg">
+            <text x="180" y="22" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="2" fill="#6B5544" text-anchor="middle">SAME GATEWAY · ANY KITCHEN</text>
+
+            <!-- gateway box (top, fixed) -->
+            <rect x="60" y="50" width="240" height="40" fill="#FBF8F1" stroke="#3B2A1F" stroke-width="2" rx="4"/>
+            <text x="180" y="68" font-family="Lora, serif" font-weight="600" font-size="13" fill="#3B2A1F" text-anchor="middle">your gateway</text>
+            <text x="180" y="83" font-family="IBM Plex Mono, monospace" font-size="8" fill="#6B5544" text-anchor="middle">doorman · sous-chef · pass · ledger</text>
+
+            <!-- arrow down -->
+            <line x1="180" y1="92" x2="180" y2="110" stroke="#3B2A1F" stroke-width="1.5"/>
+            <line x1="180" y1="120" x2="180" y2="135" stroke="#3B2A1F" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+            <!-- swappable kitchens row -->
+            <g transform="translate(40, 145)">
+              <rect x="0" y="0" width="64" height="58" fill="#F2EBDC" stroke="#3B2A1F" stroke-width="1.5" rx="4"/>
+              <text x="32" y="25" font-family="Lora, serif" font-weight="600" font-size="11" fill="#3B2A1F" text-anchor="middle">GPT-4</text>
+              <text x="32" y="42" font-family="IBM Plex Mono, monospace" font-size="7" fill="#6B5544" text-anchor="middle">openai</text>
+            </g>
+            <g transform="translate(112, 145)">
+              <rect x="0" y="0" width="64" height="58" fill="#F2EBDC" stroke="#3B2A1F" stroke-width="1.5" rx="4"/>
+              <text x="32" y="25" font-family="Lora, serif" font-weight="600" font-size="11" fill="#3B2A1F" text-anchor="middle">Claude</text>
+              <text x="32" y="42" font-family="IBM Plex Mono, monospace" font-size="7" fill="#6B5544" text-anchor="middle">anthropic</text>
+            </g>
+            <g transform="translate(184, 145)">
+              <rect x="0" y="0" width="64" height="58" fill="#F2EBDC" stroke="#3B2A1F" stroke-width="1.5" rx="4"/>
+              <text x="32" y="25" font-family="Lora, serif" font-weight="600" font-size="11" fill="#3B2A1F" text-anchor="middle">Gemini</text>
+              <text x="32" y="42" font-family="IBM Plex Mono, monospace" font-size="7" fill="#6B5544" text-anchor="middle">google</text>
+            </g>
+            <g transform="translate(256, 145)">
+              <rect x="0" y="0" width="64" height="58" fill="#F2EBDC" stroke="#3B2A1F" stroke-width="1.5" rx="4"/>
+              <text x="32" y="25" font-family="Lora, serif" font-weight="600" font-size="11" fill="#3B2A1F" text-anchor="middle">Llama</text>
+              <text x="32" y="42" font-family="IBM Plex Mono, monospace" font-size="7" fill="#6B5544" text-anchor="middle">local</text>
+            </g>
+
+            <text x="180" y="225" font-family="Lora, serif" font-style="italic" font-size="10" fill="#3B2A1F" text-anchor="middle">the chef under the hood is replaceable. the kitchen rules aren't.</text>
+          </svg>
+          <div class="qa-vis-label">guardrails live above the model</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         THE CONVINCE MOMENT
+         ═══════════════════════════════════════════════════════ -->
+    <div class="section-divider">
+      <span class="roman">v.</span>
+      <span class="line"></span>
+      <span class="label">The phone comes off the table</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="section-title">Sarah <em>picks up her phone</em>.</h2>
+
+    <section class="prose">
+      <p>
+        It is now 9:48 AM. The cortado is gone. The flat white
+        is gone. The napkin has been turned over twice, drawn
+        on both sides, soaked through in one corner from the
+        condensation off the second cortado, and is currently
+        being held flat against the table with David's index
+        finger because Sarah has just photographed it three
+        times with her phone.
+      </p>
+
+      <p>
+        She closes the notebook. She has been quiet for about
+        forty seconds, which David recognizes — from college,
+        from working on group projects with her, from watching
+        her run a thousand standups — as <em>Sarah making a
+        decision.</em> The decision arrives in three parts.
+      </p>
+
+      <p>
+        Part one: she picks up her phone, which has been face-down
+        on the table since 7:47 and which she has, miraculously,
+        not checked once. Part two: she opens her contacts. Part
+        three: she calls Mike Chen, her lead AI engineer, who is
+        — based on the time and his habits — currently three blocks
+        away at a different coffee shop, deeply considering his
+        second pour-over of the morning.
+      </p>
+    </section>
+
+    <!-- PHONE CALL CARD -->
+    <div class="phone-call fade-in d2">
+      <div class="pc-header">
+        <span>📞 OUTGOING CALL</span>
+        <span>9:49 AM · WED</span>
+      </div>
+      <div class="pc-callee">
+        <div class="pc-avatar">M</div>
+        <div>
+          <div class="pc-name">Mike Chen</div>
+          <div class="pc-role">Lead AI Engineer · Northwind</div>
+        </div>
+      </div>
+      <div class="pc-msg from-me">
+        Mike. Hi. Are you sitting down?
+        <span class="pc-stamp">SARAH · 9:49 AM</span>
+      </div>
+      <div class="pc-msg">
+        I'm at Maddox. Why.
+        <span class="pc-stamp">MIKE · 9:49 AM</span>
+      </div>
+      <div class="pc-msg from-me">
+        I want to do a thing. I want you and Priya and the AI
+        guild in the Birch room at four o'clock today. Bring
+        your laptops. Bring your snark. Bring nothing else.
+        <span class="pc-stamp">SARAH · 9:50 AM</span>
+      </div>
+      <div class="pc-msg">
+        ...is this about the bot?
+        <span class="pc-stamp">MIKE · 9:50 AM</span>
+      </div>
+      <div class="pc-msg from-me">
+        It's about the bot. It's about all the bots. We're
+        building something. It has rooms. It has people in
+        it. One of them is a doorman. I'll explain when I
+        get there. Four o'clock.
+        <span class="pc-stamp">SARAH · 9:51 AM</span>
+      </div>
+      <div class="pc-typing">
+        Mike is typing<span class="dots"><span></span><span></span><span></span></span>
+      </div>
+    </div>
+
+    <section class="prose">
+      <p>
+        She hangs up. She looks at David. David, who has just
+        watched a project that he has, professionally, been
+        trying to convince companies to do for the better part
+        of two years, get green-lit in an eight-second phone
+        call, takes the last sip of his cold coffee.
+      </p>
+    </section>
+
+    <blockquote class="pull-quote">
+      "Was that a yes?"<br>
+      "That was a yes with a meeting on it."
+      <cite>— David &amp; Sarah, 9:52 AM</cite>
+    </blockquote>
+
+    <!-- ═══════════════════════════════════════════════════════
+         CLOSING + SETUP FOR EP 3
+         ═══════════════════════════════════════════════════════ -->
+    <h3 style="font-family: var(--display); font-weight: 500; font-size: 1.5rem; color: var(--espresso); margin: 2.5rem auto 1rem; max-width: var(--measure);">A small, friendly <em>name</em>.</h3>
+
+    <section class="prose">
+      <p>
+        On the way out of Brewline, on the napkin, on the side
+        that does not have the kitchen drawing or the four
+        roles or the two coffee rings, David writes a single
+        word in capital letters. He looks at it for a moment.
+        He shows it to Sarah. Sarah laughs, a real laugh, for
+        the second time in twenty-four hours.
+      </p>
+    </section>
+
+    <aside class="inset" style="text-align: center; padding: 2rem 1.5rem;">
+      <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--moss); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.6rem;">scrawled on the back of the napkin</div>
+      <div style="font-family: var(--display); font-style: italic; font-weight: 500; font-size: 2.4rem; color: var(--espresso); letter-spacing: 0.04em; line-height: 1;">SENTINEL.</div>
+      <div style="font-family: var(--display); font-style: italic; font-size: 1rem; color: var(--coffee); margin-top: 0.6rem;">— the project, named —</div>
+    </aside>
+
+    <section class="prose">
+      <p>
+        Sentinel. The doorman. The watcher. The one who stands
+        guard. It will end up being the name of the architecture,
+        the name of the project, and — by the end of next quarter
+        — the name of a slide that Northwind's board will spend
+        a surprisingly large amount of time nodding at.
+      </p>
+
+      <p>
+        But that is later. For now, it is 9:55 AM on a Wednesday,
+        the rain is gone, Sarah has a meeting at four, and
+        somewhere three blocks away Mike Chen is already opening
+        a notepad and writing the words <em>"the doorman??"</em>
+        with a question mark and an exclamation mark, both of
+        which he will keep.
+      </p>
+
+      <p style="font-family: var(--display); font-style: italic; color: var(--coffee); font-size: 1.15rem; text-align: center; margin-top: 2.5rem;">
+        — end of Episode 2 —
+      </p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         NEXT EPISODE
+         ═══════════════════════════════════════════════════════ -->
+    <div class="next-episode">
+      <div>
+        <div class="ne-eyebrow">
+          <span class="arrow">→</span> EPISODE 03 · COMING UP
+        </div>
+        <h3>The <em>Whiteboard.</em></h3>
+        <p class="ne-desc">
+          Birch conference room, 4:00 PM sharp. Sarah, David, Priya from Legal,
+          Mike Chen, and the rest of the AI guild. The napkin is taped
+          to the whiteboard. Beside it, the real architecture goes up —
+          the four roles become eight pipeline stages, the analogies
+          become FastAPI services, the "memory" becomes a sentence-transformer
+          cache, the "ledger" becomes SQLAlchemy tables. Cost numbers, latency
+          budgets, the deploy plan, who-owns-what. Engineer-grade.
+        </p>
+        <div class="ne-tags">
+          <span class="ne-tag">8-stage pipeline</span>
+          <span class="ne-tag">data flow</span>
+          <span class="ne-tag">SLAs</span>
+          <span class="ne-tag">deploy plan</span>
+          <span class="ne-tag">ownership</span>
+          <span class="ne-tag">cost model</span>
+        </div>
+      </div>
+      <div class="ne-art">
+        <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+          <!-- whiteboard -->
+          <rect x="14" y="22" width="192" height="138" fill="#FBF8F1" stroke="#C9BCA4" stroke-width="2" rx="3"/>
+          <rect x="10" y="160" width="200" height="6" fill="#3B2A1F" rx="1"/>
+          <!-- 8 boxes in a row -->
+          <g transform="translate(22, 80)">
+            <rect x="0" y="0" width="20" height="22" fill="none" stroke="#DC8A6A" stroke-width="1.5" rx="2"/>
+            <rect x="22" y="0" width="20" height="22" fill="none" stroke="#DC8A6A" stroke-width="1.5" rx="2"/>
+            <rect x="44" y="0" width="20" height="22" fill="none" stroke="#DC8A6A" stroke-width="1.5" rx="2"/>
+            <rect x="66" y="0" width="20" height="22" fill="none" stroke="#DC8A6A" stroke-width="1.5" rx="2"/>
+            <rect x="88" y="0" width="20" height="22" fill="#DC8A6A" opacity="0.3" stroke="#DC8A6A" stroke-width="1.5" rx="2"/>
+            <rect x="110" y="0" width="20" height="22" fill="none" stroke="#DC8A6A" stroke-width="1.5" rx="2"/>
+            <rect x="132" y="0" width="20" height="22" fill="none" stroke="#DC8A6A" stroke-width="1.5" rx="2"/>
+            <rect x="154" y="0" width="20" height="22" fill="none" stroke="#DC8A6A" stroke-width="1.5" rx="2"/>
+          </g>
+          <!-- napkin pinned to top-left -->
+          <g transform="translate(28, 32) rotate(-3)">
+            <rect x="0" y="0" width="44" height="32" fill="#F6F1E7" stroke="#B8451E" stroke-width="0.5" stroke-dasharray="2,2"/>
+            <line x1="4" y1="6" x2="40" y2="6" stroke="#3B2A1F" stroke-width="0.6"/>
+            <line x1="4" y1="12" x2="40" y2="12" stroke="#3B2A1F" stroke-width="0.6"/>
+            <line x1="4" y1="18" x2="32" y2="18" stroke="#3B2A1F" stroke-width="0.6"/>
+            <text x="22" y="28" font-family="Lora, serif" font-style="italic" font-size="6" fill="#B8451E" text-anchor="middle">napkin</text>
+          </g>
+          <!-- arrows between boxes -->
+          <g stroke="#DC8A6A" stroke-width="1" opacity="0.7">
+            <line x1="42" y1="91" x2="44" y2="91"/>
+            <line x1="64" y1="91" x2="66" y2="91"/>
+            <line x1="86" y1="91" x2="88" y2="91"/>
+            <line x1="108" y1="91" x2="110" y2="91"/>
+            <line x1="130" y1="91" x2="132" y2="91"/>
+            <line x1="152" y1="91" x2="154" y2="91"/>
+          </g>
+          <!-- annotations -->
+          <text x="110" y="135" font-family="Lora, serif" font-style="italic" font-size="9" fill="#DC8A6A" text-anchor="middle">— 8 stages —</text>
+          <!-- marker pen -->
+          <line x1="170" y1="190" x2="200" y2="195" stroke="#1C1917" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="200" cy="195" r="3.5" fill="#DC8A6A"/>
+          <!-- post-it on board -->
+          <rect x="155" y="40" width="38" height="32" fill="#E8B751" opacity="0.9"/>
+          <text x="174" y="56" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F" text-anchor="middle">SLA</text>
+          <text x="174" y="65" font-family="IBM Plex Mono, monospace" font-size="6" fill="#3B2A1F" text-anchor="middle">&lt; 1.2s</text>
+        </svg>
+      </div>
+    </div>
+
+  </article>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-mark">
+        The <em>Sentinel</em> Chronicles
+        <div style="font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--coffee); margin-top: 0.4rem; font-weight: 400;">
+          A four-part story about not blowing up your AI.
+        </div>
+      </div>
+      <div class="series-list">
+        <span class="done"><span class="num">01.</span><span class="ttl">The Espresso Apocalypse</span></span>
+        <span class="current"><span class="num">02.</span><span class="ttl">The Napkin Sketch</span></span>
+        <span><span class="num">03.</span><span class="ttl">The Whiteboard</span></span>
+        <span><span class="num">04.</span><span class="ttl">15 Days Later</span></span>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+(function () {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('fade-in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+
+  document.querySelectorAll('.role-card, .qa-card, .gateway-diagram, .infographic, .inset, .pull-quote, .next-episode, .phone-call')
+    .forEach((el) => {
+      if (!el.classList.contains('fade-in')) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(12px)';
+        io.observe(el);
+      }
+    });
+})();
+
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'theme') {
+    document.documentElement.classList.toggle('dark', !!e.data.dark);
+  }
+});
+</script>
+
+</body>
+</html>

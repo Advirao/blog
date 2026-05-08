@@ -11,8 +11,8 @@ import {
 
 // ─── Registry shape ───────────────────────────────────────────────────────────
 describe('posts registry', () => {
-  it('contains 9 posts', () => {
-    expect(posts).toHaveLength(9)
+  it('contains 13 posts', () => {
+    expect(posts).toHaveLength(13)
   })
 
   it('every post has all required fields', () => {
@@ -61,8 +61,8 @@ describe('CATEGORIES', () => {
 
 // ─── getAllPosts() ─────────────────────────────────────────────────────────────
 describe('getAllPosts()', () => {
-  it('returns all 9 posts', () => {
-    expect(getAllPosts()).toHaveLength(9)
+  it('returns all 13 posts', () => {
+    expect(getAllPosts()).toHaveLength(13)
   })
 
   it('returns a new reference each call (not mutating)', () => {
@@ -93,8 +93,8 @@ describe('getPostsByCategory()', () => {
     expect(getPostsByCategory('oil-trading')).toHaveLength(4)
   })
 
-  it('returns 4 genai posts', () => {
-    expect(getPostsByCategory('genai')).toHaveLength(4)
+  it('returns 8 genai posts', () => {
+    expect(getPostsByCategory('genai')).toHaveLength(8)
   })
 
   it('returns 1 claude-code post', () => {
@@ -158,6 +158,46 @@ describe('getPostBySlug()', () => {
 
   it('returns undefined for ollama-run-ai-locally under wrong category', () => {
     expect(getPostBySlug('oil-trading', 'ollama-run-ai-locally')).toBeUndefined()
+  })
+
+  it('finds the episode-1-the-espresso-apocalypse post', () => {
+    const post = getPostBySlug('genai', 'episode-1-the-espresso-apocalypse')
+    expect(post).toBeDefined()
+    expect(post?.title).toBeTruthy()
+  })
+
+  it('returns undefined for episode-1-the-espresso-apocalypse under wrong category', () => {
+    expect(getPostBySlug('oil-trading', 'episode-1-the-espresso-apocalypse')).toBeUndefined()
+  })
+
+  it('finds the episode-2-the-napkin-sketch post', () => {
+    const post = getPostBySlug('genai', 'episode-2-the-napkin-sketch')
+    expect(post).toBeDefined()
+    expect(post?.title).toBeTruthy()
+  })
+
+  it('returns undefined for episode-2-the-napkin-sketch under wrong category', () => {
+    expect(getPostBySlug('oil-trading', 'episode-2-the-napkin-sketch')).toBeUndefined()
+  })
+
+  it('finds the episode-3-the-whiteboard post', () => {
+    const post = getPostBySlug('genai', 'episode-3-the-whiteboard')
+    expect(post).toBeDefined()
+    expect(post?.title).toBeTruthy()
+  })
+
+  it('returns undefined for episode-3-the-whiteboard under wrong category', () => {
+    expect(getPostBySlug('oil-trading', 'episode-3-the-whiteboard')).toBeUndefined()
+  })
+
+  it('finds the episode-4-15-days-later post', () => {
+    const post = getPostBySlug('genai', 'episode-4-15-days-later')
+    expect(post).toBeDefined()
+    expect(post?.title).toBeTruthy()
+  })
+
+  it('returns undefined for episode-4-15-days-later under wrong category', () => {
+    expect(getPostBySlug('oil-trading', 'episode-4-15-days-later')).toBeUndefined()
   })
 })
 

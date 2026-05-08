@@ -1,0 +1,1941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Episode 1 · The Espresso Apocalypse — The Sentinel Chronicles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   THE SENTINEL CHRONICLES · EPISODE 1
+   Aesthetic: editorial magazine, KB design system
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  --bg:      #FAF9F7;
+  --surface:  #FFFFFF;
+  --surface2: #F2EDE6;
+  --border:   #E5DDD5;
+  --ink:      #2D2926;
+  --ink2:     #7A6F68;
+  --accent:   #5E4FA0;
+}
+
+html.dark {
+  --bg:      #16151C;
+  --surface:  #201F29;
+  --surface2: #1A1924;
+  --border:   #2E2D3C;
+  --ink:      #E8E3DC;
+  --ink2:     #9B9399;
+  --accent:   #7B6BBD;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ───── Paper texture overlay ───── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+main { position: relative; z-index: 2; }
+
+/* ──────────────────────────────────────────────
+   STICKY SERIES NAV
+   ────────────────────────────────────────────── */
+.series-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.series-nav-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0.85rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.series-mark {
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.series-mark .glyph {
+  width: 22px;
+  height: 22px;
+  display: inline-block;
+  position: relative;
+}
+
+.series-mark .glyph svg { width: 100%; height: 100%; }
+
+.episode-dots {
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink2);
+}
+
+.episode-dots .dot-group { display: flex; gap: 0.35rem; align-items: center; }
+
+.episode-dots .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.episode-dots .dot.active {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ──────────────────────────────────────────────
+   HERO
+   ────────────────────────────────────────────── */
+.hero {
+  padding: 5rem 2rem 3rem;
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+}
+
+.hero-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.hero-eyebrow .ep-num {
+  background: var(--accent);
+  color: var(--surface);
+  padding: 0.2rem 0.55rem;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+.hero-eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  max-width: 200px;
+}
+
+.hero-title {
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  font-size: clamp(2.6rem, 6vw, 5.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin: 0 0 1.5rem;
+}
+
+.hero-title .accent {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.hero-subtitle {
+  font-family: 'Lora', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  line-height: 1.4;
+  color: var(--ink2);
+  max-width: 38ch;
+  margin: 0 0 2rem;
+}
+
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--ink2);
+  text-transform: uppercase;
+  border-top: 1px solid var(--border);
+  padding-top: 1.2rem;
+}
+
+.hero-meta dt {
+  font-size: 0.66rem;
+  color: var(--ink2);
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.15em;
+}
+
+.hero-meta dd { margin: 0; color: var(--ink); font-weight: 500; }
+
+.hero-meta > div { margin: 0; }
+
+/* ──────────────────────────────────────────────
+   ARTICLE CONTAINER
+   ────────────────────────────────────────────── */
+article {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 2rem 6rem;
+}
+
+.prose {
+  max-width: 68ch;
+  margin: 0 auto;
+}
+
+.prose p {
+  font-size: 1.13rem;
+  line-height: 1.72;
+  color: var(--ink);
+  margin: 0 0 1.4rem;
+}
+
+.prose p:first-of-type::first-letter {
+  font-family: 'Lora', serif;
+  font-weight: 700;
+  font-size: 4.5rem;
+  line-height: 0.85;
+  float: left;
+  padding: 0.3rem 0.7rem 0 0;
+  color: var(--accent);
+}
+
+.prose .lede {
+  font-family: 'Lora', serif;
+  font-weight: 400;
+  font-size: 1.45rem;
+  line-height: 1.45;
+  color: var(--ink);
+  margin-bottom: 2rem;
+}
+
+.prose .lede::first-letter {
+  font-size: 4.5rem;
+  color: var(--accent);
+}
+
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 3.5rem 0 2rem;
+  max-width: 68ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-divider .roman {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.4rem;
+  color: var(--accent);
+}
+
+.section-divider .line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.section-divider .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink2);
+}
+
+h2.section-title {
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 auto 1.5rem;
+  max-width: 68ch;
+}
+
+h2.section-title em {
+  font-weight: 500;
+  color: var(--accent);
+}
+
+h3.subsection {
+  font-family: 'Lora', serif;
+  font-weight: 500;
+  font-size: 1.5rem;
+  color: var(--ink);
+  margin: 2.5rem auto 1rem;
+  max-width: 68ch;
+}
+
+/* ──────────────────────────────────────────────
+   THE VIRAL TWEET CARD
+   ────────────────────────────────────────────── */
+.tweet-card {
+  max-width: 540px;
+  margin: 2.5rem auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem 1.6rem;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.04),
+    0 12px 32px -8px rgba(0,0,0,0.12);
+  position: relative;
+  transform: rotate(-1.2deg);
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.tweet-card::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  background: var(--surface2);
+  border-radius: 18px;
+  z-index: -1;
+  transform: rotate(2deg);
+  opacity: 0.6;
+}
+
+.tweet-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin-bottom: 0.8rem;
+}
+
+.tweet-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--surface);
+  font-weight: 600;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.tweet-userline { flex: 1; min-width: 0; }
+.tweet-name {
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 0.98rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.tweet-name .verified {
+  width: 16px; height: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--surface);
+  font-size: 10px;
+  font-weight: 700;
+}
+.tweet-handle { color: var(--ink2); font-size: 0.88rem; }
+
+.tweet-body {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 0.8rem 0 1rem;
+}
+
+.tweet-body strong { color: var(--accent); font-weight: 600; }
+
+.tweet-screenshot {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.83rem;
+  line-height: 1.55;
+  margin: 0.5rem 0 1rem;
+}
+.tweet-screenshot .bot {
+  color: var(--ink);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.tweet-screenshot .bot::before {
+  content: 'NORMA · ';
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.tweet-screenshot .user {
+  color: var(--ink2);
+  display: block;
+}
+.tweet-screenshot .user::before {
+  content: 'CUSTOMER · ';
+  color: var(--ink2);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.tweet-screenshot .yikes {
+  background: rgba(184,53,53,0.12);
+  color: #A03030;
+  padding: 0.05em 0.3em;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.tweet-meta {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.83rem;
+  color: var(--ink2);
+  border-top: 1px solid var(--border);
+  padding-top: 0.85rem;
+}
+.tweet-meta span strong { color: var(--ink); font-weight: 600; }
+.tweet-stamp {
+  color: var(--ink2);
+  font-size: 0.78rem;
+  margin-top: 0.4rem;
+}
+
+/* ──────────────────────────────────────────────
+   COMPANY INSET — "Meet Northwind"
+   ────────────────────────────────────────────── */
+.inset {
+  max-width: 68ch;
+  margin: 2.5rem auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  padding: 1.6rem 1.8rem 1.7rem;
+  border-radius: 0 8px 8px 0;
+  position: relative;
+}
+
+.inset-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+}
+
+.inset h4 {
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: var(--ink);
+  margin: 0 0 0.7rem;
+  letter-spacing: -0.01em;
+}
+
+.inset p {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--ink);
+  margin: 0 0 0.8rem;
+}
+.inset p:last-child { margin-bottom: 0; }
+
+.inset .stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--border);
+}
+.inset .stat-row > div {
+  display: flex;
+  flex-direction: column;
+}
+.inset .stat-row .num {
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  font-size: 1.55rem;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.inset .stat-row .lbl {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink2);
+  margin-top: 0.3rem;
+}
+
+/* ──────────────────────────────────────────────
+   THE INFOGRAPHIC — Sarah at Brewline
+   ────────────────────────────────────────────── */
+.infographic {
+  max-width: 1100px;
+  margin: 4rem auto;
+  background: var(--surface);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  padding: 2rem 2rem 1.5rem;
+  position: relative;
+}
+
+.infographic .figure-label {
+  position: absolute;
+  top: -12px;
+  left: 24px;
+  background: var(--accent);
+  color: var(--surface);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.32rem 0.7rem;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+.infographic-svg-wrap {
+  width: 100%;
+  aspect-ratio: 1.6 / 1;
+  display: block;
+}
+
+.infographic svg { width: 100%; height: 100%; display: block; }
+
+.infographic-caption {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 0.98rem;
+  color: var(--ink2);
+  text-align: center;
+  margin-top: 1rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+  line-height: 1.5;
+}
+
+.infographic-caption strong {
+  font-style: normal;
+  font-family: 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ──────────────────────────────────────────────
+   TIMELINE OF CHAOS
+   ────────────────────────────────────────────── */
+.timeline {
+  max-width: 780px;
+  margin: 3rem auto;
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 110px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: var(--border);
+}
+
+.tl-row {
+  display: grid;
+  grid-template-columns: 100px 24px 1fr;
+  gap: 0.8rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.tl-when {
+  text-align: right;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  color: var(--ink2);
+  text-transform: uppercase;
+  padding-top: 0.1rem;
+}
+.tl-when .day {
+  display: block;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 0.85rem;
+}
+
+.tl-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  margin: 0.3rem 0 0 5px;
+  position: relative;
+  z-index: 1;
+}
+
+.tl-row:last-child .tl-dot {
+  background: var(--accent);
+}
+
+.tl-content h5 {
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  font-size: 1.18rem;
+  color: var(--ink);
+  margin: 0 0 0.4rem;
+  letter-spacing: -0.01em;
+}
+
+.tl-content p {
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0 0 0.5rem;
+}
+
+.tl-tag {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(94, 79, 160, 0.1);
+  color: var(--accent);
+  padding: 0.2rem 0.55rem;
+  border-radius: 3px;
+  font-weight: 500;
+  margin-right: 0.4rem;
+}
+
+/* ──────────────────────────────────────────────
+   DIALOGUE
+   ────────────────────────────────────────────── */
+.dialogue {
+  max-width: 68ch;
+  margin: 3rem auto;
+}
+
+.dialogue .stage {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  color: var(--ink2);
+  text-align: center;
+  margin: 1.5rem 0;
+  font-size: 0.98rem;
+  position: relative;
+}
+.dialogue .stage::before, .dialogue .stage::after {
+  content: '· · ·';
+  margin: 0 0.8rem;
+  color: var(--border);
+  font-style: normal;
+  letter-spacing: 0.3em;
+}
+
+.line {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 1rem;
+  margin-bottom: 1.3rem;
+  align-items: flex-start;
+}
+
+.speaker {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding-top: 0.25rem;
+  text-align: right;
+}
+
+.speaker.sarah { color: var(--accent); }
+.speaker.david { color: var(--ink2); }
+.speaker.action {
+  color: var(--border);
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.utterance {
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--ink);
+}
+
+.line.action .utterance {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  color: var(--ink2);
+  font-size: 1rem;
+}
+
+/* ──────────────────────────────────────────────
+   ARCHITECTURE DIAGRAM (BEFORE STATE)
+   ────────────────────────────────────────────── */
+.arch-diagram {
+  max-width: 1000px;
+  margin: 3rem auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2.5rem 2rem 2rem;
+  position: relative;
+}
+
+.arch-diagram .figure-label {
+  position: absolute;
+  top: -12px;
+  left: 24px;
+  background: var(--ink);
+  color: var(--surface);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.32rem 0.7rem;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+.arch-diagram .arch-title {
+  font-family: 'Lora', serif;
+  font-weight: 500;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--ink2);
+  text-align: center;
+  margin: 0 0 1rem;
+}
+.arch-diagram .arch-title strong {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.arch-svg-wrap {
+  width: 100%;
+  aspect-ratio: 2.2 / 1;
+  display: block;
+}
+
+.arch-svg-wrap svg { width: 100%; height: 100%; display: block; }
+
+.arch-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px dashed var(--border);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--ink2);
+}
+
+.arch-legend .swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.arch-legend .swatch::before {
+  content: '';
+  width: 14px; height: 14px;
+  border-radius: 3px;
+  background: var(--gap-color, var(--accent));
+}
+
+/* ──────────────────────────────────────────────
+   VOCABULARY CARDS
+   ────────────────────────────────────────────── */
+.vocab-grid {
+  max-width: 1100px;
+  margin: 3rem auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.2rem;
+}
+
+.vocab-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.4rem 1.4rem 1.5rem;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.vocab-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
+.vocab-card .term {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.vocab-card h5 {
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: var(--ink);
+  margin: 0 0 0.6rem;
+  letter-spacing: -0.01em;
+}
+
+.vocab-card p {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0 0 0.7rem;
+}
+
+.vocab-card .aside {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 0.88rem;
+  color: var(--ink2);
+  border-top: 1px dashed var(--border);
+  padding-top: 0.7rem;
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+.vocab-card .icon-wrap {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.1rem;
+  width: 28px;
+  height: 28px;
+  opacity: 0.55;
+}
+
+.vocab-card .icon-wrap svg { width: 100%; height: 100%; display: block; }
+
+/* ──────────────────────────────────────────────
+   PULL QUOTE
+   ────────────────────────────────────────────── */
+.pull-quote {
+  max-width: 760px;
+  margin: 3.5rem auto;
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  line-height: 1.35;
+  color: var(--ink);
+  text-align: center;
+  letter-spacing: -0.01em;
+  position: relative;
+  padding: 1.5rem 2.5rem;
+}
+
+.pull-quote::before {
+  content: '"';
+  position: absolute;
+  top: -1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 6rem;
+  color: var(--accent);
+  opacity: 0.25;
+  font-family: 'Lora', serif;
+  line-height: 1;
+}
+
+.pull-quote cite {
+  display: block;
+  font-style: normal;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink2);
+  margin-top: 1.2rem;
+  font-weight: 500;
+}
+
+/* ──────────────────────────────────────────────
+   CLIFFHANGER / NEXT EPISODE CARD
+   ────────────────────────────────────────────── */
+.next-episode {
+  max-width: 1100px;
+  margin: 5rem auto 2rem;
+  background: var(--surface2);
+  color: var(--ink);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  padding: 3rem 3rem 3rem;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3rem;
+  align-items: center;
+}
+
+.next-episode > * { position: relative; z-index: 1; }
+
+.next-episode .ne-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.next-episode .ne-eyebrow .arrow { display: inline-block; }
+
+.next-episode h3 {
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  color: var(--ink);
+  margin: 0 0 0.8rem;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.next-episode h3 em {
+  color: var(--accent);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.next-episode .ne-desc {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--ink2);
+  line-height: 1.5;
+  max-width: 50ch;
+  margin: 0 0 1.2rem;
+}
+
+.next-episode .ne-tags {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.next-episode .ne-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.7rem;
+  border-radius: 3px;
+}
+
+.next-episode .ne-art {
+  width: 220px;
+  height: 220px;
+  flex-shrink: 0;
+}
+
+.next-episode .ne-art svg { width: 100%; height: 100%; display: block; }
+
+/* ──────────────────────────────────────────────
+   FOOTER
+   ────────────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 3rem 2rem;
+  margin-top: 4rem;
+  background: var(--surface2);
+}
+
+.footer-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.footer-mark {
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.footer-mark em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.series-list {
+  display: flex;
+  gap: 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--ink2);
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.series-list span {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.series-list .num {
+  font-weight: 600;
+  color: var(--ink2);
+}
+.series-list .ttl { color: var(--ink2); }
+.series-list .current { color: var(--accent); font-weight: 600; }
+.series-list .current .num { color: var(--accent); }
+
+/* ──────────────────────────────────────────────
+   FUNCTIONAL UTILITIES
+   ────────────────────────────────────────────── */
+.fade-in {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fade-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.fade-in.d1 { animation-delay: 0.05s; }
+.fade-in.d2 { animation-delay: 0.15s; }
+.fade-in.d3 { animation-delay: 0.25s; }
+.fade-in.d4 { animation-delay: 0.35s; }
+
+@keyframes fade-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes steam-rise {
+  0%   { transform: translateY(0)   scale(1);   opacity: 0.6; }
+  50%  { opacity: 0.4; }
+  100% { transform: translateY(-18px) scale(1.4); opacity: 0; }
+}
+
+@keyframes blink {
+  0%, 60% { opacity: 1; }
+  70%, 100% { opacity: 0.2; }
+}
+
+/* ──────────────────────────────────────────────
+   RESPONSIVE
+   ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  body { padding: 8px; }
+  .hero { padding: 3rem 1.3rem 2rem; }
+  article { padding: 0 1.3rem 4rem; }
+  .prose p { font-size: 1.05rem; }
+  .prose .lede { font-size: 1.18rem; }
+
+  .timeline::before { left: 76px; }
+  .tl-row { grid-template-columns: 70px 20px 1fr; gap: 0.6rem; }
+  .tl-when { font-size: 0.7rem; }
+  .tl-when .day { font-size: 0.78rem; }
+
+  .line { grid-template-columns: 70px 1fr; gap: 0.7rem; }
+  .speaker { font-size: 0.7rem; }
+  .utterance { font-size: 1rem; }
+
+  .next-episode {
+    grid-template-columns: 1fr;
+    padding: 2rem;
+    gap: 1.5rem;
+  }
+  .next-episode .ne-art { width: 100%; max-width: 200px; margin: 0 auto; }
+
+  .footer-inner { grid-template-columns: 1fr; text-align: center; }
+  .series-list { justify-content: center; }
+
+  .tweet-card { transform: rotate(-0.5deg); }
+
+  /* Stack flex rows */
+  .main-layout, .content-row, .flex-row { flex-direction: column !important; }
+  /* Reduce panel padding */
+  .panel, .card, .section { padding: 12px !important; }
+  /* Make tabs horizontally scrollable */
+  .tab-bar, .tabs, .nav-tabs { overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+  /* Sidebar drawer */
+  .sidebar { position: fixed; left: -280px; top: 0; height: 100vh; width: 260px; z-index: 200; transition: left 0.3s ease; background: var(--surface); overflow-y: auto; }
+  .sidebar.open { left: 0; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 199; }
+  .sidebar-overlay.visible { display: block; }
+  .menu-toggle { display: flex !important; }
+  .main-content { width: 100% !important; margin-left: 0 !important; }
+}
+</style>
+</head>
+<body>
+
+<main>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SERIES NAV
+       ═══════════════════════════════════════════════════════ -->
+  <nav class="series-nav">
+    <div class="series-nav-inner">
+      <div class="series-mark">
+        <span class="glyph">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2 L20 6 L20 12 C20 17 16 21 12 22 C8 21 4 17 4 12 L4 6 Z"
+                  stroke="#2D2926" stroke-width="1.6" stroke-linejoin="round" fill="#FFFFFF"/>
+            <path d="M9 12 L11 14 L15 10" stroke="#5E4FA0" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </span>
+        The Sentinel Chronicles
+      </div>
+      <div class="episode-dots">
+        <span>EP</span>
+        <div class="dot-group">
+          <span class="dot active" title="Episode 1"></span>
+          <span class="dot" title="Episode 2"></span>
+          <span class="dot" title="Episode 3"></span>
+          <span class="dot" title="Episode 4"></span>
+        </div>
+        <span>01 / 04</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════════════════════ -->
+  <header class="hero">
+    <div class="fade-in d1">
+      <div class="hero-eyebrow">
+        <span class="ep-num">EP 01</span>
+        The Brewline Tapes · A four-part field study in not-blowing-up-your-AI
+      </div>
+
+      <h1 class="hero-title">
+        The Espresso<br>
+        <span class="accent">Apocalypse.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        In which Sarah's AI has the worst Tuesday of its short life,
+        an old friend orders a flat&nbsp;white, and somebody, finally,
+        says the words "Responsible AI" out loud.
+      </p>
+
+      <div class="hero-meta">
+        <div><dt>Series</dt><dd>The Sentinel Chronicles</dd></div>
+        <div><dt>Reading time</dt><dd>11 min</dd></div>
+        <div><dt>Setting</dt><dd>Brewline Coffee · Tuesday, 6:42 PM</dd></div>
+        <div><dt>Cast</dt><dd>Sarah · David · one very tired AI</dd></div>
+      </div>
+    </div>
+  </header>
+
+  <article>
+
+    <!-- ═══════════════════════════════════════════════════════
+         OPENING PROSE
+         ═══════════════════════════════════════════════════════ -->
+    <section class="prose fade-in d2">
+      <p class="lede">
+        There is a particular kind of quiet that descends on an open-plan
+        engineering office at five-thirty on a Tuesday — the quiet of a
+        Slack channel that has gone, in the polite phrasing of one of
+        Sarah's senior engineers, <em>full nuclear winter</em>.
+      </p>
+
+      <p>
+        Sarah had gathered her things, told her team to go home, and walked
+        the eight blocks to Brewline Coffee in the rain because (a) Brewline
+        does the only oat-milk cortado in the city that she would defend
+        in court, and (b) her apartment was full of clean laundry that
+        was about to start asking pointed questions about its future.
+        She needed neither.
+      </p>
+
+      <p>
+        What she needed was a table by the window, a phone face-down,
+        and a brief, blessed period in which nobody — not the CEO,
+        not Legal, not the customer-success manager who had been
+        crying very professionally into her webcam an hour ago —
+        asked her any more questions about Norma.
+      </p>
+
+      <p>
+        Norma is Northwind's AI customer-support assistant. Norma
+        answers tickets, drafts replies, schedules callbacks, and,
+        as of this past Monday, also occasionally hands out the
+        personal email addresses of one customer to a different
+        customer like a maître d' confusing the reservation book.
+      </p>
+
+      <p>
+        It had been, in summary, a week.
+      </p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         VIRAL TWEET
+         ═══════════════════════════════════════════════════════ -->
+    <div class="tweet-card fade-in d3">
+      <div class="tweet-head">
+        <div class="tweet-avatar">JK</div>
+        <div class="tweet-userline">
+          <div class="tweet-name">
+            Jordan K. <span class="verified">✓</span>
+          </div>
+          <div class="tweet-handle">@jordanwritesgood</div>
+        </div>
+      </div>
+      <div class="tweet-body">
+        screenshotting this for posterity. <strong>Northwind's AI bot</strong>
+        just made up an entire sixty-day refund policy on the spot.
+        confidently. with a <em>citation</em>. <br>
+        the citation does not exist. nothing exists. we are in hell. 💀
+      </div>
+      <div class="tweet-screenshot">
+        <span class="user">hey is there any way i can return this? i bought it 47 days ago</span>
+        <span class="bot">Absolutely! Northwind offers a <span class="yikes">generous 60-day money-back guarantee</span>, no questions asked. You can find the full policy in our help center under "Returns &amp; Refunds — Section 4.2". Would you like me to start the return for you?</span>
+      </div>
+      <div class="tweet-meta">
+        <span><strong>14.2K</strong> ❤️</span>
+        <span><strong>3,891</strong> 🔁</span>
+        <span><strong>612</strong> 💬</span>
+      </div>
+      <div class="tweet-stamp">8:47 AM · Apr 29 · 2.1M views</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         WHO IS NORTHWIND
+         ═══════════════════════════════════════════════════════ -->
+    <aside class="inset fade-in d2">
+      <div class="inset-label">Dramatis Personae · Set 1</div>
+      <h4>Northwind, in one paragraph.</h4>
+      <p>
+        Northwind sells customer-support automation to mid-market
+        SaaS companies. You plug Northwind into your help desk and
+        Norma — Northwind's flagship AI assistant — handles the
+        boring half of your inbox: password resets, status checks,
+        invoice questions, "where's my order." Norma is good at her
+        job. Norma is also, technically, talking to roughly four
+        hundred thousand human beings every weekday with no adult
+        supervision. This has, until recently, been fine.
+      </p>
+      <div class="stat-row">
+        <div><span class="num">~400K</span><span class="lbl">Daily conversations</span></div>
+        <div><span class="num">38</span><span class="lbl">Enterprise customers</span></div>
+        <div><span class="num">$0</span><span class="lbl">Spent on guardrails</span></div>
+        <div><span class="num">1</span><span class="lbl">Very tired VP of Eng.</span></div>
+      </div>
+    </aside>
+
+    <!-- ═══════════════════════════════════════════════════════
+         INFOGRAPHIC — Sarah at Brewline
+         ═══════════════════════════════════════════════════════ -->
+    <figure class="infographic fade-in d2">
+      <div class="figure-label">Figure 01 · The Scene</div>
+      <div class="infographic-svg-wrap">
+        <svg viewBox="0 0 1100 690" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <!-- Define shared elements -->
+          <defs>
+            <linearGradient id="rainGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#4A6B7C" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#4A6B7C" stop-opacity="0.05"/>
+            </linearGradient>
+            <pattern id="woodGrain" patternUnits="userSpaceOnUse" width="80" height="6" patternTransform="rotate(2)">
+              <rect width="80" height="6" fill="#6B5544"/>
+              <line x1="0" y1="3" x2="80" y2="3" stroke="#5A4636" stroke-width="0.5" opacity="0.6"/>
+            </pattern>
+            <radialGradient id="lampGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#F5D89B" stop-opacity="0.65"/>
+              <stop offset="100%" stop-color="#F5D89B" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+              <feOffset dx="0" dy="2" result="offsetblur"/>
+              <feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
+              <feMerge>
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- BACKGROUND WALL -->
+          <rect x="0" y="0" width="1100" height="500" fill="#E3D9C5"/>
+
+          <!-- WINDOW -->
+          <g transform="translate(40, 40)">
+            <!-- window frame -->
+            <rect x="0" y="0" width="380" height="340" fill="#3B2A1F" rx="2"/>
+            <rect x="14" y="14" width="352" height="312" fill="#86A4B5" opacity="0.55"/>
+            <rect x="14" y="14" width="352" height="312" fill="url(#rainGrad)"/>
+            <!-- window cross -->
+            <rect x="14" y="160" width="352" height="6" fill="#3B2A1F"/>
+            <rect x="186" y="14" width="6" height="312" fill="#3B2A1F"/>
+            <!-- rain streaks -->
+            <g stroke="#FBF8F1" stroke-width="1" opacity="0.6">
+              <line x1="40" y1="30" x2="20" y2="80"/>
+              <line x1="80" y1="50" x2="55" y2="100"/>
+              <line x1="135" y1="20" x2="115" y2="80"/>
+              <line x1="220" y1="40" x2="195" y2="95"/>
+              <line x1="270" y1="20" x2="245" y2="85"/>
+              <line x1="320" y1="35" x2="295" y2="100"/>
+              <line x1="60" y1="180" x2="40" y2="240"/>
+              <line x1="160" y1="195" x2="135" y2="260"/>
+              <line x1="250" y1="180" x2="225" y2="245"/>
+              <line x1="340" y1="190" x2="320" y2="255"/>
+            </g>
+            <!-- window sign painted on glass -->
+            <text x="190" y="80" font-family="Lora, serif" font-style="italic" font-weight="500" font-size="38" fill="#3B2A1F" text-anchor="middle" opacity="0.85">Brewline</text>
+            <text x="190" y="108" font-family="IBM Plex Mono, monospace" font-size="11" letter-spacing="3" fill="#3B2A1F" text-anchor="middle" opacity="0.7">EST. 2014 · COFFEE &amp; WI-FI</text>
+          </g>
+
+          <!-- WALL DECOR — chalkboard menu -->
+          <g transform="translate(470, 60)">
+            <rect x="0" y="0" width="180" height="140" fill="#1C1917" stroke="#3B2A1F" stroke-width="6" rx="3"/>
+            <text x="90" y="28" font-family="Lora, serif" font-style="italic" font-size="14" fill="#F5D89B" text-anchor="middle" opacity="0.95">— today —</text>
+            <text x="20" y="55" font-family="IBM Plex Mono, monospace" font-size="11" fill="#FBF8F1" opacity="0.85">cortado ··········· 4.2</text>
+            <text x="20" y="73" font-family="IBM Plex Mono, monospace" font-size="11" fill="#FBF8F1" opacity="0.85">flat white ········ 4.5</text>
+            <text x="20" y="91" font-family="IBM Plex Mono, monospace" font-size="11" fill="#FBF8F1" opacity="0.85">drip ·············· 3.0</text>
+            <text x="20" y="109" font-family="IBM Plex Mono, monospace" font-size="11" fill="#DC8A6A" opacity="0.85">crisis blend* ····· 5.0</text>
+            <text x="20" y="128" font-family="IBM Plex Mono, monospace" font-size="8" fill="#C9BCA4" font-style="italic">*comes w/ a hug</text>
+          </g>
+
+          <!-- HANGING LIGHT -->
+          <g transform="translate(740, 0)">
+            <line x1="0" y1="0" x2="0" y2="80" stroke="#1C1917" stroke-width="2"/>
+            <ellipse cx="0" cy="95" rx="38" ry="14" fill="#3B2A1F"/>
+            <ellipse cx="0" cy="92" rx="38" ry="10" fill="#1C1917"/></svg>
+      </div>
+    </figure>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION II — BACKGROUND / WHO IS DAVID
+         ═══════════════════════════════════════════════════════ -->
+    <div class="section-divider">
+      <span class="roman">ii.</span>
+      <span class="line"></span>
+      <span class="label">Before we get to the diagram on the napkin</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="section-title">The timeline of a <em>very bad</em> two days.</h2>
+
+    <div class="timeline">
+
+      <div class="tl-row">
+        <div class="tl-when"><span class="day">Mon</span>09:14</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h5>The PII leak.</h5>
+          <p>A customer asks Norma to "check their account details." Norma helpfully also returns the account details of a customer with a similar name. A different customer. Who had not asked.</p>
+          <span class="tl-tag">PII leak</span><span class="tl-tag">data breach</span>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-when"><span class="day">Tue</span>08:47</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h5>The hallucination goes viral.</h5>
+          <p>A customer asks about the return policy. Norma invents a sixty-day money-back guarantee, cites a policy section that does not exist, and offers to begin the return. The screenshot achieves 14.2K likes before lunch.</p>
+          <span class="tl-tag">hallucination</span><span class="tl-tag">policy invention</span>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-when"><span class="day">Tue</span>14:22</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h5>Norma gets snarky.</h5>
+          <p>A customer, frustrated by a delay, writes an aggressive message. Norma — trained to "match customer energy" — escalates. The exchange is described in a follow-up tweet as "genuinely concerning."</p>
+          <span class="tl-tag">tone failure</span><span class="tl-tag">safety</span>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-when"><span class="day">Tue</span>17:00</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h5>Legal pulls the plug.</h5>
+          <p>General Counsel suspends Norma pending a review. Sarah has 72 hours to present a remediation plan. The board update is Friday. It is currently Tuesday at five.</p>
+          <span class="tl-tag">suspension</span><span class="tl-tag">board update</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         WHO IS DAVID
+         ═══════════════════════════════════════════════════════ -->
+    <section class="prose fade-in d2">
+      <p>
+        David used to work at a company whose name we
+        shall not name here either. David's company already had Sarah's week. They had it
+        about two years ago. They survived it, learned things
+        from it, and now David spends a non-trivial fraction
+        of his life explaining what they learned to people
+        who are about thirty seconds away from being him,
+        but two years ago.
+      </p>
+
+      <p>
+        He spots Sarah by the window. She has not seen him.
+        She is doing the specific kind of staring that happens
+        when your laptop is open but your eyes are focused
+        about three feet behind it. He orders a flat white.
+        He sits down across from her.
+      </p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         THE DIALOGUE
+         ═══════════════════════════════════════════════════════ -->
+    <div class="dialogue">
+
+      <p class="stage">Brewline Coffee · 6:53 PM · Two old friends, one cortado, one flat white.</p>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance">You look like a person whose AI has done something extremely public.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker sarah">SARAH</div>
+        <div class="utterance">Two-point-one million views public.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance"><em>(setting his coffee down, very gently)</em> Oh, <em>honey.</em></div>
+      </div>
+
+      <div class="line action">
+        <div class="speaker action">— she laughs for the first time in eight hours —</div>
+        <div class="utterance">Sarah laughs for the first time in eight hours. It is a small laugh, but a real one.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker sarah">SARAH</div>
+        <div class="utterance">PII leak Monday. Hallucination Tuesday morning. Bot got snarky Tuesday afternoon. Legal pulled the plug at five. I have a board update Friday and the only honest thing I can put on the slide is a picture of a dumpster.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance">A dumpster on fire?</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker sarah">SARAH</div>
+        <div class="utterance">A dumpster <em>full</em> of fire. The dumpster <em>is</em> the fire.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance"><em>(pulls a napkin out of the holder, uncaps a pen)</em> OK. Listen. What you have is not a bug. What you have is a <em>missing layer</em>.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker sarah">SARAH</div>
+        <div class="utterance">A missing —</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance">Layer. You built an AI. Great. You wired it directly into your customers. Less great. There's nothing in between.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker sarah">SARAH</div>
+        <div class="utterance"><em>(staring)</em> Nothing in between.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance">Right now, when a customer types something, it goes straight to the model. When the model answers, it goes straight back. No screening on the way in. No screening on the way out. No memory of who said what. No <em>conscience</em>.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker sarah">SARAH</div>
+        <div class="utterance">You're saying my AI doesn't have a conscience.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance">I'm saying you haven't <em>given</em> it one. Models don't come with consciences. They come with vibes.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker sarah">SARAH</div>
+        <div class="utterance"><em>(long pause)</em> Vibes.</div>
+      </div>
+
+      <div class="line">
+        <div class="speaker david">DAVID</div>
+        <div class="utterance">Confident vibes. Sometimes correct vibes. But yeah — vibes.</div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         ARCHITECTURE DIAGRAM
+         ═══════════════════════════════════════════════════════ -->
+    <figure class="arch-diagram fade-in d2">
+      <div class="figure-label">Figure 02 · The Napkin</div>
+      <p class="arch-title">Northwind's AI stack, <strong>as built</strong> — Tuesday evening</p>
+      <div class="arch-svg-wrap">
+        <svg viewBox="0 0 1000 330" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 Z" fill="#2D2926"/>
+            </marker>
+          </defs>
+
+          <!-- CUSTOMER box (upstream) -->
+          <g transform="translate(50, 150)">
+            <rect x="0" y="0" width="160" height="90" rx="6" fill="none" stroke="#2D2926" stroke-width="2.5" stroke-linejoin="round" transform="rotate(-0.8)"/>
+            <text x="80" y="38" font-family="Lora, serif" font-weight="600" font-size="22" fill="#2D2926" text-anchor="middle">Customer</text>
+            <text x="80" y="60" font-family="IBM Plex Mono, monospace" font-size="10" letter-spacing="1.5" fill="#7A6F68" text-anchor="middle">UPSTREAM USER</text>
+            <text x="80" y="78" font-family="Lora, serif" font-style="italic" font-size="11" fill="#7A6F68" text-anchor="middle">types a message</text>
+          </g>
+
+          <!-- ARROW 1: Customer -> Norma -->
+          <g>
+            <path d="M 220 195 L 460 195" stroke="#2D2926" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+            <text x="340" y="180" font-family="IBM Plex Mono, monospace" font-size="10" fill="#7A6F68" text-anchor="middle" letter-spacing="1.5">prompt →</text>
+            <!-- gap callout: no input screening -->
+            <g transform="translate(265, 210)">
+              <rect x="0" y="0" width="160" height="52" rx="4" fill="rgba(94,79,160,0.08)" stroke="#5E4FA0" stroke-width="1.5" stroke-dasharray="3,3"/>
+              <text x="80" y="18" font-family="IBM Plex Mono, monospace" font-size="9" font-weight="600" letter-spacing="1.5" fill="#5E4FA0" text-anchor="middle">MISSING</text>
+              <text x="80" y="33" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#2D2926" text-anchor="middle">input screening</text>
+              <text x="80" y="47" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#2D2926" text-anchor="middle">+ PII detection</text>
+              <line x1="80" y1="0" x2="80" y2="-20" stroke="#5E4FA0" stroke-width="1.2" stroke-dasharray="2,2"/>
+            </g>
+          </g>
+
+          <!-- NORMA box (LLM) -->
+          <g transform="translate(470, 130)">
+            <rect x="0" y="0" width="180" height="130" rx="6" fill="none" stroke="#2D2926" stroke-width="2.5" stroke-linejoin="round" transform="rotate(0.5)"/>
+            <text x="90" y="40" font-family="Lora, serif" font-weight="600" font-size="24" fill="#2D2926" text-anchor="middle">Norma</text>
+            <text x="90" y="62" font-family="Lora, serif" font-style="italic" font-size="13" fill="#7A6F68" text-anchor="middle">(an LLM)</text>
+            <!-- brain swirl -->
+            <g transform="translate(90, 95)">
+              <circle cx="0" cy="0" r="20" fill="none" stroke="#2D2926" stroke-width="1.5"/>
+              <path d="M -14 0 Q 0 -10 14 0 Q 0 10 -14 0" stroke="#5E4FA0" stroke-width="1.5" fill="none"/>
+              <path d="M -10 -7 Q 0 0 10 -7" stroke="#5E4FA0" stroke-width="1.2" fill="none" opacity="0.7"/>
+              <path d="M -10 7 Q 0 0 10 7" stroke="#5E4FA0" stroke-width="1.2" fill="none" opacity="0.7"/>
+            </g>
+          </g>
+
+          <!-- ARROW 2: Norma -> Customer -->
+          <g>
+            <path d="M 660 195 L 890 195" stroke="#2D2926" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+            <text x="775" y="180" font-family="IBM Plex Mono, monospace" font-size="10" fill="#7A6F68" text-anchor="middle" letter-spacing="1.5">response →</text>
+            <!-- gap callout: hallucination + toxic -->
+            <g transform="translate(700, 232)">
+              <rect x="0" y="0" width="160" height="62" rx="4" fill="rgba(94,79,160,0.08)" stroke="#5E4FA0" stroke-width="1.5" stroke-dasharray="3,3"/>
+              <text x="80" y="18" font-family="IBM Plex Mono, monospace" font-size="9" font-weight="600" letter-spacing="1.5" fill="#5E4FA0" text-anchor="middle">MISSING</text>
+              <text x="80" y="33" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#2D2926" text-anchor="middle">hallucination check</text>
+              <text x="80" y="47" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#2D2926" text-anchor="middle">+ toxicity filter</text>
+              <text x="80" y="59" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#2D2926" text-anchor="middle">+ audit log</text>
+              <line x1="80" y1="0" x2="80" y2="-20" stroke="#5E4FA0" stroke-width="1.2" stroke-dasharray="2,2"/>
+            </g>
+          </g>
+
+          <!-- CUSTOMER box (downstream) -->
+          <g transform="translate(890, 150)">
+            <rect x="0" y="0" width="160" height="90" rx="6" fill="none" stroke="#2D2926" stroke-width="2.5" stroke-linejoin="round" transform="rotate(0.8)"/>
+            <text x="80" y="38" font-family="Lora, serif" font-weight="600" font-size="22" fill="#2D2926" text-anchor="middle">User again</text>
+            <text x="80" y="60" font-family="IBM Plex Mono, monospace" font-size="10" letter-spacing="1.5" fill="#7A6F68" text-anchor="middle">SAME CUSTOMER</text>
+            <text x="80" y="78" font-family="Lora, serif" font-style="italic" font-size="11" fill="#7A6F68" text-anchor="middle">now possibly upset</text>
+          </g>
+
+          <!-- bottom note -->
+          <text x="550" y="320" font-family="Lora, serif" font-style="italic" font-size="13" fill="#7A6F68" text-anchor="middle">"this is where the conscience goes." — D., on the napkin</text>
+        </svg>
+      </div>
+
+      <div class="arch-legend">
+        <span class="swatch" style="--gap-color: #5E4FA0;">missing layer</span>
+        <span class="swatch" style="--gap-color: #2D2926;">component as built</span>
+      </div>
+    </figure>
+
+    <div class="prose">
+      <p>
+        That diagram, in red ink on a coffee-stained napkin,
+        is the frame for the next six weeks of Sarah's
+        professional life. The boxes she has. The arrows she
+        has. The thing she does not have — the thing the
+        General Counsel halted Norma until she could prove
+        existed — is everything between the boxes.
+      </p>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         PULL QUOTE
+         ═══════════════════════════════════════════════════════ -->
+    <blockquote class="pull-quote">
+      Models don't come with consciences. They come with vibes.
+      Confident vibes. Sometimes correct vibes. But yeah — vibes.
+      <cite>David, sketching on a napkin</cite>
+    </blockquote>
+
+    <!-- ═══════════════════════════════════════════════════════
+         VOCABULARY
+         ═══════════════════════════════════════════════════════ -->
+    <div class="section-divider">
+      <span class="roman">iii.</span>
+      <span class="line"></span>
+      <span class="label">Crash course in vocabulary, before the next round</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="section-title">Four <em>words</em> Sarah did not have on Monday morning.</h2>
+
+    <div class="prose">
+      <p>
+        Before David lets her go home, he makes Sarah write
+        four things on the back of the napkin. Not because
+        she needs jargon — she has plenty of that already —
+        but because, as he puts it, <em>"on Friday, when the
+        board asks you what happened, these four words are
+        the difference between sounding like you have a plan
+        and sounding like you have feelings."</em>
+      </p>
+    </div>
+
+    <div class="vocab-grid">
+
+      <!-- Responsible AI -->
+      <div class="vocab-card fade-in d1">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 3 L19 6 L19 12 C19 16 16 20 12 21 C8 20 5 16 5 12 L5 6 Z" stroke="#5E4FA0" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M9 12 L11 14 L15 10" stroke="#5E4FA0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="term">Term 01</div>
+        <h5>Responsible AI</h5>
+        <p>
+          The whole umbrella. All the engineering, controls, monitoring, and processes that keep an AI system from doing things it shouldn't, and that make it explainable when it does.
+        </p>
+        <p class="aside">
+          Think: the seatbelts, airbags, brakes, blind-spot mirrors, and dashboard warning lights of an AI product. Norma currently has none of these.
+        </p>
+      </div>
+
+      <!-- Ethical AI -->
+      <div class="vocab-card fade-in d2">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="9" stroke="#5E4FA0" stroke-width="1.5"/>
+            <path d="M8 12 L11 15 L16 9" stroke="#5E4FA0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 3 V21" stroke="#5E4FA0" stroke-width="0.8" opacity="0.4" stroke-dasharray="1,2"/>
+          </svg>
+        </div>
+        <div class="term">Term 02</div>
+        <h5>Ethical AI</h5>
+        <p>
+          The values question. <em>Should</em> we be doing this? Whose data are we using? Who could this hurt? Who is this not designed for? The answers shape what Responsible AI even tries to enforce.
+        </p>
+        <p class="aside">
+          Responsible AI asks <em>are we doing it right.</em>
+          Ethical AI asks <em>are we doing the right thing.</em>
+          You need both.
+        </p>
+      </div>
+
+      <!-- Guardrails -->
+      <div class="vocab-card fade-in d3">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="9" width="18" height="6" rx="1" stroke="#5E4FA0" stroke-width="1.5"/>
+            <line x1="3" y1="9" x2="3" y2="15" stroke="#5E4FA0" stroke-width="2"/>
+            <line x1="21" y1="9" x2="21" y2="15" stroke="#5E4FA0" stroke-width="2"/>
+            <line x1="8" y1="6" x2="8" y2="18" stroke="#5E4FA0" stroke-width="0.8" opacity="0.5" stroke-dasharray="2,2"/>
+            <line x1="16" y1="6" x2="16" y2="18" stroke="#5E4FA0" stroke-width="0.8" opacity="0.5" stroke-dasharray="2,2"/>
+          </svg>
+        </div>
+        <div class="term">Term 03</div>
+        <h5>Guardrails</h5>
+        <p>
+          The actual mechanical stuff. Filters on the way in (no toxic prompts, no PII), filters on the way out (no hallucinated policies, no rude bots, no leaked customer data). They are unsexy. They are the entire game.
+        </p>
+        <p class="aside">
+          A guardrail is just a polite computer saying <em>"actually, no"</em> at exactly the right moment.
+        </p>
+      </div>
+
+      <!-- Audit Trail -->
+      <div class="vocab-card fade-in d4">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none">
+            <rect x="5" y="3" width="14" height="18" rx="1.5" stroke="#2D2926" stroke-width="1.5"/>
+            <line x1="8" y1="8" x2="16" y2="8" stroke="#2D2926" stroke-width="1.2"/>
+            <line x1="8" y1="12" x2="16" y2="12" stroke="#2D2926" stroke-width="1.2"/>
+            <line x1="8" y1="16" x2="13" y2="16" stroke="#2D2926" stroke-width="1.2"/>
+            <circle cx="17" cy="17" r="3" fill="#FFFFFF" stroke="#5E4FA0" stroke-width="1.5"/>
+            <path d="M15.5 17 L16.5 18 L18.5 16" stroke="#5E4FA0" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </div>
+        <div class="term">Term 04</div>
+        <h5>Audit Trail</h5>
+        <p>
+          The receipt. Every prompt in, every response out, who asked, when, what was blocked, what was let through, what was changed. So that when Legal asks <em>"prove it,"</em> you have something to show them other than feelings.
+        </p>
+        <p class="aside">
+          An AI without an audit trail is a witness with amnesia. Helpful, until you need it to remember anything.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         CLOSING / CLIFFHANGER
+         ═══════════════════════════════════════════════════════ -->
+    <div class="section-divider">
+      <span class="roman">iv.</span>
+      <span class="line"></span>
+      <span class="label">The slow exhale</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="section-title">A napkin, a deadline, and one small <em>plan</em>.</h2>
+
+    <section class="prose">
+      <p>
+        By 8:14 PM the rain has thinned. Sarah's cortado is
+        long gone. David's flat white has been cold for half
+        an hour and neither of them has noticed. The napkin
+        — soaked through in two corners, a sketch on one side,
+        four words on the other — is folded carefully into
+        the front pocket of Sarah's bag.
+      </p>
+
+      <p>
+        She is not, technically, less terrified about Friday's
+        board update. But the thing about terror is that it
+        gets a lot more workable when it has an outline. Sarah
+        has, for the first time in 78 hours, an outline. Four
+        words. Three boxes. A red circle around the empty
+        space between the boxes. A friend who has done this
+        before, sitting across the table, drinking a flat
+        white that has gone irrevocably cold.
+      </p>
+
+      <p>
+        David finishes his coffee. He looks at his watch. He
+        says the thing that, looking back on this six weeks
+        from now, Sarah will identify as the moment the
+        project actually started:
+      </p>
+    </section>
+
+    <blockquote class="pull-quote">
+      "Sarah, can I borrow your napkin tomorrow morning?
+      Same place, eight AM. I'll show you what to build."
+      <cite>David — Brewline Coffee, 8:16 PM</cite>
+    </blockquote>
+
+    <section class="prose">
+      <p>
+        She says yes. She walks home in the soft, cold post-rain
+        of an early-spring evening. She does not check her phone.
+        She sleeps better than she has any right to.
+      </p>
+      <p style="font-family: 'Lora', serif; font-style: italic; color: var(--ink2); font-size: 1.15rem; text-align: center; margin-top: 2.5rem;">
+        — end of Episode 1 —
+      </p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         NEXT EPISODE
+         ═══════════════════════════════════════════════════════ -->
+    <div class="next-episode">
+      <div>
+        <div class="ne-eyebrow">
+          <span class="arrow">→</span> EPISODE 02 · COMING UP
+        </div>
+        <h3>The <em>Napkin Sketch.</em></h3>
+        <p class="ne-desc">
+          Same coffee shop, eight AM. David draws Sarah a picture of what the missing layer looks like. No jargon. No acronyms. Just analogies — a security guard at a club, a kitchen pass, the bouncer's clipboard. Sarah brings the skeptic's questions. David has answers. By the end of the second cortado, Sarah will agree to bring this to her engineers.
+        </p>
+        <div class="ne-tags">
+          <span class="ne-tag">analogies</span>
+          <span class="ne-tag">no jargon</span>
+          <span class="ne-tag">cost questions</span>
+          <span class="ne-tag">latency questions</span>
+          <span class="ne-tag">false-positive questions</span>
+        </div>
+      </div>
+      <div class="ne-art">
+        <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+          <!-- decorative napkin sketch icon -->
+          <rect x="20" y="20" width="180" height="180" rx="6" fill="#F2EDE6" stroke="#7B6BBD" stroke-width="1.5" stroke-dasharray="3,3"/>
+          <!-- three boxes -->
+          <rect x="38" y="90" width="40" height="40" rx="3" fill="none" stroke="#2D2926" stroke-width="2"/>
+          <rect x="90" y="90" width="40" height="40" rx="3" fill="none" stroke="#2D2926" stroke-width="2"/>
+          <rect x="142" y="90" width="40" height="40" rx="3" fill="none" stroke="#2D2926" stroke-width="2"/>
+          <!-- arrows -->
+          <path d="M 78 110 L 90 110" stroke="#2D2926" stroke-width="2" marker-end="url(#arrowDark)"/>
+          <path d="M 130 110 L 142 110" stroke="#2D2926" stroke-width="2" marker-end="url(#arrowDark)"/>
+          <defs>
+            <marker id="arrowDark" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 Z" fill="#2D2926"/>
+            </marker>
+          </defs>
+          <!-- box labels -->
+          <text x="58" y="115" font-family="Lora, serif" font-size="11" fill="#2D2926" text-anchor="middle">in</text>
+          <text x="110" y="115" font-family="Lora, serif" font-size="11" fill="#2D2926" text-anchor="middle">AI</text>
+          <text x="162" y="115" font-family="Lora, serif" font-size="11" fill="#2D2926" text-anchor="middle">out</text>
+          <!-- big circles around the gaps (the missing layer) -->
+          <ellipse cx="84" cy="110" rx="14" ry="22" fill="none" stroke="#7B6BBD" stroke-width="2.5" transform="rotate(-5 84 110)"/>
+          <ellipse cx="136" cy="110" rx="14" ry="22" fill="none" stroke="#7B6BBD" stroke-width="2.5" transform="rotate(5 136 110)"/>
+          <!-- text on napkin -->
+          <text x="110" y="60" font-family="Lora, serif" font-style="italic" font-size="13" fill="#7B6BBD" text-anchor="middle">— the missing —</text>
+          <text x="110" y="78" font-family="Lora, serif" font-style="italic" font-weight="600" font-size="15" fill="#7B6BBD" text-anchor="middle">layer.</text>
+          <!-- coffee ring -->
+          <circle cx="170" cy="170" r="14" fill="none" stroke="#5E4FA0" stroke-width="1.5" opacity="0.4"/>
+          <circle cx="170" cy="170" r="11" fill="none" stroke="#5E4FA0" stroke-width="0.8" opacity="0.3"/>
+          <!-- pen -->
+          <line x1="40" y1="170" x2="78" y2="180" stroke="#1C1917" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="78" cy="180" r="2" fill="#5E4FA0"/>
+        </svg>
+      </div>
+    </div>
+
+  </article>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-mark">
+        The <em>Sentinel</em> Chronicles
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink2); margin-top: 0.4rem; font-weight: 400;">
+          A four-part story about not blowing up your AI.
+        </div>
+      </div>
+      <div class="series-list">
+        <span class="current"><span class="num">01.</span><span class="ttl">The Espresso Apocalypse</span></span>
+        <span><span class="num">02.</span><span class="ttl">The Napkin Sketch</span></span>
+        <span><span class="num">03.</span><span class="ttl">The Whiteboard</span></span>
+        <span><span class="num">04.</span><span class="ttl">15 Days Later</span></span>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+// Subtle reveal-on-scroll for figures and cards
+(function () {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('fade-in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+
+  document.querySelectorAll('.timeline .tl-row, .vocab-card, .arch-diagram, .infographic, .inset, .pull-quote, .next-episode, .tweet-card')
+    .forEach((el) => {
+      if (!el.classList.contains('fade-in')) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(12px)';
+        io.observe(el);
+      }
+    });
+})();
+
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'theme') {
+    document.documentElement.classList.toggle('dark', !!e.data.dark);
+  }
+});
+</script>
+
+</body>
+</html>
